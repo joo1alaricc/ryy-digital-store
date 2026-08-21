@@ -1,0 +1,9 @@
+{
+  "maintenance": false,
+  "uiMode": "liquid-glass",
+  "font": {
+    "family": "san-francisco",
+    "weight": 700
+  },
+  "admins": []
+}

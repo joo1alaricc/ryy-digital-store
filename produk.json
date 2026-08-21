@@ -1,0 +1,329 @@
+{
+  "storeInfo": {
+    "name": "RYY STORE",
+    "slogan": "Murah, cepat, dan terpercaya.",
+    "description": "RYY STORE merupakan toko digital yang hadir untuk menyediakan berbagai kebutuhan digital dengan harga yang murah, proses yang cepat, dan pelayanan yang terpercaya.\n\nBerdiri sejak Maret 2025, RYY STORE terus berkembang dan melayani berbagai kebutuhan pelanggan, mulai dari aplikasi premium, top up game, pulsa, top up e-money, token listrik, hingga berbagai produk digital lainnya.\n\nKami berusaha memberikan harga yang relatif murah dan bersahabat tanpa mengesampingkan kualitas pelayanan. Setiap pesanan diproses dengan mudah dan cepat, sehingga pelanggan dapat memenuhi kebutuhan digital mereka dengan lebih praktis dan nyaman.\n\nDengan pengalaman sejak Maret 2025, RYY STORE terus berkomitmen untuk memberikan pelayanan terbaik serta menjaga kepercayaan pelanggan dalam setiap transaksi.\n\nRYY STORE — Murah, Cepat, dan Terpercaya.",
+    "owner": "Eilyan Sander",
+    "urlPhoto": "https://cdn.phototourl.com/free/2026-08-20-8d176b62-2a99-4046-9a98-fbd286130495.jpg",
+    "operatingSince": "Maret 2025",
+    "totalBuyers": 927,
+    "i18n": {
+      "id": {
+        "name": "RYY STORE",
+        "slogan": "Murah, cepat, dan terpercaya.",
+        "description": "RYY STORE merupakan toko digital yang hadir untuk menyediakan berbagai kebutuhan digital dengan harga yang murah, proses yang cepat, dan pelayanan yang terpercaya.\n\nBerdiri sejak Maret 2025, RYY STORE terus berkembang dan melayani berbagai kebutuhan pelanggan, mulai dari aplikasi premium, top up game, pulsa, top up e-money, token listrik, hingga berbagai produk digital lainnya.\n\nKami berusaha memberikan harga yang relatif murah dan bersahabat tanpa mengesampingkan kualitas pelayanan. Setiap pesanan diproses dengan mudah dan cepat, sehingga pelanggan dapat memenuhi kebutuhan digital mereka dengan lebih praktis dan nyaman.\n\nDengan pengalaman sejak Maret 2025, RYY STORE terus berkomitmen untuk memberikan pelayanan terbaik serta menjaga kepercayaan pelanggan dalam setiap transaksi.\n\nRYY STORE — Murah, Cepat, dan Terpercaya.",
+        "owner": "Eilyan Sander",
+        "operatingSince": "Maret 2025"
+      },
+      "en": {
+        "name": "RYY STORE",
+        "slogan": "Affordable, fast, and trustworthy.",
+        "description": "RYY STORE is a digital store that provides various digital needs at affordable prices, with fast processing and trusted service.\n\nEstablished in March 2025, RYY STORE continues to grow and serve customer needs, from premium applications, game top-ups, mobile credit, e-money top-ups, electricity tokens, and other digital products.\n\nWe strive to offer friendly prices without compromising service quality. Every order is processed easily and quickly so customers can fulfill their digital needs more practically and comfortably.\n\nWith experience since March 2025, RYY STORE remains committed to providing the best service and maintaining customer trust in every transaction.\n\nRYY STORE — Affordable, Fast, and Trustworthy.",
+        "owner": "Eilyan Sander",
+        "operatingSince": "March 2025"
+      },
+      "ko": {
+        "name": "RYY STORE",
+        "slogan": "저렴하고, 빠르고, 믿을 수 있는 스토어.",
+        "description": "RYY STORE는 합리적인 가격, 빠른 처리, 믿을 수 있는 서비스를 제공하는 디지털 스토어입니다.\n\n2025년 3월에 시작한 RYY STORE는 프리미엄 앱, 게임 충전, 휴대폰 충전, 전자지갑 충전, 전기 토큰 등 다양한 디지털 상품을 제공하며 계속 성장하고 있습니다.\n\n서비스 품질을 유지하면서 친절하고 합리적인 가격을 제공하기 위해 노력합니다. 모든 주문은 쉽고 빠르게 처리되어 고객이 디지털 상품을 더욱 편리하게 이용할 수 있습니다.\n\n2025년 3월부터 쌓아온 경험을 바탕으로 최고의 서비스를 제공하고 모든 거래에서 고객의 신뢰를 지키기 위해 노력합니다.\n\nRYY STORE — 저렴하고, 빠르고, 믿을 수 있는 스토어.",
+        "owner": "Eilyan Sander",
+        "operatingSince": "2025년 3월"
+      }
+    }
+  },
+  "categories": [
+    "Semua",
+    "Aplikasi Premium",
+    "Design & Creative",
+    "AI & Productivity"
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Canva Premium",
+      "category": "Design & Creative",
+      "description": "Canva Premium untuk mempermudah kebutuhan desain dengan akses template, elemen, foto, video, font premium, Background Remover, Magic Resize, dan berbagai fitur AI. Cocok untuk tugas sekolah, konten sosial media, poster, presentasi, hingga kebutuhan desain lainnya.",
+      "image": "https://cdn.phototourl.com/free/2026-08-19-ec85b45d-90da-4f51-b34f-123189de1a03.jpg",
+      "bestSeller": true,
+      "types": [
+        {
+          "typeName": "Member 1 Bulan",
+          "price": 2000,
+          "stock": 42,
+          "durationDays": 30,
+          "i18n": {
+            "id": {
+              "typeName": "Member 1 Bulan"
+            },
+            "en": {
+              "typeName": "Member 1 Month"
+            },
+            "ko": {
+              "typeName": "회원 1개월"
+            }
+          }
+        },
+        {
+          "typeName": "Design 1 Bulan",
+          "price": 4000,
+          "stock": 43,
+          "durationDays": 30,
+          "i18n": {
+            "id": {
+              "typeName": "Design 1 Bulan"
+            },
+            "en": {
+              "typeName": "Design 1 Month"
+            },
+            "ko": {
+              "typeName": "디자인 1개월"
+            }
+          }
+        },
+        {
+          "typeName": "Design 6 bulan",
+          "price": 8000,
+          "stock": 43,
+          "durationDays": 180,
+          "i18n": {
+            "id": {
+              "typeName": "Design 6 bulan"
+            },
+            "en": {
+              "typeName": "Design 6 months"
+            },
+            "ko": {
+              "typeName": "디자인 6개월"
+            }
+          }
+        },
+        {
+          "typeName": "Lifetime",
+          "price": 16000,
+          "stock": 43,
+          "durationDays": null,
+          "i18n": {
+            "id": {
+              "typeName": "Lifetime"
+            },
+            "en": {
+              "typeName": "Lifetime"
+            },
+            "ko": {
+              "typeName": "일생"
+            }
+          }
+        }
+      ],
+      "stock": 171,
+      "i18n": {
+        "id": {
+          "name": "Canva Premium",
+          "description": "Canva Premium untuk mempermudah kebutuhan desain dengan akses template, elemen, foto, video, font premium, Background Remover, Magic Resize, dan berbagai fitur AI. Cocok untuk tugas sekolah, konten sosial media, poster, presentasi, hingga kebutuhan desain lainnya."
+        },
+        "en": {
+          "name": "Canva Premium",
+          "description": "Canva Premium makes your design needs easier with access to templates, elements, photos, videos, premium fonts, Background Remover, Magic Resize, and various AI features. Suitable for school assignments, social media content, posters, presentations, and other design needs."
+        },
+        "ko": {
+          "name": "칸바 프리미엄",
+          "description": "Canva Premium을 사용하면 템플릿, 요소, 사진, 동영상, 프리미엄 글꼴, 배경 제거, 자동 크기 조정, 다양한 AI 기능을 이용하여 디자인 요구 사항을 더욱 쉽게 만들 수 있습니다. 학교 과제, 소셜 미디어 콘텐츠, 포스터, 프레젠테이션 및 기타 디자인 요구 사항에 적합합니다."
+        }
+      }
+    },
+    {
+      "id": 2,
+      "name": "Alight Motion Premium",
+      "category": "Design & Creative",
+      "description": "Alight Motion Premium untuk kebutuhan editing video dengan akses fitur premium, efek, preset, font, dan tools editing lengkap. Cocok untuk membuat video aesthetic, AMV, velocity, jedag-jedug, konten sosial media, hingga berbagai kebutuhan editing lainnya.",
+      "image": "https://cdn.phototourl.com/free/2026-08-19-ee44d483-51e0-4d42-87c0-bc464338c3b0.jpg",
+      "bestSeller": true,
+      "types": [
+        {
+          "typeName": "1 Tahun Acc Seller",
+          "price": 3000,
+          "stock": 96,
+          "durationDays": 365,
+          "i18n": {
+            "id": {
+              "typeName": "1 Tahun Acc Seller"
+            },
+            "en": {
+              "typeName": "1 Year ACC Seller"
+            },
+            "ko": {
+              "typeName": "1년 ACC 판매자"
+            }
+          }
+        },
+        {
+          "typeName": "1 Tahun Acc Buyer",
+          "price": 5000,
+          "stock": 96,
+          "durationDays": 365,
+          "i18n": {
+            "id": {
+              "typeName": "1 Tahun Acc Buyer"
+            },
+            "en": {
+              "typeName": "1 Year Acc Buyer"
+            },
+            "ko": {
+              "typeName": "1년 Acc 구매자"
+            }
+          }
+        },
+        {
+          "typeName": "100 Akun",
+          "price": 20000,
+          "stock": 96,
+          "durationDays": null,
+          "i18n": {
+            "id": {
+              "typeName": "100 Akun"
+            },
+            "en": {
+              "typeName": "100 Accounts"
+            },
+            "ko": {
+              "typeName": "100개 계정"
+            }
+          }
+        }
+      ],
+      "stock": 288,
+      "i18n": {
+        "id": {
+          "name": "Alight Motion Premium",
+          "description": "Alight Motion Premium untuk kebutuhan editing video dengan akses fitur premium, efek, preset, font, dan tools editing lengkap. Cocok untuk membuat video aesthetic, AMV, velocity, jedag-jedug, konten sosial media, hingga berbagai kebutuhan editing lainnya."
+        },
+        "en": {
+          "name": "Alight Motion Premium",
+          "description": "Alight Motion Premium for video editing needs with access to premium features, effects, presets, fonts and complete editing tools. Suitable for creating aesthetic videos, AMV, velocity, pauses, social media content, and various other editing needs."
+        },
+        "ko": {
+          "name": "하차 모션 프리미엄",
+          "description": "Alight Motion Premium은 프리미엄 기능, 효과, 사전 설정, 글꼴 및 전체 편집 도구에 대한 액세스가 필요한 비디오 편집용입니다. 미적인 비디오, AMV, 속도, 일시 중지, 소셜 미디어 콘텐츠 및 기타 다양한 편집 요구 사항을 만드는 데 적합합니다."
+        }
+      }
+    },
+    {
+      "id": 3,
+      "name": "CapCut Premium",
+      "category": "Design & Creative",
+      "description": "CapCut Premium untuk editing video lebih lengkap dengan akses fitur premium, efek, filter, template, font, transisi, dan berbagai tools editing. Cocok untuk membuat konten TikTok, Reels, video aesthetic, jedag-jedug, hingga kebutuhan editing sehari-hari.",
+      "image": "https://cdn.phototourl.com/free/2026-08-19-0adf4068-054c-481c-8f5e-a1e40d6b59ae.jpg",
+      "bestSeller": false,
+      "types": [
+        {
+          "typeName": "Sharing 7 Hari",
+          "price": 5000,
+          "stock": 25,
+          "durationDays": 7,
+          "i18n": {
+            "id": {
+              "typeName": "Sharing 7 Hari"
+            },
+            "en": {
+              "typeName": "Sharing 7 Hari"
+            },
+            "ko": {
+              "typeName": "Sharing 7 Hari"
+            }
+          }
+        },
+        {
+          "typeName": "Private 7 Hari",
+          "price": 9000,
+          "stock": 25,
+          "durationDays": 7,
+          "i18n": {
+            "id": {
+              "typeName": "Private 7 Hari"
+            },
+            "en": {
+              "typeName": "Private 7 Hari"
+            },
+            "ko": {
+              "typeName": "Private 7 Hari"
+            }
+          }
+        },
+        {
+          "typeName": "Private 1 Bulan",
+          "price": 30000,
+          "stock": 25,
+          "durationDays": 30,
+          "i18n": {
+            "id": {
+              "typeName": "Private 1 Bulan"
+            },
+            "en": {
+              "typeName": "Private 1 Bulan"
+            },
+            "ko": {
+              "typeName": "Private 1 Bulan"
+            }
+          }
+        }
+      ],
+      "stock": 75,
+      "i18n": {
+        "id": {
+          "name": "CapCut Premium",
+          "description": "CapCut Premium untuk editing video lebih lengkap dengan akses fitur premium, efek, filter, template, font, transisi, dan berbagai tools editing. Cocok untuk membuat konten TikTok, Reels, video aesthetic, jedag-jedug, hingga kebutuhan editing sehari-hari."
+        },
+        "en": {
+          "name": "CapCut Premium",
+          "description": "CapCut Premium for more complete video editing with access to premium features, effects, filters, templates, fonts, transitions and various editing tools. Suitable for creating TikTok content, Reels, aesthetic videos, pauses, and daily editing needs."
+        },
+        "ko": {
+          "name": "캡컷 프리미엄",
+          "description": "프리미엄 기능, 효과, 필터, 템플릿, 글꼴, 전환 및 다양한 편집 도구에 액세스하여 더욱 완벽한 비디오 편집을 위한 CapCut 프리미엄. TikTok 콘텐츠, 릴, 미적 비디오, 일시 중지 및 일일 편집 요구 사항을 만드는 데 적합합니다."
+        }
+      }
+    },
+    {
+      "id": 4,
+      "name": "Gemini Pro",
+      "category": "AI & Productivity",
+      "description": "Gemini Pro untuk membantu berbagai kebutuhan AI dengan akses fitur premium yang lebih lengkap. Cocok untuk belajar, membuat dan menganalisis konten, membantu coding, merangkum dokumen, mencari ide, hingga berbagai kebutuhan produktivitas sehari-hari.",
+      "image": "https://upload.shizukuuu.cloud/get/vbqrjv.png",
+      "bestSeller": false,
+      "types": [
+        {
+          "typeName": "Pro 18 Bulan",
+          "price": 20000,
+          "stock": 17,
+          "durationDays": 547,
+          "i18n": {
+            "id": {
+              "typeName": "Pro 18 Bulan"
+            },
+            "en": {
+              "typeName": "Pro 18 Months"
+            },
+            "ko": {
+              "typeName": "프로 18개월"
+            }
+          }
+        }
+      ],
+      "i18n": {
+        "id": {
+          "name": "Gemini Pro",
+          "description": "Gemini Pro untuk membantu berbagai kebutuhan AI dengan akses fitur premium yang lebih lengkap. Cocok untuk belajar, membuat dan menganalisis konten, membantu coding, merangkum dokumen, mencari ide, hingga berbagai kebutuhan produktivitas sehari-hari."
+        },
+        "en": {
+          "name": "Gemini Pro",
+          "description": "Gemini Pro to help with various AI needs with access to more complete premium features. Suitable for studying, creating and analyzing content, helping with coding, summarizing documents, looking for ideas, and various daily productivity needs."
+        },
+        "ko": {
+          "name": "제미니 프로",
+          "description": "Gemini Pro는 보다 완벽한 프리미엄 기능에 액세스하여 다양한 AI 요구 사항을 지원합니다. 콘텐츠 연구, 생성 및 분석, 코딩 지원, 문서 요약, 아이디어 찾기 및 다양한 일상 생산성 요구 사항에 적합합니다."
+        }
+      },
+      "stock": 17
+    }
+  ]
+}

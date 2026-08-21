@@ -1,0 +1,15 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "ryy-store-cron",
+  "main": "./cron-worker.js",
+  "compatibility_date": "2026-08-21",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "triggers": {
+    "crons": [
+      "0 0 * * *",
+      "0 1 * * *"
+    ]
+  }
+}

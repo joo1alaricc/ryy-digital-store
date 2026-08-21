@@ -1,1 +1,1 @@
-# ryy-digital-store
+# ryy-store

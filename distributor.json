@@ -1,0 +1,32 @@
+{
+  "developerOwner": {
+    "role": "Developer & Owner",
+    "name": "Eilyan Sander",
+    "photo": "https://upload.shizukuuu.cloud/get/KMr1mL.jpg",
+    "socials": {
+      "instagram": "https://instagram.com/brzee_.sky"
+    }
+  },
+  "admin": [
+    {
+    "role": "Supplier",
+    "name": "Dahlan Revara Mahesa",
+    "photo": "https://lh3.googleusercontent.com/a/ACg8ocJvvquxPzUDC7SwNcF3slDHcswckBxU0Q684WI-2N5mFtnfM6M=s96-c",
+    "socials": {}
+    },
+  {
+    "role": "Admin",
+    "name": "Adava Ihsani",
+    "photo": "https://upload.shizukuuu.cloud/get/cxEH23.jpg",
+    "socials": {
+      "instagram": "https://www.instagram.com/lowcarityy?igsi=M3R1Nnpsem51bWho"
+    }
+  }
+],
+  "reseller": {
+    "role": "Reseller",
+    "name": "RYY STORE Reseller",
+    "photo": "",
+    "socials": {}
+  }
+}
