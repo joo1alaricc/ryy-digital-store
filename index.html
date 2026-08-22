@@ -423,6 +423,45 @@
             box-shadow: 0 4px 15px var(--accent-glow);
         }
 
+        /* Compact authentication layout — tuned for mobile browsers / Cloudflare Pages SPA. */
+        .auth-container {
+            min-height: 100dvh;
+            padding: max(18px, env(safe-area-inset-top)) 12px max(28px, env(safe-area-inset-bottom));
+            align-items: flex-start;
+            overflow-y: auto;
+        }
+        .auth-card {
+            width: min(100%, 430px);
+            max-height: none;
+            margin: 12px auto 0;
+            padding: 22px 20px 18px;
+            border-radius: 24px;
+        }
+        .store-title { font-size: 1.52rem; margin-bottom: 3px; }
+        .store-subtitle { font-size: .76rem; margin-bottom: 14px; }
+        .role-selector { margin-bottom: 12px; padding: 3px; gap: 4px; border-radius: 13px; }
+        .role-btn { padding: 9px 7px; font-size: .76rem; }
+        .auth-card input, .auth-card select { padding: 10px 13px; margin-bottom: 9px; border-radius: 12px; font-size: .84rem; }
+        .auth-card .btn-accent { padding: 10px; font-size: .84rem; border-radius: 12px; }
+        .auth-card .btn-icon-minimal { min-height: 40px; padding: 9px 12px !important; font-size: .78rem; border-radius: 12px; }
+        .auth-card #google-signin-button { min-height: 40px !important; }
+        .auth-card #google-signin-button > div { max-width: 100% !important; }
+        .auth-card .password-strength-meter { margin-top: 1px; margin-bottom: 4px; }
+        .auth-card .strength-text { margin-bottom: 8px; }
+        @media (max-width: 520px) {
+            .auth-container { padding-left: 10px; padding-right: 10px; }
+            .auth-card { margin-top: 8px; padding: 19px 16px 15px; border-radius: 22px; }
+            .store-title { font-size: 1.45rem; }
+            .store-subtitle { font-size: .72rem; margin-bottom: 12px; }
+            .auth-card #user-login-panel > div[style*="margin:14px"] { margin: 10px 0 !important; }
+        }
+        @media (max-height: 760px) {
+            .auth-card { margin-top: 4px; padding-top: 16px; padding-bottom: 12px; }
+            .store-subtitle { margin-bottom: 9px; }
+            .role-selector { margin-bottom: 9px; }
+            .auth-card input, .auth-card select { margin-bottom: 7px; }
+        }
+
         .password-strength-meter { height: 5px; border-radius: 3px; background: var(--border-color); margin-bottom: 6px; overflow: hidden; }
         .password-strength-fill { height: 100%; width: 0%; transition: width 0.3s, background 0.3s; }
         .strength-text { font-size: 0.72rem; text-align: left; margin-bottom: 12px; font-weight: 500; color: var(--text-muted); }
@@ -3447,7 +3486,9 @@
                 }
 
                 if (!response.ok) {
-                    const message = data?.message || data?.error || `Request gagal (${response.status})`;
+                    const message = data?.message || data?.error || (response.status === 404
+                        ? "API tidak ditemukan. Pastikan deployment memakai _worker.js / Advanced Mode Cloudflare Pages."
+                        : `Request gagal (${response.status})`);
                     const error = new Error(`${message} [HTTP ${response.status}]`);
                     error.status = response.status;
                     error.data = data;
@@ -3538,6 +3579,7 @@
             }
             try {
                 const data = await apiRequest("/send-otp", {
+                    skipAuth: true,
                     method: "POST",
                     body: JSON.stringify({ email })
                 });
@@ -3586,6 +3628,7 @@
 
             try {
                 const data = await apiRequest("/register", {
+                    skipAuth: true,
                     method: "POST",
                     body: JSON.stringify({ email, otp, otpToken: registrationOtpToken, username, password })
                 });
