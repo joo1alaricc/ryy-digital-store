@@ -2325,10 +2325,12 @@
         }
 
         document.addEventListener("DOMContentLoaded", async () => {
-            await loadStoreData();
+            // Route/session first. Product and distributor data are secondary and must
+            // never delay the authentication screen or successful login navigation.
+            try { checkSessionState(); } catch (e) { console.error("Initial session routing:", e); forceAuthScreen(); }
             loadSavedPreferences();
             setLanguage(currentLanguage);
-            checkSessionState();
+            try { await loadStoreData(); } catch (e) { console.error("Initial store data:", e); }
         });
 
         async function loadStoreData() {
@@ -2789,7 +2791,8 @@
                 saveUserSession(data.user, data.token);
                 localStorage.removeItem("has_seen_landing");
                 showToast("Login dengan Google berhasil!");
-                checkSessionState();
+                forceUserScreen();
+                launchUserApp();
             } catch (error) {
                 console.error(error);
                 iosAlert(error.message || "Login Google gagal.");
@@ -2896,60 +2899,8 @@
             if (name) name.innerText = "RYY STORE [ADMIN PANEL]";
             if (slogan) slogan.innerText = `Logged in as @${adminData?.username || "admin"}`;
             if (identity) identity.innerText = `@${adminData?.username || "admin"}`;
-            // Do not await this optional panel loader: login navigation is already complete.
-            Promise.resolve(loadUserTableForAdmin()).catch(e => console.error("Admin user list:", e));
-        }
-
-        function loadUserTableForAdmin() {
-            const tbody = document.getElementById('userTableBody');
-            tbody.innerHTML = '';
-            let registeredUsers = JSON.parse(localStorage.getItem('registered_users')) || [];
-
-            if (registeredUsers.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color: var(--text-muted);">Belum ada user terdaftar.</td></tr>';
-                return;
-            }
-
-            registeredUsers.forEach((user, index) => {
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><input type="text" id="username_${index}" value="${user.username || ''}"></td>
-                    <td><input type="text" id="contact_${index}" value="${user.contact || ''}"></td>
-                    <td><input type="text" id="password_${index}" value="${user.password || ''}"></td>
-                    <td><input type="number" id="items_${index}" value="${user.totalItemsBought || 0}" style="width: 50px;"></td>
-                    <td><input type="number" id="spent_${index}" value="${user.totalMoneySpent || 0}" style="width: 90px;"></td>
-                    <td>
-                        <div style="display:flex; gap:4px;">
-                            <button onclick="saveUserByAdmin(${index})" class="btn-admin-action btn-admin-save">Simpan</button>
-                            <button onclick="deleteUserByAdmin(${index})" class="btn-admin-action btn-admin-del">Hapus</button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function saveUserByAdmin(index) {
-            let registeredUsers = JSON.parse(localStorage.getItem('registered_users')) || [];
-            registeredUsers[index].username = document.getElementById(`username_${index}`).value;
-            registeredUsers[index].contact = document.getElementById(`contact_${index}`).value;
-            registeredUsers[index].password = document.getElementById(`password_${index}`).value;
-            registeredUsers[index].totalItemsBought = parseInt(document.getElementById(`items_${index}`).value) || 0;
-            registeredUsers[index].totalMoneySpent = parseInt(document.getElementById(`spent_${index}`).value) || 0;
-
-            localStorage.setItem('registered_users', JSON.stringify(registeredUsers));
-            showToast('Data user berhasil diperbarui oleh admin!');
-            loadUserTableForAdmin();
-        }
-
-        async function deleteUserByAdmin(index) {
-            if (await iosConfirm('Yakin ingin menghapus akun user ini dari sistem?', {title:'Hapus akun', okText:'Hapus', danger:true})) {
-                let registeredUsers = JSON.parse(localStorage.getItem('registered_users')) || [];
-                registeredUsers.splice(index, 1);
-                localStorage.setItem('registered_users', JSON.stringify(registeredUsers));
-                loadUserTableForAdmin();
-                showToast('Akun user dihapus.');
-            }
+            // The panel is already visible. Data loading is optional and cannot block navigation.
+            setTimeout(() => Promise.resolve(loadUserTableForAdmin()).catch(e => console.error("Admin user list:", e)), 0);
         }
 
         function updatePageScrollMode() {
@@ -3025,66 +2976,6 @@
             }
         }
 
-        function sendOTP() {
-            const contact=document.getElementById("contact-input")?.value.trim();
-            if(!contact){ iosAlert("Kontak wajib diisi!"); return; }
-            if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact)){ iosAlert("Format email tidak valid!"); return; }
-            generatedOTP=Math.floor(1000+Math.random()*9000).toString();
-            document.getElementById("step-contact")?.classList.remove("active");
-            document.getElementById("step-otp")?.classList.add("active");
-            showToast(t("send_otp"));
-            console.info("RYY STORE registration OTP:",generatedOTP);
-        }
-
-        function verifyOTP() {
-            const userOTP = document.getElementById("otp-input").value.trim();
-            if (userOTP === generatedOTP) {
-                document.getElementById("step-otp").classList.remove("active");
-                document.getElementById("step-credentials").classList.add("active");
-                showToast("OTP Berhasil Diverifikasi");
-            } else {
-                iosAlert("Kode OTP salah!");
-            }
-        }
-
-        function registerAccount() {
-            const username = document.getElementById("username-input").value.trim();
-            const password = document.getElementById("password-input").value;
-            const contact = document.getElementById("contact-input").value.trim();
-
-            if (username.length < 5 || !/[a-zA-Z]/.test(username)) {
-                iosAlert("Username minimal 5 karakter dan harus mengandung huruf!");
-                return;
-            }
-
-            if (calculateStrength(password) < 3) {
-                iosAlert("Keamanan password minimal 8 karakter berisi huruf, angka, dan simbol.");
-                return;
-            }
-
-            const existingUsers = JSON.parse(localStorage.getItem("registered_users")) || [];
-            if (existingUsers.some(u => u.username === username)) {
-                iosAlert("Username sudah digunakan.");
-                return;
-            }
-
-            const userData = { contact, secondaryContact: "", username, password, totalItemsBought: 0, totalMoneySpent: 0 };
-            existingUsers.push(userData);
-            localStorage.setItem("registered_users", JSON.stringify(existingUsers));
-            localStorage.setItem("current_user", JSON.stringify(userData));
-            localStorage.removeItem("has_seen_landing");
-
-            showToast("Login Berhasil!");
-            checkSessionState();
-        }
-
-        function logoutAccount() {
-            localStorage.removeItem("current_user");
-            localStorage.removeItem("current_admin");
-            localStorage.removeItem("has_seen_landing");
-            showToast("Berhasil keluar akun");
-            checkSessionState();
-        }
 
         function sendProfileOTP() {
             const newContact=document.getElementById("profile-new-contact-input")?.value.trim();
@@ -3528,16 +3419,24 @@
         let profileOtpToken = ""; // reserved for future verified-contact API
 
         async function apiRequest(path, options = {}) {
-            const { skipAuth = false, ...requestOptions } = options;
-            const headers = { "Content-Type": "application/json", ...(requestOptions.headers || {}) };
+            const { skipAuth = false, timeout = 20000, ...requestOptions } = options;
+            const headers = { Accept: "application/json", "Content-Type": "application/json", ...(requestOptions.headers || {}) };
             const token = skipAuth ? null : localStorage.getItem("auth_token");
             if (token) headers.Authorization = `Bearer ${token}`;
-            else if (skipAuth) delete headers.Authorization;
-            const response = await fetch(`${API_BASE}${path}`, { ...requestOptions, headers });
-            let data = {};
-            try { data = await response.json(); } catch (_) {}
-            if (!response.ok) throw new Error(data.message || `Request gagal (${response.status})`);
-            return data;
+            else delete headers.Authorization;
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), Number(timeout) || 20000);
+            try {
+                const response = await fetch(`${API_BASE}${path}`, { ...requestOptions, headers, cache: "no-store", signal: controller.signal });
+                const text = await response.text();
+                let data = {};
+                try { data = text ? JSON.parse(text) : {}; } catch (_) { data = { message: text.slice(0, 300) }; }
+                if (!response.ok) throw new Error(data.message || `Request gagal (${response.status})`);
+                return data;
+            } catch (error) {
+                if (error?.name === "AbortError") throw new Error("Server terlalu lama merespons. Coba lagi.");
+                throw error;
+            } finally { clearTimeout(timer); }
         }
 
         function saveUserSession(user, token) {
@@ -3589,14 +3488,21 @@
         }
 
         async function verifyOTP() {
-            const otp = document.getElementById("otp-input").value.trim();
-            if (!/^\d{4}$/.test(otp) || !registrationOtpToken) {
+            const email = document.getElementById("contact-input")?.value.trim().toLowerCase();
+            const otp = document.getElementById("otp-input")?.value.trim();
+            if (!/^\d{4}$/.test(otp) || !registrationOtpToken || !email) {
                 iosAlert("Masukkan OTP 4 digit yang valid."); return;
             }
-            // OTP is cryptographically verified by /api/register. This step only moves the UI forward.
-            document.getElementById("otp-input").dataset.verifiedOtp = otp;
-            showAuthStep("step-credentials");
-            showToast("OTP siap diverifikasi saat registrasi.");
+            try {
+                const data = await apiRequest("/verify-otp", { method: "POST", body: JSON.stringify({ email, otp, otpToken: registrationOtpToken }), skipAuth: true });
+                if (!data?.verified) throw new Error(data?.message || "OTP tidak valid.");
+                document.getElementById("otp-input").dataset.verifiedOtp = otp;
+                showAuthStep("step-credentials");
+                showToast("OTP berhasil diverifikasi.");
+            } catch (error) {
+                console.error("Verify OTP error:", error);
+                iosAlert(error.message || "OTP salah atau sudah kedaluwarsa.");
+            }
         }
 
         async function registerAccount() {
@@ -3624,7 +3530,8 @@
                 localStorage.removeItem("has_seen_landing");
                 registrationOtpToken = "";
                 showToast("Registrasi berhasil!");
-                checkSessionState();
+                forceUserScreen();
+                launchUserApp();
             } catch (error) {
                 console.error(error);
                 iosAlert(error.message);
@@ -3633,14 +3540,37 @@
 
         let loginInProgress = false;
 
-        function setAuthSectionVisible(section) {
+        function setAuthSectionVisible(section, updateUrl = true) {
             const auth = document.getElementById("auth-section");
             const landing = document.getElementById("landing-section");
             const app = document.getElementById("app-section");
-            if (!auth || !landing || !app) return;
-            auth.classList.toggle("hidden", section !== "auth");
-            landing.classList.toggle("hidden", section !== "landing");
-            app.classList.toggle("hidden", section !== "app");
+            if (!auth || !landing || !app) return false;
+            const target = section === "app" || section === "landing" ? section : "auth";
+            auth.classList.toggle("hidden", target !== "auth");
+            landing.classList.toggle("hidden", target !== "landing");
+            app.classList.toggle("hidden", target !== "app");
+            document.body.dataset.screen = target;
+            if (updateUrl) {
+                const hash = target === "app" ? "#store" : target === "landing" ? "#landing" : "#login";
+                if (location.hash !== hash) history.replaceState({screen: target}, "", hash);
+            }
+            return true;
+        }
+
+        function forceUserScreen() {
+            setAuthSectionVisible("app");
+            document.getElementById("auth-section")?.classList.add("hidden");
+            document.getElementById("landing-section")?.classList.add("hidden");
+            document.getElementById("app-section")?.classList.remove("hidden");
+            document.body.dataset.screen = "app";
+        }
+
+        function forceAuthScreen() {
+            setAuthSectionVisible("auth");
+            document.getElementById("app-section")?.classList.add("hidden");
+            document.getElementById("landing-section")?.classList.add("hidden");
+            document.getElementById("auth-section")?.classList.remove("hidden");
+            document.body.dataset.screen = "auth";
         }
 
         function setLoginBusy(busy) {
@@ -3680,7 +3610,7 @@
                     localStorage.setItem("admin_token", data.token);
                     localStorage.setItem("current_admin", JSON.stringify(data.admin));
                     // Switch screens first. Optional admin widgets cannot block navigation.
-                    setAuthSectionVisible("app");
+                    forceUserScreen();
                     launchAdminApp(data.admin);
                     showToast("Login Admin Berhasil!");
                     return;
@@ -3695,11 +3625,12 @@
                 localStorage.removeItem("admin_token");
                 clearUserSession();
                 saveUserSession(data.user, data.token);
-                setAuthSectionVisible("app");
+                forceUserScreen();
                 launchUserApp();
                 showToast("Login berhasil!");
             } catch (error) {
                 console.error("Login error:", error);
+                forceAuthScreen();
                 await iosAlert(error?.message || "Login gagal. Silakan coba lagi.", { title: "Login Gagal" });
             } finally {
                 setLoginBusy(false);
@@ -3708,24 +3639,25 @@
 
         function checkSessionState() {
             let currentUser = null, currentAdmin = null;
-            try { currentUser = JSON.parse(localStorage.getItem("current_user") || "null"); } catch (_) {}
-            try { currentAdmin = JSON.parse(localStorage.getItem("current_admin") || "null"); } catch (_) {}
+            try { currentUser = JSON.parse(localStorage.getItem("current_user") || "null"); } catch (_) { clearUserSession(); }
+            try { currentAdmin = JSON.parse(localStorage.getItem("current_admin") || "null"); } catch (_) { localStorage.removeItem("current_admin"); }
             const adminToken = localStorage.getItem("admin_token");
             const userToken = localStorage.getItem("auth_token");
-            if (currentAdmin && adminToken) {
-                setAuthSectionVisible("app");
+            if (currentAdmin?.username && adminToken) {
+                forceUserScreen();
                 launchAdminApp(currentAdmin);
-                return;
+                return true;
             }
-            if (currentUser && userToken) {
-                setAuthSectionVisible("app");
+            if (currentUser?.id && userToken) {
+                forceUserScreen();
                 launchUserApp();
-                return;
+                return true;
             }
             clearUserSession();
             localStorage.removeItem("current_admin");
             localStorage.removeItem("admin_token");
-            setAuthSectionVisible("auth");
+            forceAuthScreen();
+            return false;
         }
 
         function logoutAccount() {
@@ -3733,8 +3665,9 @@
             localStorage.removeItem("current_admin");
             localStorage.removeItem("admin_token");
             localStorage.removeItem("has_seen_landing");
+            forceAuthScreen();
+            switchRole("user");
             showToast("Berhasil keluar akun");
-            checkSessionState();
         }
 
         async function recordPurchase() {
@@ -4339,7 +4272,15 @@ Simpan data ini. Kredensial rahasia tidak ditampilkan lagi setelah ini.`;
         };
 
         // Initial site config fetch; DOMContentLoaded handler above will also load store data.
-        document.addEventListener("DOMContentLoaded",()=>{loadSiteConfig();setInterval(loadSiteConfig,30000);});
+        document.addEventListener("DOMContentLoaded",()=>{
+            loadSiteConfig();
+            setInterval(loadSiteConfig,30000);
+            // Cloudflare Pages is a single-page app here: restore the authenticated screen
+            // without relying on a server-side route or a second HTML page.
+            setTimeout(() => {
+                try { checkSessionState(); } catch (e) { console.error("Session bootstrap:", e); forceAuthScreen(); }
+            }, 0);
+        });
 
         /* ===== User visual + AI chat preferences ===== */
         const USER_UI_MODES = {
