@@ -84,6 +84,11 @@
 
         .hidden { display: none !important; }
 
+        /* iOS dialog must override the global .hidden display rule when opened. */
+        .ios-dialog-overlay:not(.hidden) {
+            display: flex !important;
+        }
+
         /* iOS-style stacked notification center — stable absolute stack */
         #toast-container {
             position: fixed;
@@ -3653,8 +3658,13 @@
                     localStorage.removeItem("auth_token");
                     localStorage.setItem("admin_token", data.token);
                     localStorage.setItem("current_admin", JSON.stringify(data.admin));
-                    showToast("Login Admin Berhasil!");
-                    checkSessionState();
+                        showToast("Login Admin Berhasil!");
+                    try {
+                        checkSessionState();
+                    } catch (renderError) {
+                        console.error("Gagal membuka panel admin setelah login:", renderError);
+                        iosAlert("Login admin berhasil, tetapi panel admin gagal dibuka. Silakan muat ulang halaman.");
+                    }
                 } catch (error) {
                     console.error(error);
                     iosAlert(error.message);
@@ -3673,7 +3683,12 @@
                 saveUserSession(data.user, data.token);
                 localStorage.removeItem("has_seen_landing");
                 showToast("Login berhasil!");
-                checkSessionState();
+                try {
+                    checkSessionState();
+                } catch (renderError) {
+                    console.error("Gagal membuka halaman setelah login:", renderError);
+                    iosAlert("Login berhasil, tetapi halaman toko gagal dibuka. Silakan muat ulang halaman.");
+                }
             } catch (error) {
                 console.error(error);
                 iosAlert(error.message);
@@ -3784,34 +3799,57 @@
         }
 
         async function loadUserTableForAdmin() {
-            const tbody = document.getElementById("userTableBody");
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Memuat data...</td></tr>';
+            const container = document.getElementById("admin-user-list");
+            if (!container) {
+                console.error("Elemen #admin-user-list tidak ditemukan.");
+                return;
+            }
+            container.innerHTML = '<div style="padding:16px;text-align:center;color:var(--text-muted);">Memuat data user...</div>';
             try {
                 const token = localStorage.getItem("admin_token");
-                const response = await fetch(`${API_BASE}/admin-users`, { headers: { Authorization: `Bearer ${token}` } });
+                if (!token) throw new Error("Sesi admin tidak ditemukan. Silakan login kembali.");
+                const response = await fetch(`${API_BASE}/admin-users`, {
+                    method: "GET",
+                    headers: { Authorization: `Bearer ${token}` }
+                });
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.message || "Gagal mengambil data user.");
-                if (!data.users.length) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Belum ada user terdaftar.</td></tr>';
+                window.__adminUsers = Array.isArray(data.users) ? data.users : [];
+                if (!window.__adminUsers.length) {
+                    container.innerHTML = '<div style="padding:16px;text-align:center;color:var(--text-muted);">Belum ada user terdaftar.</div>';
                     return;
                 }
-                data.users.forEach((user, index) => {
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td><input type="text" id="username_${index}" value="${escapeHtml(user.username)}"></td>
-                        <td><input type="text" id="contact_${index}" value="${escapeHtml(user.email || user.phone || "")}"></td>
-                        <td><input type="number" id="items_${index}" value="${Number(user.totalItemsBought || 0)}" style="width: 70px;"></td>
-                        <td><input type="number" id="spent_${index}" value="${Number(user.totalMoneySpent || 0)}" style="width: 100px;"></td>
-                        <td><div style="display:flex;gap:4px;">
-<button onclick="saveUserByAdmin(${index})" class="btn-admin-action btn-admin-save">Simpan</button>
-<button onclick="deleteUserByAdmin(${index})" class="btn-admin-action btn-admin-del">Hapus</button></div></td>`;
-                    tr.dataset.userId = user.id;
-                    tbody.appendChild(tr);
+                container.innerHTML = "";
+                window.__adminUsers.forEach((user, index) => {
+                    const card = document.createElement("div");
+                    card.className = "admin-user-card";
+                    card.dataset.userId = user.id;
+                    card.innerHTML = `
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+                            <div>
+                                <div style="font-weight:700;font-size:.9rem;">@${escapeHtml(user.username || "-")}</div>
+                                <div style="font-size:.7rem;color:var(--text-muted);margin-top:3px;">${escapeHtml(user.email || user.phone || "-")}</div>
+                            </div>
+                            <span style="font-size:.65rem;color:var(--text-muted);">${escapeHtml(user.authProvider || "local")}</span>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
+                            <label style="font-size:.68rem;color:var(--text-muted);">Total item
+                                <input type="number" id="items_${index}" value="${Number(user.totalItemsBought || 0)}" min="0" style="width:100%;margin-top:4px;">
+                            </label>
+                            <label style="font-size:.68rem;color:var(--text-muted);">Total belanja
+                                <input type="number" id="spent_${index}" value="${Number(user.totalMoneySpent || 0)}" min="0" style="width:100%;margin-top:4px;">
+                            </label>
+                        </div>
+                        <div style="display:flex;gap:6px;margin-top:10px;">
+                            <button type="button" onclick="saveUserByAdmin(${index})" class="btn-admin-action btn-admin-save">Simpan</button>
+                            <button type="button" onclick="deleteUserByAdmin(${index})" class="btn-admin-action btn-admin-del">Hapus</button>
+                        </div>
+                    `;
+                    container.appendChild(card);
                 });
-                window.__adminUsers = data.users;
             } catch (error) {
-                console.error(error);
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#ff6b6b;">${escapeHtml(error.message)}</td></tr>`;
+                console.error("loadUserTableForAdmin:", error);
+                container.innerHTML = `<div style="padding:16px;text-align:center;color:#ff6b6b;">${escapeHtml(error.message || "Gagal memuat user.")}</div>`;
             }
         }
 
@@ -3826,20 +3864,25 @@
                 const token = localStorage.getItem("admin_token");
                 const response = await fetch(`${API_BASE}/admin-users`, {
                     method: "PATCH",
-                    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    },
                     body: JSON.stringify({
                         userId: user.id,
-                        username: document.getElementById(`username_${index}`).value.trim(),
-                        email: document.getElementById(`contact_${index}`).value.trim(),
-                        totalItemsBought: Number(document.getElementById(`items_${index}`).value) || 0,
-                        totalMoneySpent: Number(document.getElementById(`spent_${index}`).value) || 0
+                        action: "user",
+                        totalItemsBought: Number(document.getElementById(`items_${index}`)?.value) || 0,
+                        totalMoneySpent: Number(document.getElementById(`spent_${index}`)?.value) || 0
                     })
                 });
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.message || "Gagal memperbarui user.");
                 showToast("Data user berhasil diperbarui!");
-                loadUserTableForAdmin();
-            } catch (error) { console.error(error); iosAlert(error.message); }
+                await loadUserTableForAdmin();
+            } catch (error) {
+                console.error("saveUserByAdmin:", error);
+                iosAlert(error.message || "Gagal memperbarui user.");
+            }
         }
 
         async function deleteUserByAdmin(index) {
