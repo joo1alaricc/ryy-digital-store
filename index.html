@@ -4904,5 +4904,266 @@ function startSupportPolling(){
 })();
 </script>
 
+
+<script>
+/* ===== RYY STORE POST-AUTH / STORE FLOW V3 =====
+   Repairs profile hydration, product actions, checkout, persistent inbox,
+   admin purchase workflow, avatar uploads and device information. */
+(function(){
+  const $ = id => document.getElementById(id);
+  const esc = v => typeof escapeHtml === 'function' ? escapeHtml(v) : String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const sessionUser = () => { try{return JSON.parse(localStorage.getItem('current_user')||'null')}catch{return null} };
+
+  window.refreshCurrentUserSession = async function(){
+    const token=localStorage.getItem('auth_token');
+    if(!token) return sessionUser();
+    try{
+      const d=await apiRequest('/me');
+      if(d?.user){ saveUserSession(d.user,token); updateProfileDashboard(); updateInboxBadge(); }
+      return d?.user || sessionUser();
+    }catch(e){
+      if(e?.status===401){ clearUserSession(); forceAuthScreen(); }
+      throw e;
+    }
+  };
+
+  window.updateInboxBadge = function(){
+    const u=sessionUser(); const fab=$('inbox-fab'); const badge=$('inbox-unread-badge');
+    if(fab) fab.classList.toggle('hidden', !u);
+    if(!badge) return;
+    const n=Array.isArray(u?.inbox)?u.inbox.filter(m=>m.read!==true).length:0;
+    badge.textContent=n>99?'99+':String(n); badge.classList.toggle('hidden',n===0);
+  };
+
+  window.updateProfileDashboard = function(){
+    const u=sessionUser(); if(!u) return;
+    const primary=u.email||u.phone||u.contact||u.googleEmail||'-';
+    $('dash-username') && ($('dash-username').textContent=`@${u.username||'user'}`);
+    $('dash-email') && ($('dash-email').textContent=primary);
+    $('dash-secondary-contact') && ($('dash-secondary-contact').textContent=u.secondaryContact||'Belum Ditambahkan');
+    $('dash-total-items') && ($('dash-total-items').textContent=`${Number(u.totalItemsBought||0)} Item`);
+    $('dash-total-spent') && ($('dash-total-spent').textContent=`Rp${Number(u.totalMoneySpent||0).toLocaleString('id-ID')}`);
+    const display=u.displayName||u.username||'Pengguna';
+    $('profile-display-name') && ($('profile-display-name').textContent=display);
+    $('profile-display-email') && ($('profile-display-email').textContent=primary);
+    const avatar=$('profile-avatar-wrap');
+    if(avatar){
+      if(u.avatar){ avatar.classList.remove('profile-avatar-empty'); avatar.innerHTML=`<img src="${esc(u.avatar)}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" onerror="this.parentElement.innerHTML='?';this.parentElement.classList.add('profile-avatar-empty')">`; }
+      else { avatar.classList.add('profile-avatar-empty'); avatar.textContent=(display||'?').slice(0,1).toUpperCase(); }
+    }
+    $('remove-avatar-btn')?.classList.toggle('hidden',!u.avatar);
+    const reseller=$('dash-reseller-status'); if(reseller) reseller.textContent=u.reseller?'Aktif':'Tidak Aktif';
+    const resellerCard=$('profile-reseller-card'); if(resellerCard) resellerCard.querySelector('span')?.replaceChildren(document.createTextNode(u.reseller?'Reseller: Aktif':'Reseller: Tidak Aktif'));
+
+    renderPendingPurchases(u);
+    renderSubscriptions(u);
+    updateDeviceBattery(); updateJakartaClock(); updateInboxBadge();
+    const primaryEmail=primary.includes('@');
+    const title=$('add-contact-title'), input=$('profile-new-contact-input');
+    if(title) title.textContent=primaryEmail?'Tambah Nomor Telepon Alternatif':'Tambah Email Alternatif';
+    if(input) input.placeholder=primaryEmail?'Masukkan Nomor Telepon Baru':'Masukkan Email Baru';
+  };
+
+  function renderPendingPurchases(u){
+    const box=$('profile-pending-list'); if(!box) return;
+    const pending=(u.pendingPurchases||[]).filter(p=>p.status==='pending');
+    if(!pending.length){ box.innerHTML='<div style="padding:10px 0;color:var(--text-muted);font-size:.68rem;">Tidak ada pesanan menunggu konfirmasi.</div>'; return; }
+    box.innerHTML=pending.map(p=>`<div class="subscription-card" style="margin-top:8px;"><strong>${esc((p.items||[]).map(i=>i.productName).join(', ')||'Pesanan')}</strong><div class="subscription-meta">${esc(p.paymentMethod||'-')} · ${esc(p.targetPhone||'-')}</div><div class="subscription-time">Rp${Number(p.totalSpent||0).toLocaleString('id-ID')} · Menunggu admin</div></div>`).join('');
+  }
+
+  function formatRemaining(ms){
+    if(ms<=0) return 'Berakhir';
+    const d=Math.floor(ms/86400000),h=Math.floor((ms%86400000)/3600000),m=Math.floor((ms%3600000)/60000);
+    if(d) return `${d} hari ${h} jam tersisa`;
+    if(h) return `${h} jam ${m} menit tersisa`;
+    return `${m} menit tersisa`;
+  }
+  function renderSubscriptions(u){
+    const box=$('subscription-list'); if(!box) return;
+    const subs=(u.subscriptions||[]).filter(s=>s.status==='active' && (!s.expiresAt || new Date(s.expiresAt).getTime()>Date.now()));
+    if(!subs.length){box.innerHTML='<div style="padding:10px 0;color:var(--text-muted);font-size:.68rem;">Belum ada langganan aktif.</div>';return;}
+    box.innerHTML=subs.map(s=>{const remaining=s.expiresAt?formatRemaining(new Date(s.expiresAt).getTime()-Date.now()):'Lifetime';return `<div class="subscription-card"><strong>${esc(s.productName||'-')}</strong><div class="subscription-meta">${esc(s.typeName||'')} · ${esc(s.durationDays?`${s.durationDays} hari`:'Lifetime')}</div><div class="subscription-time">${esc(remaining)}</div>${s.expiresAt?`<div class="subscription-meta">Berakhir ${esc(new Date(s.expiresAt).toLocaleString('id-ID'))}</div>`:''}</div>`}).join('');
+  }
+
+  let batteryTimer=null, clockTimer=null;
+  async function updateDeviceBattery(){
+    const el=$('dash-battery'); if(!el) return;
+    try{
+      if(navigator.getBattery){
+        const b=await navigator.getBattery(); batteryManager=b;
+        const paint=()=>{el.innerHTML=`<span class="device-icon">${b.charging?'⚡':'🔋'}</span><span>${Math.round(b.level*100)}%${b.charging?' · Mengisi':''}</span>`};
+        paint();
+        if(!b.__ryyBound){['levelchange','chargingchange'].forEach(ev=>b.addEventListener(ev,paint));b.__ryyBound=true;}
+      }else el.innerHTML='<span class="device-icon">🔋</span><span>Tidak tersedia</span>';
+    }catch{el.innerHTML='<span class="device-icon">🔋</span><span>Tidak tersedia</span>'}
+  }
+  function updateJakartaClock(){
+    const el=$('dash-clock'); if(!el) return;
+    const now=new Date(); const text=new Intl.DateTimeFormat('id-ID',{timeZone:'Asia/Jakarta',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now);
+    el.innerHTML=`<span class="device-icon">🕒</span><span>${text} WIB</span>`;
+  }
+  window.updateDeviceBattery=updateDeviceBattery; window.updateJakartaClock=updateJakartaClock;
+  if(!clockTimer) clockTimer=setInterval(updateJakartaClock,1000);
+
+  window.switchView = function(viewName,category=null){
+    const views={home:'view-home',catalog:'view-catalog',profile:'view-profile',settings:'view-settings'};
+    Object.values(views).forEach(id=>$(id)?.classList.add('hidden'));
+    document.querySelectorAll('.floating-nav-item').forEach((el,i)=>el.classList.toggle('active',(viewName==='home'&&i===0)||(viewName==='catalog'&&i===1)||(viewName==='profile'&&i===2)||(viewName==='settings'&&i===3)));
+    if(views[viewName]) $(views[viewName])?.classList.remove('hidden');
+    if(typeof updateCatalogHeaderControls==='function') updateCatalogHeaderControls(viewName);
+    if(viewName==='home') renderHomeView?.();
+    if(viewName==='catalog'){const target=category||document.querySelector('.cat-tab.active')?.dataset?.category||'Semua';renderCategories?.(target);renderProducts?.(target);}
+    if(viewName==='profile'||viewName==='settings') updateProfileDashboard();
+    if(viewName==='profile') refreshCurrentUserSession().then(updateProfileDashboard).catch(()=>{});
+    window.scrollTo({top:0,behavior:'smooth'}); updatePageScrollMode?.(); updateInboxBadge();
+  };
+
+  window.openProductDetail = function(productId){
+    const product=(storeData.products||[]).find(p=>Number(p.id)===Number(productId));
+    if(!product){iosAlert('Produk tidak ditemukan.');return;}
+    currentActiveProduct=product;
+    product.stock=productStock(product);
+    $('modal-prod-name') && ($('modal-prod-name').textContent=productText(product,'name'));
+    $('modal-prod-desc') && ($('modal-prod-desc').textContent=productText(product,'description'));
+    const img=$('modal-prod-img'); if(img){img.src=product.image||'';img.alt=productText(product,'name');}
+    $('modal-prod-stock') && ($('modal-prod-stock').textContent=`Stok Tersedia: ${product.stock} unit`);
+    const list=$('modal-type-list');
+    const types=Array.isArray(product.types)?product.types:[];
+    selectedProductType=types.find(t=>typeStock(t)>0)||types[0]||null;
+    if(list) list.innerHTML=types.length?types.map((t,i)=>`<button type="button" class="type-option ${t===selectedProductType?'selected':''}" onclick="selectProductType(this,${i})"><span><strong>${esc(t.typeName||'Varian')}</strong><small>${t.durationDays?`${t.durationDays} hari`:'Lifetime'} · ${typeStock(t)} stok</small></span><b>Rp${Number(resellerPrice(t.price,sessionUser())||0).toLocaleString('id-ID')}</b></button>`).join(''):'<div style="color:var(--text-muted);font-size:.7rem">Varian belum tersedia.</div>';
+    const modal=$('product-detail-modal'); if(modal){modal.classList.remove('hidden');document.body.classList.add('modal-open');}
+  };
+
+  window.toggleProductDetail = function(){const m=$('product-detail-modal');if(!m)return;m.classList.toggle('hidden');if(m.classList.contains('hidden'))document.body.classList.remove('modal-open');else document.body.classList.add('modal-open');};
+
+  window.addSelectedProductToCart = function(buyNow=false){
+    if(!currentActiveProduct||!selectedProductType){iosAlert('Pilih varian produk terlebih dahulu.');return;}
+    if(typeStock(selectedProductType)<1){iosAlert('Varian ini sedang habis.');return;}
+    const u=sessionUser(); const price=Number(resellerPrice(selectedProductType.price,u)||0);
+    const key=`${currentActiveProduct.id}::${selectedProductType.typeName}`;
+    const existing=cart.find(i=>i.key===key);
+    if(existing){if(existing.quantity>=typeStock(selectedProductType)){iosAlert('Jumlah melebihi stok.');return;}existing.quantity+=1;existing.selected=true;}
+    else cart.push({cartItemId:`cart_${Date.now()}_${Math.random().toString(36).slice(2,7)}`,key,id:Number(currentActiveProduct.id),name:productText(currentActiveProduct,'name'),typeName:selectedProductType.typeName,quantity:1,price,basePrice:Number(selectedProductType.price||0),durationDays:selectedProductType.durationDays??null,selected:true});
+    updateCartUI();
+    toggleProductDetail();
+    if(buyNow) { toggleCart(); }
+    else showToast('Produk ditambahkan ke keranjang.');
+  };
+
+  window.completeCheckout = async function(targetPhone,paymentMethod,proofUrl){
+    const selected=cart.filter(i=>i.selected).map(i=>({id:i.id,typeName:i.typeName,quantity:i.quantity}));
+    if(!selected.length) throw new Error('Tidak ada produk yang dipilih.');
+    const d=await apiRequest('/checkout',{method:'POST',body:JSON.stringify({items:selected,targetPhone,paymentMethod,proofUrl})});
+    if(d?.user) saveUserSession(d.user,localStorage.getItem('auth_token'));
+    return d;
+  };
+
+  window.openCart = window.toggleCart;
+
+  window.openAvatarPicker=function(){ $('avatar-file-input')?.click(); };
+  window.handleAvatarFile=async function(event){
+    const file=event.target.files?.[0]; if(!file)return;
+    if(!file.type.startsWith('image/')){iosAlert('File harus berupa gambar.');return;}
+    if(file.size>4*1024*1024){iosAlert('Foto maksimal 4 MB.');return;}
+    try{
+      showToast('Mengupload foto profil...');
+      const reader=new FileReader(); reader.onload=async()=>{
+        try{
+          const url=await uploadImage(String(reader.result||''),'profile-avatar');
+          const u=sessionUser(); if(!u)throw new Error('Sesi user tidak ditemukan.');
+          const d=await apiRequest('/update-user',{method:'POST',body:JSON.stringify({userId:u.id,action:'avatar',avatar:url})});
+          saveUserSession(d.user,localStorage.getItem('auth_token'));updateProfileDashboard();showToast('Foto profil berhasil diperbarui.');
+        }catch(e){iosAlert(e.message||'Gagal menyimpan foto profil.');}
+      }; reader.readAsDataURL(file);
+    }catch(e){iosAlert(e.message||'Gagal membaca foto.');}
+  };
+  window.removeAvatar=async function(){
+    const u=sessionUser(); if(!u)return;
+    try{const d=await apiRequest('/update-user',{method:'POST',body:JSON.stringify({userId:u.id,action:'avatar',avatar:''})});saveUserSession(d.user,localStorage.getItem('auth_token'));updateProfileDashboard();showToast('Foto profil dihapus.');}catch(e){iosAlert(e.message||'Gagal menghapus foto.');}
+  };
+  window.closeAvatarCrop=function(){$('avatar-crop-modal')?.classList.add('hidden');};
+  window.saveCroppedAvatar=async function(){closeAvatarCrop();};
+
+  window.openInbox=async function(){
+    try{await refreshCurrentUserSession();}catch(_){}
+    renderInbox?.(); $('inbox-overlay')?.classList.remove('hidden'); updateInboxBadge();
+  };
+  window.renderInbox=function(){
+    const u=sessionUser(),list=$('inbox-list');if(!list)return;
+    const ms=Array.isArray(u?.inbox)?u.inbox:[];
+    if(!ms.length){list.innerHTML='<div style="padding:28px;text-align:center;color:var(--text-muted);font-size:.72rem;">Belum ada pesan.</div>';updateInboxBadge();return;}
+    list.innerHTML=ms.map((m,i)=>{const fields=Array.isArray(m.fields)?m.fields:[];const done=m.responded===true;return `<div class="inbox-message ${m.read?'':'unread'}"><div class="inbox-message-top"><strong>${esc(m.title||'Pesan RYY STORE')}</strong><time>${esc(typeof formatInboxTime==='function'?formatInboxTime(m.createdAt):'')}</time></div><div class="inbox-message-body">${esc(m.body||'')}</div>${m.note?`<div class="inbox-response-box"><b>Catatan admin:</b><br>${esc(m.note)}</div>`:''}${fields.length&&!done?`<button class="inbox-form-button" onclick="openInboxForm(${i})">Lengkapi Form</button>`:fields.length?'<div style="margin-top:9px;color:#6ee7b7;font-size:.64rem;font-weight:700;">Form sudah dikirim ke admin.</div>':''}</div>`}).join('');
+    ms.forEach(m=>m.read=true);localStorage.setItem('current_user',JSON.stringify(u));updateInboxBadge();apiRequest('/inbox',{method:'POST',body:JSON.stringify({action:'readAll'})}).catch(()=>{});
+  };
+  window.openInboxForm=function(i){
+    const u=sessionUser(),m=u?.inbox?.[i];if(!m||!Array.isArray(m.fields)||m.responded)return;
+    window.__activeInboxForm={messageId:m.id,purchaseId:m.purchaseId,fields:m.fields};
+    const box=$('inbox-form-content');if(!box)return;
+    box.innerHTML=`<div style="font-size:.7rem;color:var(--text-muted);line-height:1.45;">${esc(m.body||'')}</div><div class="inbox-form-grid">${m.fields.map((f,j)=>`<label>${esc(f.label)}<input id="inbox-field-${j}" autocomplete="off" placeholder="Masukkan ${esc(f.label.toLowerCase())}"></label>`).join('')}</div><div class="inbox-form-note">Data akan tersimpan di database pesanan dan dapat diperiksa admin sebelum pesanan di-ACC.</div><button class="btn-accent" style="margin-top:11px;border-radius:18px" onclick="confirmInboxFormSubmission()">Kirim Data</button>`;
+    $('inbox-form-overlay')?.classList.remove('hidden');
+  };
+
+  window.confirmInboxFormSubmission=async function(){
+    const st=window.__activeInboxForm;if(!st)return;const responses={},lines=[];
+    st.fields.forEach((f,i)=>{const v=$(`inbox-field-${i}`)?.value.trim()||'';responses[f.key]=v;lines.push(`${f.label}: ${v||'-'}`)});
+    if(Object.values(responses).some(v=>!v)){iosAlert('Semua data pada form wajib diisi.');return;}
+    if(!window.confirm(`Pastikan data sudah benar:\n\n${lines.join('\n')}`))return;
+    try{const d=await apiRequest('/inbox',{method:'POST',body:JSON.stringify({action:'submitForm',messageId:st.messageId,purchaseId:st.purchaseId,responses})});saveUserSession(d.user,localStorage.getItem('auth_token'));$('inbox-form-overlay')?.classList.add('hidden');renderInbox();showToast('Data form berhasil dikirim ke admin.');}catch(e){iosAlert(e.message||'Gagal mengirim form.');}
+  };
+
+  window.loadAdminPendingPurchases=async function(){
+    const box=$('admin-pending-list');if(!box)return;box.innerHTML='<div class="admin-config-note">Memuat pesanan...</div>';
+    try{
+      const d=await adminApi('admin-purchases');const purchases=d.purchases||[];
+      if(!purchases.length){box.innerHTML='<div class="admin-config-note">Tidak ada pesanan menunggu konfirmasi.</div>';return;}
+      const fieldLabels=d.formFields||{};
+      box.innerHTML=purchases.map((p,i)=>{
+        const fs=p.formStatus||{};const responseText=Object.entries(fs.responses||{}).map(([k,v])=>`${fieldLabels[k]||k}: ${v}`).join('\n');
+        const checks=Object.entries(fieldLabels).map(([key,label])=>`<label class="admin-form-check"><input type="checkbox" data-purchase="${esc(p.id)}" data-user="${esc(p.userId)}" class="pending-field-${i}" value="${esc(key)}">${esc(label)}</label>`).join('');
+        const waiting=fs.required?.length&&!fs.complete;
+        return `<div class="admin-pending-card" style="padding:14px;">
+          <div style="display:flex;gap:8px;align-items:flex-start;"><div style="flex:1"><strong>@${esc(p.username||'user')}</strong><div class="subscription-meta">${esc(p.userEmail||p.userPhone||'-')} · ${esc(new Date(p.createdAt).toLocaleString('id-ID'))}</div></div><span class="admin-status-pill ${waiting?'':'active'}">${waiting?'Form diminta':'Siap diproses'}</span></div>
+          <div style="margin-top:9px;font-size:.68rem;line-height:1.45"><b>Pesanan:</b> ${esc((p.items||[]).map(x=>`${x.productName} — ${x.typeName} × ${x.quantity}`).join(', '))}<br><b>Total:</b> Rp${Number(p.totalSpent||0).toLocaleString('id-ID')} · ${esc(p.paymentMethod||'-')} · ${esc(p.targetPhone||'-')}</div>
+          ${p.proofUrl?`<img class="admin-proof-thumb" src="${esc(p.proofUrl)}" alt="Bukti pembayaran">`:''}
+          ${responseText?`<div class="admin-response-box"><b>Data form user:</b><pre style="white-space:pre-wrap;margin:6px 0 0;font:inherit">${esc(responseText)}</pre></div>`:''}
+          <div class="admin-form-request"><strong style="font-size:.68rem">Minta data user</strong><div class="admin-form-checks">${checks}</div><button type="button" class="admin-mini-btn" style="margin-top:8px" onclick="requestAdminPurchaseForm(${i})">Kirim Form ke Inbox</button></div>
+          <textarea id="pending-note-${i}" class="admin-product-data" style="min-height:64px" placeholder="Catatan custom untuk user (opsional)"></textarea>
+          <textarea id="pending-product-data-${i}" class="admin-product-data" placeholder="Data aplikasi/produk yang akan dikirim ke email user setelah ACC (opsional)"></textarea>
+          <div style="display:flex;gap:7px;margin-top:8px"><button type="button" class="admin-mini-btn accent" onclick="processAdminPurchase(${i},'confirm')" ${waiting?'disabled':''}>ACC Pesanan</button><button type="button" class="admin-mini-btn" onclick="processAdminPurchase(${i},'reject')">Tolak</button></div>
+        </div>`;
+      }).join('');
+      window.__adminPendingPurchases=purchases;
+    }catch(e){box.innerHTML=`<div style="color:#ff6b6b;font-size:.7rem;">${esc(e.message||'Gagal memuat pesanan.')}</div>`;}
+  };
+  window.requestAdminPurchaseForm=async function(index){
+    const p=window.__adminPendingPurchases?.[index];if(!p)return;const keys=[...document.querySelectorAll(`.pending-field-${index}:checked`)].map(x=>x.value);if(!keys.length){iosAlert('Pilih minimal satu data yang harus diminta.');return;}
+    try{const d=await adminApi('admin-purchases',{method:'PATCH',body:{action:'requestForm',purchaseId:p.id,userId:p.userId,fields:keys}});showToast(d.message||'Form dikirim ke inbox user.');await loadAdminPendingPurchases();}catch(e){iosAlert(e.message||'Gagal mengirim form.');}
+  };
+  window.processAdminPurchase=async function(index,action){
+    const p=window.__adminPendingPurchases?.[index];if(!p)return;const note=$(`pending-note-${index}`)?.value.trim()||'';const productData=$(`pending-product-data-${index}`)?.value.trim()||'';
+    if(action==='reject'&&!window.confirm('Tolak pesanan ini?'))return;
+    try{const d=await adminApi('admin-purchases',{method:'PATCH',body:{action,purchaseId:p.id,userId:p.userId,note,productData}});showToast(d.message||'Pesanan diproses.');await loadAdminPendingPurchases();}catch(e){iosAlert(e.message||'Gagal memproses pesanan.');}
+  };
+
+  window.switchAdminTab=function(tab){
+    document.querySelectorAll('.admin-tab').forEach(b=>b.classList.toggle('active',b.dataset.adminTab===tab));document.querySelectorAll('.admin-view').forEach(v=>v.classList.remove('active'));$(`admin-view-${tab}`)?.classList.add('active');
+    if(tab==='users'){loadUserTableForAdmin?.();loadAdminPendingPurchases();}
+    if(tab==='products')loadAdminProducts?.();if(tab==='config'&&typeof loadAdminConfig==='function')loadAdminConfig();
+    if(tab==='chat'){loadAdminChats?.();clearInterval(window.adminChatTimer);window.adminChatTimer=setInterval(loadAdminChats,4000);}
+    if(tab==='support')loadAdminSupport?.();
+  };
+
+  // Keep Inbox visible above the AI button after authentication.
+  const inbox=$('inbox-fab'); if(inbox){inbox.classList.add('inbox-v3'); if(!inbox.querySelector('.inbox-fab-label')) inbox.insertAdjacentHTML('beforeend','<span class="inbox-fab-label">Inbox</span>');}
+  const style=document.createElement('style');style.textContent=`
+    .inbox-fab.inbox-v3{width:auto;min-width:78px;padding:0 12px;border-radius:18px;display:flex;align-items:center;justify-content:center;gap:7px;font-size:.65rem;font-weight:800;}
+    .inbox-fab.inbox-v3 svg{width:21px;height:21px;flex:0 0 auto}.inbox-fab-label{font-size:.62rem;font-weight:800}.inbox-fab.inbox-v3 .inbox-fab-badge{right:-3px;top:-4px}
+    .type-option{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;margin-bottom:7px;border:1px solid var(--glass-border);border-radius:16px;background:rgba(255,255,255,.07);color:var(--text-main);text-align:left;cursor:pointer}.type-option.selected{border-color:var(--accent);box-shadow:0 8px 24px var(--accent-glow)}.type-option span{display:flex;flex-direction:column;gap:3px}.type-option small{font-size:.58rem;color:var(--text-muted)}.type-option b{color:var(--accent);font-size:.68rem;white-space:nowrap}
+    .admin-mini-btn:disabled{opacity:.42;cursor:not-allowed;filter:grayscale(1)}
+  `;document.head.appendChild(style);
+  updateInboxBadge();
+})();
+</script>
+
 </body>
 </html>
