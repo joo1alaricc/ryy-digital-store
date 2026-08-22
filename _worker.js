@@ -52,7 +52,35 @@ async function dispatch(request, env, targetHandler = legacyHandler) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    if (url.pathname.startsWith("/api/")) return dispatch(request, env);
+
+    if (url.pathname.startsWith("/api/")) {
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: {
+            "Access-Control-Allow-Origin": url.origin,
+            "Access-Control-Allow-Methods": "GET,HEAD,POST,PUT,PATCH,DELETE,OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, Accept",
+            "Access-Control-Max-Age": "86400"
+          }
+        });
+      }
+
+      const response = await dispatch(request, env);
+      const headers = new Headers(response.headers);
+      headers.set("Access-Control-Allow-Origin", url.origin);
+      headers.set("Access-Control-Allow-Methods", "GET,HEAD,POST,PUT,PATCH,DELETE,OPTIONS");
+      headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization, Accept");
+      headers.set("Cache-Control", "no-store");
+      return new Response(response.body, { status: response.status, headers });
+    }
+
+    // Cloudflare Pages static assets. Keep SPA navigation on index.html.
+    if (request.method === "GET" || request.method === "HEAD") {
+      const assetResponse = await env.ASSETS.fetch(request);
+      if (assetResponse.status !== 404) return assetResponse;
+      return env.ASSETS.fetch(new Request(new URL("/", request.url), request));
+    }
     return env.ASSETS.fetch(request);
   },
 
