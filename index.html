@@ -1458,6 +1458,7 @@
                 <button type="button" onclick="switchRole('admin')" id="btnAdmin" class="role-btn" data-i18n="login_admin">Login Admin</button>
             </div>
 
+            <div id="login-debug-status" class="hidden" role="status" aria-live="polite" style="margin:10px 0;padding:10px 12px;border-radius:14px;font-size:.72rem;line-height:1.45;background:rgba(255,255,255,.07);border:1px solid var(--border-color);"></div>
             <form id="loginForm" onsubmit="handleLogin(event)">
                 <div id="userAuthContainer">
                     <div id="user-login-panel" class="auth-step active">
@@ -3424,26 +3425,88 @@
             const token = skipAuth ? null : localStorage.getItem("auth_token");
             if (token) headers.Authorization = `Bearer ${token}`;
             else delete headers.Authorization;
+
             const controller = new AbortController();
             const timer = setTimeout(() => controller.abort(), Number(timeout) || 20000);
+
             try {
-                const response = await fetch(`${API_BASE}${path}`, { ...requestOptions, headers, cache: "no-store", signal: controller.signal });
+                const response = await fetch(`${API_BASE}${path}`, {
+                    ...requestOptions,
+                    headers,
+                    cache: "no-store",
+                    credentials: "same-origin",
+                    signal: controller.signal
+                });
+
                 const text = await response.text();
                 let data = {};
-                try { data = text ? JSON.parse(text) : {}; } catch (_) { data = { message: text.slice(0, 300) }; }
-                if (!response.ok) throw new Error(data.message || `Request gagal (${response.status})`);
+                try {
+                    data = text ? JSON.parse(text) : {};
+                } catch (_) {
+                    data = { message: text.slice(0, 500) };
+                }
+
+                if (!response.ok) {
+                    const message = data?.message || data?.error || `Request gagal (${response.status})`;
+                    const error = new Error(`${message} [HTTP ${response.status}]`);
+                    error.status = response.status;
+                    error.data = data;
+                    throw error;
+                }
+
                 return data;
             } catch (error) {
-                if (error?.name === "AbortError") throw new Error("Server terlalu lama merespons. Coba lagi.");
+                if (error?.name === "AbortError") {
+                    const timeoutError = new Error("Server terlalu lama merespons (timeout 20 detik).");
+                    timeoutError.code = "TIMEOUT";
+                    throw timeoutError;
+                }
                 throw error;
-            } finally { clearTimeout(timer); }
+            } finally {
+                clearTimeout(timer);
+            }
         }
 
         function saveUserSession(user, token) {
+            // Storage is the authentication source of truth. UI helpers are secondary.
             localStorage.setItem("current_user", JSON.stringify(user));
             if (token) localStorage.setItem("auth_token", token);
-            updateInboxBadge();
-            if (typeof startSupportPolling === "function") startSupportPolling();
+
+            try { updateInboxBadge?.(); } catch (e) { console.warn("Inbox badge skipped:", e); }
+            try {
+                if (typeof startSupportPolling === "function") startSupportPolling();
+            } catch (e) {
+                console.warn("Support polling skipped:", e);
+            }
+        }
+
+        function navigateAuthenticatedScreen() {
+            const auth = document.getElementById("auth-section");
+            const landing = document.getElementById("landing-section");
+            const app = document.getElementById("app-section");
+
+            if (!auth || !app) throw new Error("Elemen halaman toko tidak ditemukan.");
+
+            // Do not use a CSS class alone here. The global .hidden rule has !important,
+            // so explicitly force the authenticated screen visible.
+            auth.classList.add("hidden");
+            landing?.classList.add("hidden");
+            app.classList.remove("hidden");
+
+            auth.style.setProperty("display", "none", "important");
+            if (landing) landing.style.setProperty("display", "none", "important");
+            app.style.setProperty("display", "flex", "important");
+
+            document.body.dataset.screen = "app";
+            document.documentElement.dataset.authenticated = "true";
+
+            // Use the real hash setter only after the session has been persisted.
+            if (location.hash !== "#store") {
+                location.hash = "#store";
+            }
+
+            window.scrollTo?.(0, 0);
+            return true;
         }
 
         function clearUserSession() {
@@ -3558,18 +3621,7 @@
         }
 
         function forceUserScreen() {
-            const auth = document.getElementById("auth-section");
-            const landing = document.getElementById("landing-section");
-            const app = document.getElementById("app-section");
-            if (!auth || !app) throw new Error("Tampilan aplikasi tidak ditemukan. Pastikan index.html terdeploy lengkap.");
-            auth.classList.add("hidden");
-            landing?.classList.add("hidden");
-            app.classList.remove("hidden");
-            app.style.display = "";
-            document.body.dataset.screen = "app";
-            if (location.hash !== "#store") history.replaceState({screen:"app"}, "", "#store");
-            window.scrollTo?.(0, 0);
-            return true;
+            return navigateAuthenticatedScreen();
         }
 
         function forceAuthScreen() {
@@ -3586,6 +3638,11 @@
         function setLoginBusy(busy) {
             loginInProgress = Boolean(busy);
             const form = document.getElementById("loginForm");
+            const status = document.getElementById("login-debug-status");
+            if (status) {
+                status.classList.toggle("hidden", !busy);
+                status.textContent = busy ? "🔄 Menghubungkan ke server login..." : "";
+            }
             if (!form) return;
             form.setAttribute("aria-busy", busy ? "true" : "false");
             form.querySelectorAll('button[type="submit"]').forEach(btn => {
@@ -3598,65 +3655,109 @@
         async function handleLogin(event) {
             event?.preventDefault();
             if (loginInProgress) return;
+
             setLoginBusy(true);
-            let authenticatedNavigation = false;
+            let authenticated = false;
+
             try {
                 if (currentLoginRole === "admin") {
                     const login = document.getElementById("admin-username")?.value.trim();
                     const password = document.getElementById("admin-password")?.value || "";
                     const tokenDeveloper = document.getElementById("admin-token")?.value.trim() || "";
                     const pin = document.getElementById("admin-pin")?.value.trim() || "";
-                    if (!login || !password || !tokenDeveloper || !pin) throw new Error("Username/email, password, token developer, dan PIN wajib diisi.");
+
+                    if (!login || !password || !tokenDeveloper || !pin) {
+                        throw new Error("Username/email, password, token developer, dan PIN wajib diisi.");
+                    }
+
                     const response = await fetch(`${API_BASE}/admin-login`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json", Accept: "application/json" },
                         body: JSON.stringify({ login, password, tokenDeveloper, pin }),
-                        cache: "no-store"
+                        cache: "no-store",
+                        credentials: "same-origin"
                     });
-                    const data = await response.json().catch(() => ({}));
-                    if (!response.ok || !data?.token || !data?.admin) throw new Error(data.message || `Login admin gagal (${response.status}).`);
+
+                    const text = await response.text();
+                    let data = {};
+                    try { data = text ? JSON.parse(text) : {}; } catch (_) {
+                        data = { message: text.slice(0, 500) };
+                    }
+
+                    if (!response.ok || !data?.token || !data?.admin) {
+                        throw new Error(`${data?.message || "Login admin gagal."} [HTTP ${response.status}]`);
+                    }
+
+                    // Persist session BEFORE changing the screen.
                     clearUserSession();
                     localStorage.removeItem("current_admin");
                     localStorage.removeItem("admin_token");
-                    // Navigate first; admin widgets are secondary.
-                    forceUserScreen();
-                    authenticatedNavigation = true;
                     localStorage.setItem("admin_token", data.token);
                     localStorage.setItem("current_admin", JSON.stringify(data.admin));
-                    try { launchAdminApp(data.admin); } catch (uiError) {
-                        console.warn("Admin app initialization skipped:", uiError);
-                    }
+                    authenticated = true;
+
+                    navigateAuthenticatedScreen();
+
+                    try { launchAdminApp(data.admin); }
+                    catch (uiError) { console.warn("Admin UI skipped:", uiError); }
+
                     showToast("Login Admin Berhasil!");
                     return;
                 }
 
                 const login = document.getElementById("user-login-input")?.value.trim();
                 const password = document.getElementById("user-login-password")?.value || "";
-                if (!login || !password) throw new Error("Username/email dan password wajib diisi.");
-                const data = await apiRequest("/login", { method: "POST", body: JSON.stringify({ login, password }), skipAuth: true });
-                if (!data?.token || !data?.user) throw new Error("Server login tidak mengembalikan sesi yang valid.");
+
+                if (!login || !password) {
+                    throw new Error("Username/email dan password wajib diisi.");
+                }
+
+                const data = await apiRequest("/login", {
+                    method: "POST",
+                    body: JSON.stringify({ login, password }),
+                    skipAuth: true,
+                    timeout: 20000
+                });
+
+                if (!data?.token || !data?.user) {
+                    throw new Error("Server login tidak mengembalikan token/sesi yang valid.");
+                }
+
+                // Authentication state is persisted first. Nothing below may invalidate it.
                 localStorage.removeItem("current_admin");
                 localStorage.removeItem("admin_token");
-                clearUserSession();
-                // Put the UI on the authenticated screen BEFORE optional session/UI helpers.
-                // A secondary widget must never cancel a successful login.
-                forceUserScreen();
-                authenticatedNavigation = true;
-                try { saveUserSession(data.user, data.token); } catch (sessionError) {
-                    console.warn("Session UI init skipped:", sessionError);
-                    localStorage.setItem("current_user", JSON.stringify(data.user));
-                    localStorage.setItem("auth_token", data.token);
-                }
-                try { launchUserApp(); } catch (uiError) {
-                    console.warn("User app initialization skipped:", uiError);
-                }
+                saveUserSession(data.user, data.token);
+                authenticated = true;
+
+                navigateAuthenticatedScreen();
+
+                try { launchUserApp(); }
+                catch (uiError) { console.warn("User UI skipped:", uiError); }
+
                 showToast("Login berhasil!");
             } catch (error) {
                 console.error("Login error:", error);
-                // Never send the user back to #login after the server already authenticated
-                // them. Only authentication/API failures should return to the login screen.
-                if (!authenticatedNavigation) forceAuthScreen();
-                await iosAlert(error?.message || "Login gagal. Silakan coba lagi.", { title: "Login Gagal" });
+                const debugStatus = document.getElementById("login-debug-status");
+                if (debugStatus) {
+                    debugStatus.classList.remove("hidden");
+                    debugStatus.textContent = `❌ ${error?.message || "Login gagal."}`;
+                }
+
+                if (!authenticated) {
+                    // Clear only a partially-created session.
+                    if (!localStorage.getItem("auth_token") || !localStorage.getItem("current_user")) {
+                        clearUserSession();
+                    }
+                    if (!localStorage.getItem("admin_token") || !localStorage.getItem("current_admin")) {
+                        localStorage.removeItem("admin_token");
+                        localStorage.removeItem("current_admin");
+                    }
+                    forceAuthScreen();
+                }
+
+                await iosAlert(error?.message || "Login gagal. Silakan coba lagi.", {
+                    title: "Login Gagal"
+                });
             } finally {
                 setLoginBusy(false);
             }
@@ -3666,18 +3767,24 @@
             let currentUser = null, currentAdmin = null;
             try { currentUser = JSON.parse(localStorage.getItem("current_user") || "null"); } catch (_) { clearUserSession(); }
             try { currentAdmin = JSON.parse(localStorage.getItem("current_admin") || "null"); } catch (_) { localStorage.removeItem("current_admin"); }
+
             const adminToken = localStorage.getItem("admin_token");
             const userToken = localStorage.getItem("auth_token");
+
             if (currentAdmin?.username && adminToken) {
-                forceUserScreen();
-                launchAdminApp(currentAdmin);
+                try { navigateAuthenticatedScreen(); }
+                catch (e) { console.error("Admin navigation:", e); return false; }
+                try { launchAdminApp(currentAdmin); } catch (e) { console.warn("Admin UI restore skipped:", e); }
                 return true;
             }
+
             if (currentUser?.id && userToken) {
-                forceUserScreen();
-                launchUserApp();
+                try { navigateAuthenticatedScreen(); }
+                catch (e) { console.error("User navigation:", e); return false; }
+                try { launchUserApp(); } catch (e) { console.warn("User UI restore skipped:", e); }
                 return true;
             }
+
             clearUserSession();
             localStorage.removeItem("current_admin");
             localStorage.removeItem("admin_token");
@@ -3690,7 +3797,7 @@
             const hasAdmin = !!localStorage.getItem("admin_token") && !!localStorage.getItem("current_admin");
             const hasUser = !!localStorage.getItem("auth_token") && !!localStorage.getItem("current_user");
             if (hash === "#store" && (hasAdmin || hasUser)) {
-                forceUserScreen();
+                navigateAuthenticatedScreen();
                 if (hasAdmin) {
                     let admin = null; try { admin = JSON.parse(localStorage.getItem("current_admin") || "null"); } catch (_) {}
                     try { launchAdminApp(admin || {}); } catch (_) {}
