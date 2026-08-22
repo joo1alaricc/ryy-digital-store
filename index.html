@@ -4663,5 +4663,278 @@ function startSupportPolling(){
 
 
 </script>
+
+<script>
+/* ===== FINAL AUTH CONTROLLER (Cloudflare Pages) =====
+   This controller is intentionally last: it becomes the single source of truth
+   for post-login navigation and prevents late UI/config callbacks from sending
+   an authenticated user back to #login.
+*/
+(function () {
+    const AUTH_LOCK_MS = 15000;
+
+    function readJSON(key) {
+        try { return JSON.parse(localStorage.getItem(key) || "null"); }
+        catch (_) { return null; }
+    }
+
+    function hasUserSession() {
+        const u = readJSON("current_user");
+        return !!(u && (u.id || u.username || u.email) && localStorage.getItem("auth_token"));
+    }
+
+    function hasAdminSession() {
+        const a = readJSON("current_admin");
+        return !!(a && (a.username || a.email) && localStorage.getItem("admin_token"));
+    }
+
+    function setScreen(screen, updateHash) {
+        const auth = document.getElementById("auth-section");
+        const landing = document.getElementById("landing-section");
+        const app = document.getElementById("app-section");
+        if (!auth || !app) return false;
+
+        const isApp = screen === "app";
+        const isLanding = screen === "landing";
+
+        for (const [el, visible] of [
+            [auth, !isApp && !isLanding],
+            [landing, isLanding],
+            [app, isApp]
+        ]) {
+            if (!el) continue;
+            el.classList.toggle("hidden", !visible);
+            el.style.setProperty("display", visible ? (el === app ? "flex" : "block") : "none", "important");
+            el.setAttribute("aria-hidden", visible ? "false" : "true");
+        }
+
+        document.body.dataset.screen = screen;
+        document.documentElement.dataset.authenticated = isApp ? "true" : "false";
+
+        if (updateHash) {
+            const wanted = isApp ? "#store" : isLanding ? "#landing" : "#login";
+            if (location.hash !== wanted) {
+                history.replaceState({ screen }, "", wanted);
+            }
+        }
+        return true;
+    }
+
+    function authenticatedScreen() {
+        // A short lock prevents asynchronous maintenance/config/session bootstrap
+        // callbacks from undoing a successful login.
+        window.__ryyAuthTransitionUntil = Date.now() + AUTH_LOCK_MS;
+        setScreen("app", true);
+        window.scrollTo?.({ top: 0, left: 0, behavior: "auto" });
+        return true;
+    }
+
+    // Replace the old navigation function.
+    navigateAuthenticatedScreen = authenticatedScreen;
+    forceUserScreen = authenticatedScreen;
+
+    // Never send an authenticated user to #login.
+    forceAuthScreen = function () {
+        if (hasUserSession() || hasAdminSession() || Date.now() < Number(window.__ryyAuthTransitionUntil || 0)) {
+            return authenticatedScreen();
+        }
+        return setScreen("auth", true);
+    };
+
+    // The final login handler: authentication and UI initialization are separate.
+    handleLogin = async function (event) {
+        event?.preventDefault?.();
+        if (window.__ryyLoginBusy) return;
+        window.__ryyLoginBusy = true;
+
+        const status = document.getElementById("login-debug-status");
+        const showStatus = (text) => {
+            if (!status) return;
+            status.classList.remove("hidden");
+            status.textContent = text;
+        };
+
+        try {
+            const isAdmin = currentLoginRole === "admin";
+            let response, data, body;
+
+            if (isAdmin) {
+                body = {
+                    login: document.getElementById("admin-username")?.value.trim() || "",
+                    password: document.getElementById("admin-password")?.value || "",
+                    tokenDeveloper: document.getElementById("admin-token")?.value.trim() || "",
+                    pin: document.getElementById("admin-pin")?.value.trim() || ""
+                };
+                if (!body.login || !body.password || !body.tokenDeveloper || !body.pin) {
+                    throw new Error("Username/email, password, token developer, dan PIN wajib diisi.");
+                }
+                showStatus("🔄 Memverifikasi akun admin...");
+                response = await fetch("/api/admin-login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                    body: JSON.stringify(body),
+                    cache: "no-store",
+                    credentials: "same-origin"
+                });
+            } else {
+                body = {
+                    login: document.getElementById("user-login-input")?.value.trim() || "",
+                    password: document.getElementById("user-login-password")?.value || ""
+                };
+                if (!body.login || !body.password) {
+                    throw new Error("Username/email dan password wajib diisi.");
+                }
+                showStatus("🔄 Memverifikasi akun...");
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 20000);
+                try {
+                    response = await fetch("/api/login", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                        body: JSON.stringify(body),
+                        cache: "no-store",
+                        credentials: "same-origin",
+                        signal: controller.signal
+                    });
+                } finally {
+                    clearTimeout(timer);
+                }
+            }
+
+            const raw = await response.text();
+            try { data = raw ? JSON.parse(raw) : {}; }
+            catch (_) { data = { message: raw.slice(0, 500) }; }
+
+            if (!response.ok) {
+                throw new Error(`${data?.message || "Login gagal."} [HTTP ${response.status}]`);
+            }
+
+            if (isAdmin) {
+                if (!data?.token || !data?.admin) {
+                    throw new Error("Server admin tidak mengembalikan sesi yang valid.");
+                }
+                localStorage.removeItem("auth_token");
+                localStorage.removeItem("current_user");
+                localStorage.setItem("admin_token", data.token);
+                localStorage.setItem("current_admin", JSON.stringify(data.admin));
+            } else {
+                if (!data?.token || !data?.user) {
+                    throw new Error("Server login tidak mengembalikan token/sesi yang valid.");
+                }
+                localStorage.removeItem("admin_token");
+                localStorage.removeItem("current_admin");
+                localStorage.setItem("auth_token", data.token);
+                localStorage.setItem("current_user", JSON.stringify(data.user));
+            }
+
+            // Authentication is now committed. From this point forward, UI errors
+            // are non-fatal and MUST NOT call forceAuthScreen().
+            window.__ryyAuthTransitionUntil = Date.now() + AUTH_LOCK_MS;
+            authenticatedScreen();
+
+            showStatus("✅ Login berhasil. Membuka RYY STORE...");
+            try {
+                if (isAdmin) launchAdminApp(data.admin);
+                else launchUserApp();
+            } catch (uiError) {
+                console.warn("Post-login UI initialization skipped:", uiError);
+            }
+
+            try { showToast(isAdmin ? "Login Admin Berhasil!" : "Login berhasil!"); } catch (_) {}
+
+            // One final deterministic screen commit after optional UI initialization.
+            setTimeout(() => {
+                if (isAdmin ? hasAdminSession() : hasUserSession()) {
+                    authenticatedScreen();
+                }
+            }, 50);
+        } catch (error) {
+            console.error("FINAL LOGIN ERROR:", error);
+            const msg = error?.name === "AbortError"
+                ? "Server login timeout (20 detik)."
+                : (error?.message || "Login gagal.");
+            showStatus(`❌ ${msg}`);
+            // Only return to login when authentication itself failed.
+            if (!hasUserSession() && !hasAdminSession()) setScreen("auth", true);
+            try { await iosAlert(msg, { title: "Login Gagal" }); } catch (_) {}
+        } finally {
+            window.__ryyLoginBusy = false;
+        }
+    };
+
+    // Replace session bootstrap so it accepts any valid safeUser shape and does
+    // not destroy a just-created session because an optional UI field is absent.
+    checkSessionState = function () {
+        const admin = readJSON("current_admin");
+        const user = readJSON("current_user");
+
+        if (hasAdminSession()) {
+            authenticatedScreen();
+            try { launchAdminApp(admin || {}); } catch (e) { console.warn(e); }
+            return true;
+        }
+
+        if (hasUserSession()) {
+            authenticatedScreen();
+            try { launchUserApp(); } catch (e) { console.warn(e); }
+            return true;
+        }
+
+        setScreen("auth", true);
+        return false;
+    };
+
+    // Hash routing is session-aware and never turns a valid session into #login.
+    routeFromHash = function () {
+        const hash = String(location.hash || "#login").toLowerCase();
+        if (hasAdminSession() || hasUserSession()) {
+            if (hash === "#login" || hash === "#store") {
+                authenticatedScreen();
+                if (hasAdminSession()) {
+                    try { launchAdminApp(readJSON("current_admin") || {}); } catch (_) {}
+                } else {
+                    try { launchUserApp(); } catch (_) {}
+                }
+                return true;
+            }
+            if (hash === "#landing") {
+                setScreen("landing", true);
+                return true;
+            }
+        }
+        setScreen("auth", true);
+        return false;
+    };
+
+    // Maintenance/site-config must never hide an already authenticated app.
+    const originalApplySiteConfig = typeof applySiteConfig === "function" ? applySiteConfig : null;
+    if (originalApplySiteConfig) {
+        applySiteConfig = function (config) {
+            originalApplySiteConfig(config);
+            if (hasUserSession() || hasAdminSession()) {
+                document.getElementById("maintenance-overlay")?.classList.add("hidden");
+                authenticatedScreen();
+            }
+        };
+    }
+
+    window.addEventListener("hashchange", () => {
+        try { routeFromHash(); } catch (e) { console.error("Final hash route:", e); }
+    });
+
+    // If another old callback tries to force #login during the post-login window,
+    // restore the authenticated screen on the next frame.
+    const authObserver = new MutationObserver(() => {
+        if (Date.now() < Number(window.__ryyAuthTransitionUntil || 0) && (hasUserSession() || hasAdminSession())) {
+            const app = document.getElementById("app-section");
+            if (location.hash === "#login" || app?.classList.contains("hidden")) {
+                authenticatedScreen();
+            }
+        }
+    });
+    authObserver.observe(document.body, { attributes: true, subtree: true, attributeFilter: ["class", "style"] });
+})();
+</script>
+
 </body>
 </html>
