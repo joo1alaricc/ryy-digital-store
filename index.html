@@ -234,7 +234,7 @@
         /* Keep the iOS dialog visible even though the global .hidden rule uses !important. */
         .ios-dialog-overlay.hidden { display:none !important; }
         body.ios-dialog-open { overflow:hidden; }
-        .ios-dialog-overlay:not(.hidden) { display:flex !important; }
+        .ios-dialog-overlay:not(.hidden) { display:flex !important; visibility:visible !important; opacity:1; pointer-events:auto; }
 
         .ios-dialog-overlay {
             position:fixed; inset:0; z-index:16000; display:flex; align-items:center; justify-content:center; padding:20px;
@@ -2545,6 +2545,7 @@
             cancel.textContent = options.cancelText || "Batal";
             ok.textContent = options.okText || "OK";
             cancel.className = "ios-dialog-btn";
+            cancel.style.display = "";
             ok.className = `ios-dialog-btn primary${options.danger ? " danger" : ""}`;
             actions.classList.remove("single");
             setIOSDialogOpen(true);
@@ -2567,7 +2568,8 @@
             body.textContent = String(message ?? "");
             ok.textContent = options.okText || "OK";
             ok.className = `ios-dialog-btn primary${options.danger ? " danger" : ""}`;
-            cancel.className = "ios-dialog-btn hidden";
+            cancel.className = "ios-dialog-btn";
+            cancel.style.display = "none";
             actions.classList.add("single");
             setIOSDialogOpen(true);
             return new Promise(resolve => { iosDialogResolver = resolve; });
@@ -2854,37 +2856,48 @@
         async function submitPaymentProofCheckout(){const targetPhone=document.getElementById("target-phone").value.trim();const paymentMethod=document.getElementById("payment-method").value;const selectedItems=cart.filter(i=>i.selected);if(!targetPhone||!paymentMethod||!selectedItems.length){iosAlert("Lengkapi nomor penerima, metode pembayaran, dan centang minimal 1 produk.");return;}if(!paymentProofDataUrl){iosAlert("Silakan upload bukti pembayaran terlebih dahulu.");return;}try{const status=document.getElementById("payment-proof-status");if(status)status.textContent="Mengupload bukti pembayaran...";const proofUrl=await uploadImage(paymentProofDataUrl,"payment-proof");await completeCheckout(targetPhone,paymentMethod,proofUrl);cart=cart.filter(i=>!i.selected);updateCartUI();paymentProofDataUrl="";const input=document.getElementById("payment-proof-input");if(input)input.value="";const preview=document.getElementById("payment-proof-preview");if(preview){preview.removeAttribute("src");preview.style.display="none";}document.getElementById("cart-modal").classList.add("hidden");await refreshCurrentUserSession();showToast("Bukti pembayaran dikirim. Menunggu pemeriksaan admin.");}catch(error){console.error(error);iosAlert(error.message||"Gagal mengirim bukti pembayaran.");}}
 
         function launchUserApp() {
-            document.getElementById("userNavActions").classList.remove("hidden");
-            document.getElementById("adminNavActions").classList.add("hidden");
-            document.getElementById("view-catalog").classList.remove("hidden");
-            document.getElementById("view-admin").classList.add("hidden");
-            document.getElementById("view-profile").classList.add("hidden");
-
-            document.getElementById("store-name-display").innerText = storeText("name") || "RYY STORE";
-            document.getElementById("store-slogan-display").innerText = storeText("slogan") || "";
-            initCatalogSearch();
-            updateCatalogHeaderControls("catalog");
-            renderCategories();
-            renderProducts("Semua");
-            setDynamicGreeting();
-            updateProfileDashboard();
+            // UI navigation is intentionally independent from optional widgets/data.
+            // A failure in a secondary component must never cancel a successful login.
+            const ids = ["userNavActions", "adminNavActions", "view-catalog", "view-admin", "view-profile"];
+            ids.forEach(id => { if (!document.getElementById(id)) console.warn("Missing UI element:", id); });
+            document.getElementById("userNavActions")?.classList.remove("hidden");
+            document.getElementById("adminNavActions")?.classList.add("hidden");
+            document.getElementById("view-home")?.classList.add("hidden");
+            document.getElementById("view-catalog")?.classList.remove("hidden");
+            document.getElementById("view-admin")?.classList.add("hidden");
+            document.getElementById("view-profile")?.classList.add("hidden");
+            document.getElementById("view-settings")?.classList.add("hidden");
+            document.getElementById("floating-user-nav")?.classList.remove("hidden");
+            document.getElementById("ai-fab")?.classList.remove("hidden");
+            const name = document.getElementById("store-name-display");
+            const slogan = document.getElementById("store-slogan-display");
+            if (name) name.innerText = storeText("name") || "RYY STORE";
+            if (slogan) slogan.innerText = storeText("slogan") || "";
+            try { initCatalogSearch?.(); } catch (e) { console.warn("Catalog search init skipped:", e); }
+            try { updateCatalogHeaderControls?.("catalog"); } catch (e) { console.warn("Catalog controls skipped:", e); }
+            try { renderCategories?.(); renderProducts?.("Semua"); } catch (e) { console.warn("Catalog render skipped:", e); }
+            try { setDynamicGreeting?.(); } catch (e) { console.warn("Greeting skipped:", e); }
+            try { updateProfileDashboard?.(); } catch (e) { console.warn("Profile dashboard skipped:", e); }
         }
 
         function launchAdminApp(adminData) {
-            document.getElementById("userNavActions").classList.add("hidden");
-            document.getElementById("adminNavActions").classList.remove("hidden");
+            document.getElementById("userNavActions")?.classList.add("hidden");
+            document.getElementById("adminNavActions")?.classList.remove("hidden");
             document.getElementById("view-home")?.classList.add("hidden");
-            document.getElementById("view-catalog").classList.add("hidden");
-            document.getElementById("view-profile").classList.add("hidden");
+            document.getElementById("view-catalog")?.classList.add("hidden");
+            document.getElementById("view-profile")?.classList.add("hidden");
             document.getElementById("view-settings")?.classList.add("hidden");
-            document.getElementById("view-admin").classList.remove("hidden");
+            document.getElementById("view-admin")?.classList.remove("hidden");
             document.getElementById("floating-user-nav")?.classList.add("hidden");
             document.getElementById("ai-fab")?.classList.add("hidden");
-
-            document.getElementById("store-name-display").innerText = "RYY STORE [ADMIN PANEL]";
-            document.getElementById("store-slogan-display").innerText = `Logged in as @${adminData.username}`;
-            document.getElementById("admin-identity").innerText = `@${adminData.username}`;
-            loadUserTableForAdmin();
+            const name = document.getElementById("store-name-display");
+            const slogan = document.getElementById("store-slogan-display");
+            const identity = document.getElementById("admin-identity");
+            if (name) name.innerText = "RYY STORE [ADMIN PANEL]";
+            if (slogan) slogan.innerText = `Logged in as @${adminData?.username || "admin"}`;
+            if (identity) identity.innerText = `@${adminData?.username || "admin"}`;
+            // Do not await this optional panel loader: login navigation is already complete.
+            Promise.resolve(loadUserTableForAdmin()).catch(e => console.error("Admin user list:", e));
         }
 
         function loadUserTableForAdmin() {
@@ -3646,39 +3659,29 @@
             event?.preventDefault();
             if (loginInProgress) return;
             setLoginBusy(true);
-
             try {
                 if (currentLoginRole === "admin") {
                     const login = document.getElementById("admin-username")?.value.trim();
                     const password = document.getElementById("admin-password")?.value || "";
                     const tokenDeveloper = document.getElementById("admin-token")?.value.trim() || "";
                     const pin = document.getElementById("admin-pin")?.value.trim() || "";
-                    if (!login || !password || !tokenDeveloper || !pin) {
-                        throw new Error("Username/email, password, token developer, dan PIN wajib diisi.");
-                    }
-
-                    // Admin login must never reuse a stale user Authorization header.
+                    if (!login || !password || !tokenDeveloper || !pin) throw new Error("Username/email, password, token developer, dan PIN wajib diisi.");
                     const response = await fetch(`${API_BASE}/admin-login`, {
                         method: "POST",
-                        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-                        body: JSON.stringify({ login, password, tokenDeveloper, pin })
+                        headers: { "Content-Type": "application/json", Accept: "application/json" },
+                        body: JSON.stringify({ login, password, tokenDeveloper, pin }),
+                        cache: "no-store"
                     });
                     const data = await response.json().catch(() => ({}));
-                    if (!response.ok || !data.token || !data.admin) {
-                        throw new Error(data.message || `Login admin gagal (${response.status}).`);
-                    }
-
+                    if (!response.ok || !data?.token || !data?.admin) throw new Error(data.message || `Login admin gagal (${response.status}).`);
                     clearUserSession();
+                    localStorage.removeItem("current_admin");
+                    localStorage.removeItem("admin_token");
                     localStorage.setItem("admin_token", data.token);
                     localStorage.setItem("current_admin", JSON.stringify(data.admin));
-                    localStorage.removeItem("has_seen_landing");
+                    // Switch screens first. Optional admin widgets cannot block navigation.
                     setAuthSectionVisible("app");
-                    try {
-                        launchAdminApp(data.admin);
-                    } catch (renderError) {
-                        console.error("Admin app render error:", renderError);
-                        throw new Error("Login admin berhasil, tetapi panel admin gagal dibuka: " + (renderError.message || renderError));
-                    }
+                    launchAdminApp(data.admin);
                     showToast("Login Admin Berhasil!");
                     return;
                 }
@@ -3686,29 +3689,18 @@
                 const login = document.getElementById("user-login-input")?.value.trim();
                 const password = document.getElementById("user-login-password")?.value || "";
                 if (!login || !password) throw new Error("Username/email dan password wajib diisi.");
-
-                const data = await apiRequest("/login", {
-                    method: "POST",
-                    body: JSON.stringify({ login, password }),
-                    skipAuth: true
-                });
+                const data = await apiRequest("/login", { method: "POST", body: JSON.stringify({ login, password }), skipAuth: true });
                 if (!data?.token || !data?.user) throw new Error("Server login tidak mengembalikan sesi yang valid.");
-
                 localStorage.removeItem("current_admin");
                 localStorage.removeItem("admin_token");
+                clearUserSession();
                 saveUserSession(data.user, data.token);
-                localStorage.removeItem("has_seen_landing");
                 setAuthSectionVisible("app");
-                try {
-                    launchUserApp();
-                } catch (renderError) {
-                    console.error("User app render error:", renderError);
-                    throw new Error("Login berhasil, tetapi halaman toko gagal dibuka: " + (renderError.message || renderError));
-                }
+                launchUserApp();
                 showToast("Login berhasil!");
             } catch (error) {
                 console.error("Login error:", error);
-                iosAlert(error?.message || "Login gagal. Silakan coba lagi.", { title: "Login Gagal" });
+                await iosAlert(error?.message || "Login gagal. Silakan coba lagi.", { title: "Login Gagal" });
             } finally {
                 setLoginBusy(false);
             }
@@ -3716,41 +3708,20 @@
 
         function checkSessionState() {
             let currentUser = null, currentAdmin = null;
-            try { currentUser = JSON.parse(localStorage.getItem("current_user") || "null"); } catch (_) { currentUser = null; }
-            try { currentAdmin = JSON.parse(localStorage.getItem("current_admin") || "null"); } catch (_) { currentAdmin = null; }
-
+            try { currentUser = JSON.parse(localStorage.getItem("current_user") || "null"); } catch (_) {}
+            try { currentAdmin = JSON.parse(localStorage.getItem("current_admin") || "null"); } catch (_) {}
             const adminToken = localStorage.getItem("admin_token");
             const userToken = localStorage.getItem("auth_token");
-
-            // Never let a stale/partial session hide the login screen forever.
             if (currentAdmin && adminToken) {
                 setAuthSectionVisible("app");
-                try {
-                    launchAdminApp(currentAdmin);
-                } catch (error) {
-                    console.error("Failed to restore admin session:", error);
-                    localStorage.removeItem("current_admin");
-                    localStorage.removeItem("admin_token");
-                    setAuthSectionVisible("auth");
-                    iosAlert("Sesi admin tidak dapat dipulihkan. Silakan login kembali.", { title: "Sesi Admin" });
-                }
+                launchAdminApp(currentAdmin);
                 return;
             }
-
             if (currentUser && userToken) {
                 setAuthSectionVisible("app");
-                try {
-                    launchUserApp();
-                } catch (error) {
-                    console.error("Failed to restore user session:", error);
-                    clearUserSession();
-                    setAuthSectionVisible("auth");
-                    iosAlert("Sesi user tidak dapat dipulihkan. Silakan login kembali.", { title: "Sesi User" });
-                }
+                launchUserApp();
                 return;
             }
-
-            // Clean up inconsistent storage before showing login.
             clearUserSession();
             localStorage.removeItem("current_admin");
             localStorage.removeItem("admin_token");
@@ -3839,34 +3810,42 @@
         }
 
         async function loadUserTableForAdmin() {
-            const tbody = document.getElementById("userTableBody");
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Memuat data...</td></tr>';
+            const container = document.getElementById("admin-user-list");
+            if (!container) {
+                console.warn("admin-user-list tidak ditemukan; panel admin tetap dibuka.");
+                return;
+            }
+            container.innerHTML = '<div class="admin-config-note">Memuat data user...</div>';
             try {
                 const token = localStorage.getItem("admin_token");
-                const response = await fetch(`${API_BASE}/admin-users`, { headers: { Authorization: `Bearer ${token}` } });
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.message || "Gagal mengambil data user.");
-                if (!data.users.length) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Belum ada user terdaftar.</td></tr>';
+                if (!token) throw new Error("Sesi admin tidak ditemukan.");
+                const response = await fetch(`${API_BASE}/admin-users`, {
+                    headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+                    cache: "no-store"
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.message || `Gagal mengambil data user (${response.status}).`);
+                const users = Array.isArray(data.users) ? data.users : [];
+                window.__adminUsers = users;
+                if (!users.length) {
+                    container.innerHTML = '<div class="admin-config-note">Belum ada user terdaftar.</div>';
                     return;
                 }
-                data.users.forEach((user, index) => {
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td><input type="text" id="username_${index}" value="${escapeHtml(user.username)}"></td>
-                        <td><input type="text" id="contact_${index}" value="${escapeHtml(user.email || user.phone || "")}"></td>
-                        <td><input type="number" id="items_${index}" value="${Number(user.totalItemsBought || 0)}" style="width: 70px;"></td>
-                        <td><input type="number" id="spent_${index}" value="${Number(user.totalMoneySpent || 0)}" style="width: 100px;"></td>
-                        <td><div style="display:flex;gap:4px;">
-<button onclick="saveUserByAdmin(${index})" class="btn-admin-action btn-admin-save">Simpan</button>
-<button onclick="deleteUserByAdmin(${index})" class="btn-admin-action btn-admin-del">Hapus</button></div></td>`;
-                    tr.dataset.userId = user.id;
-                    tbody.appendChild(tr);
-                });
-                window.__adminUsers = data.users;
+                container.innerHTML = users.map((user, index) => `
+                    <div class="admin-user-card" data-user-index="${index}" style="padding:12px;border:1px solid var(--glass-border);border-radius:18px;background:rgba(255,255,255,.05);margin-bottom:8px;">
+                        <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;">
+                            <div style="min-width:0;"><strong>@${escapeHtml(user.username || "-")}</strong><div style="font-size:.62rem;color:var(--text-muted);word-break:break-all;">${escapeHtml(user.email || user.phone || "-")}</div></div>
+                            <button type="button" class="btn-admin-action btn-admin-del" onclick="deleteUserByAdmin(${index})">Hapus</button>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px;">
+                            <label style="font-size:.6rem;color:var(--text-muted);">Total Item<input type="number" id="items_${index}" value="${Number(user.totalItemsBought || 0)}" style="margin-top:4px;"></label>
+                            <label style="font-size:.6rem;color:var(--text-muted);">Total Belanja<input type="number" id="spent_${index}" value="${Number(user.totalMoneySpent || 0)}" style="margin-top:4px;"></label>
+                        </div>
+                        <button type="button" onclick="saveUserByAdmin(${index})" class="btn-admin-action btn-admin-save" style="margin-top:8px;width:100%;">Simpan Perubahan</button>
+                    </div>`).join("");
             } catch (error) {
-                console.error(error);
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#ff6b6b;">${escapeHtml(error.message)}</td></tr>`;
+                console.error("loadUserTableForAdmin error:", error);
+                container.innerHTML = `<div class="admin-config-note" style="color:#ff6b6b;">${escapeHtml(error.message || "Gagal memuat user.")}</div>`;
             }
         }
 
@@ -3884,17 +3863,16 @@
                     headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
                     body: JSON.stringify({
                         userId: user.id,
-                        username: document.getElementById(`username_${index}`).value.trim(),
-                        email: document.getElementById(`contact_${index}`).value.trim(),
-                        totalItemsBought: Number(document.getElementById(`items_${index}`).value) || 0,
-                        totalMoneySpent: Number(document.getElementById(`spent_${index}`).value) || 0
+                        action: "user",
+                        totalItemsBought: Number(document.getElementById(`items_${index}`)?.value) || 0,
+                        totalMoneySpent: Number(document.getElementById(`spent_${index}`)?.value) || 0
                     })
                 });
-                const data = await response.json();
+                const data = await response.json().catch(() => ({}));
                 if (!response.ok) throw new Error(data.message || "Gagal memperbarui user.");
                 showToast("Data user berhasil diperbarui!");
-                loadUserTableForAdmin();
-            } catch (error) { console.error(error); iosAlert(error.message); }
+                await loadUserTableForAdmin();
+            } catch (error) { console.error(error); iosAlert(error.message || "Gagal memperbarui user."); }
         }
 
         async function deleteUserByAdmin(index) {
