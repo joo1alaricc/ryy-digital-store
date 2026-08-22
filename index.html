@@ -3558,19 +3558,29 @@
         }
 
         function forceUserScreen() {
-            setAuthSectionVisible("app");
-            document.getElementById("auth-section")?.classList.add("hidden");
-            document.getElementById("landing-section")?.classList.add("hidden");
-            document.getElementById("app-section")?.classList.remove("hidden");
+            const auth = document.getElementById("auth-section");
+            const landing = document.getElementById("landing-section");
+            const app = document.getElementById("app-section");
+            if (!auth || !app) throw new Error("Tampilan aplikasi tidak ditemukan. Pastikan index.html terdeploy lengkap.");
+            auth.classList.add("hidden");
+            landing?.classList.add("hidden");
+            app.classList.remove("hidden");
+            app.style.display = "";
             document.body.dataset.screen = "app";
+            if (location.hash !== "#store") history.replaceState({screen:"app"}, "", "#store");
+            window.scrollTo?.(0, 0);
+            return true;
         }
 
         function forceAuthScreen() {
-            setAuthSectionVisible("auth");
+            const auth = document.getElementById("auth-section");
+            if (!auth) return false;
+            auth.classList.remove("hidden");
             document.getElementById("app-section")?.classList.add("hidden");
             document.getElementById("landing-section")?.classList.add("hidden");
-            document.getElementById("auth-section")?.classList.remove("hidden");
             document.body.dataset.screen = "auth";
+            if (location.hash !== "#login") history.replaceState({screen:"auth"}, "", "#login");
+            return true;
         }
 
         function setLoginBusy(busy) {
@@ -3589,6 +3599,7 @@
             event?.preventDefault();
             if (loginInProgress) return;
             setLoginBusy(true);
+            let authenticatedNavigation = false;
             try {
                 if (currentLoginRole === "admin") {
                     const login = document.getElementById("admin-username")?.value.trim();
@@ -3607,11 +3618,14 @@
                     clearUserSession();
                     localStorage.removeItem("current_admin");
                     localStorage.removeItem("admin_token");
+                    // Navigate first; admin widgets are secondary.
+                    forceUserScreen();
+                    authenticatedNavigation = true;
                     localStorage.setItem("admin_token", data.token);
                     localStorage.setItem("current_admin", JSON.stringify(data.admin));
-                    // Switch screens first. Optional admin widgets cannot block navigation.
-                    forceUserScreen();
-                    launchAdminApp(data.admin);
+                    try { launchAdminApp(data.admin); } catch (uiError) {
+                        console.warn("Admin app initialization skipped:", uiError);
+                    }
                     showToast("Login Admin Berhasil!");
                     return;
                 }
@@ -3624,13 +3638,24 @@
                 localStorage.removeItem("current_admin");
                 localStorage.removeItem("admin_token");
                 clearUserSession();
-                saveUserSession(data.user, data.token);
+                // Put the UI on the authenticated screen BEFORE optional session/UI helpers.
+                // A secondary widget must never cancel a successful login.
                 forceUserScreen();
-                launchUserApp();
+                authenticatedNavigation = true;
+                try { saveUserSession(data.user, data.token); } catch (sessionError) {
+                    console.warn("Session UI init skipped:", sessionError);
+                    localStorage.setItem("current_user", JSON.stringify(data.user));
+                    localStorage.setItem("auth_token", data.token);
+                }
+                try { launchUserApp(); } catch (uiError) {
+                    console.warn("User app initialization skipped:", uiError);
+                }
                 showToast("Login berhasil!");
             } catch (error) {
                 console.error("Login error:", error);
-                forceAuthScreen();
+                // Never send the user back to #login after the server already authenticated
+                // them. Only authentication/API failures should return to the login screen.
+                if (!authenticatedNavigation) forceAuthScreen();
                 await iosAlert(error?.message || "Login gagal. Silakan coba lagi.", { title: "Login Gagal" });
             } finally {
                 setLoginBusy(false);
@@ -3659,6 +3684,37 @@
             forceAuthScreen();
             return false;
         }
+
+        function routeFromHash() {
+            const hash = String(location.hash || "#login").toLowerCase();
+            const hasAdmin = !!localStorage.getItem("admin_token") && !!localStorage.getItem("current_admin");
+            const hasUser = !!localStorage.getItem("auth_token") && !!localStorage.getItem("current_user");
+            if (hash === "#store" && (hasAdmin || hasUser)) {
+                forceUserScreen();
+                if (hasAdmin) {
+                    let admin = null; try { admin = JSON.parse(localStorage.getItem("current_admin") || "null"); } catch (_) {}
+                    try { launchAdminApp(admin || {}); } catch (_) {}
+                } else {
+                    try { launchUserApp(); } catch (_) {}
+                }
+                return;
+            }
+            if (hash === "#landing") {
+                const hasSession = hasUser || hasAdmin;
+                if (hasSession) {
+                    setAuthSectionVisible("landing");
+                    return;
+                }
+            }
+            if (!hasUser && !hasAdmin) forceAuthScreen();
+        }
+
+        window.addEventListener("hashchange", () => {
+            try { routeFromHash(); } catch (error) { console.error("Hash routing error:", error); forceAuthScreen(); }
+        });
+        window.addEventListener("popstate", () => {
+            try { routeFromHash(); } catch (error) { console.error("History routing error:", error); forceAuthScreen(); }
+        });
 
         function logoutAccount() {
             clearUserSession();
