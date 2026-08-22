@@ -449,7 +449,7 @@
         .auth-card .password-strength-meter { margin-top: 1px; margin-bottom: 4px; }
         .auth-card .strength-text { margin-bottom: 8px; }
         @media (max-width: 520px) {
-            .auth-container { padding-left: 10px; padding-right: 10px; padding-top: clamp(118px, 16dvh, 190px); }
+            .auth-container { padding-left: 10px; padding-right: 10px; padding-top: clamp(150px, 20dvh, 250px); }
             .auth-card { padding: 19px 16px 15px; border-radius: 22px; }
             .store-title { font-size: 1.45rem; }
             .store-subtitle { font-size: .72rem; margin-bottom: 12px; }
@@ -3585,6 +3585,7 @@
                     body: JSON.stringify({ email })
                 });
                 registrationOtpToken = data.otpToken || "";
+                if (!registrationOtpToken) throw new Error("Server tidak mengembalikan token OTP. Periksa konfigurasi APP_SECRET dan Gmail.");
                 showAuthStep("step-otp");
                 showToast("OTP berhasil dikirim ke email.");
             } catch (error) {
