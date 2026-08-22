@@ -1,0 +1,11 @@
+# Never publish server-side data/config as static Pages assets
+config.json
+data/
+lib/
+cron-worker.js
+wrangler.jsonc
+wrangler.cron.jsonc
+package.json
+package-lock.json
+README.md
+smoke.mjs
