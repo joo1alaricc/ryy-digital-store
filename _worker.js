@@ -72,6 +72,7 @@ export default {
       headers.set("Access-Control-Allow-Methods", "GET,HEAD,POST,PUT,PATCH,DELETE,OPTIONS");
       headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization, Accept");
       headers.set("Cache-Control", "no-store");
+      headers.set("X-RYY-API", "cloudflare-pages-worker");
       return new Response(response.body, { status: response.status, headers });
     }
 
