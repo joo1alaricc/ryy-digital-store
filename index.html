@@ -449,7 +449,7 @@
         .auth-card .password-strength-meter { margin-top: 1px; margin-bottom: 4px; }
         .auth-card .strength-text { margin-bottom: 8px; }
         @media (max-width: 520px) {
-            .auth-container { padding-left: 10px; padding-right: 10px; padding-top: clamp(78px, 12dvh, 150px); }
+            .auth-container { padding-left: 10px; padding-right: 10px; padding-top: clamp(118px, 16dvh, 190px); }
             .auth-card { padding: 19px 16px 15px; border-radius: 22px; }
             .store-title { font-size: 1.45rem; }
             .store-subtitle { font-size: .72rem; margin-bottom: 12px; }
@@ -3638,7 +3638,11 @@
                 registrationOtpToken = "";
                 showToast("Registrasi berhasil!");
                 forceUserScreen();
-                launchUserApp();
+                setTimeout(() => {
+                    if (localStorage.getItem("auth_token") && localStorage.getItem("current_user")) {
+                        window.location.replace("/#store");
+                    }
+                }, 40);
             } catch (error) {
                 console.error(error);
                 iosAlert(error.message);
@@ -4871,27 +4875,22 @@ function startSupportPolling(){
                 localStorage.setItem("current_user", JSON.stringify(data.user));
             }
 
-            // Authentication is now committed. From this point forward, UI errors
-            // are non-fatal and MUST NOT call forceAuthScreen().
+            // Authentication is committed before navigation. Do not let optional UI
+            // initialization decide whether authentication succeeded.
             window.__ryyAuthTransitionUntil = Date.now() + AUTH_LOCK_MS;
             authenticatedScreen();
-
             showStatus("✅ Login berhasil. Membuka RYY STORE...");
-            try {
-                if (isAdmin) launchAdminApp(data.admin);
-                else launchUserApp();
-            } catch (uiError) {
-                console.warn("Post-login UI initialization skipped:", uiError);
-            }
-
             try { showToast(isAdmin ? "Login Admin Berhasil!" : "Login berhasil!"); } catch (_) {}
 
-            // One final deterministic screen commit after optional UI initialization.
+            // Hard-navigate to the SPA store route. This intentionally reloads the
+            // document so stale callbacks from the login page cannot restore #login.
+            // localStorage survives the navigation and checkSessionState() restores
+            // the authenticated app on the new document.
             setTimeout(() => {
                 if (isAdmin ? hasAdminSession() : hasUserSession()) {
-                    authenticatedScreen();
+                    window.location.replace("/#store");
                 }
-            }, 50);
+            }, 40);
         } catch (error) {
             console.error("FINAL LOGIN ERROR:", error);
             const msg = error?.name === "AbortError"
