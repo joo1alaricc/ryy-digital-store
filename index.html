@@ -423,17 +423,17 @@
             box-shadow: 0 4px 15px var(--accent-glow);
         }
 
-        /* Compact authentication layout — tuned for mobile browsers / Cloudflare Pages SPA. */
+        /* Cloudflare/mobile auth layout: compact, but intentionally lower on the viewport. */
         .auth-container {
             min-height: 100dvh;
-            padding: max(18px, env(safe-area-inset-top)) 12px max(28px, env(safe-area-inset-bottom));
+            padding: clamp(76px, 11dvh, 138px) 12px max(28px, env(safe-area-inset-bottom));
             align-items: flex-start;
             overflow-y: auto;
+            box-sizing: border-box;
         }
         .auth-card {
             width: min(100%, 430px);
-            max-height: none;
-            margin: 12px auto 0;
+            margin: 0 auto;
             padding: 22px 20px 18px;
             border-radius: 24px;
         }
@@ -449,14 +449,15 @@
         .auth-card .password-strength-meter { margin-top: 1px; margin-bottom: 4px; }
         .auth-card .strength-text { margin-bottom: 8px; }
         @media (max-width: 520px) {
-            .auth-container { padding-left: 10px; padding-right: 10px; }
-            .auth-card { margin-top: 8px; padding: 19px 16px 15px; border-radius: 22px; }
+            .auth-container { padding-left: 10px; padding-right: 10px; padding-top: clamp(78px, 12dvh, 150px); }
+            .auth-card { padding: 19px 16px 15px; border-radius: 22px; }
             .store-title { font-size: 1.45rem; }
             .store-subtitle { font-size: .72rem; margin-bottom: 12px; }
             .auth-card #user-login-panel > div[style*="margin:14px"] { margin: 10px 0 !important; }
         }
         @media (max-height: 760px) {
-            .auth-card { margin-top: 4px; padding-top: 16px; padding-bottom: 12px; }
+            .auth-container { padding-top: 58px; }
+            .auth-card { padding-top: 16px; padding-bottom: 12px; }
             .store-subtitle { margin-bottom: 9px; }
             .role-selector { margin-bottom: 9px; }
             .auth-card input, .auth-card select { margin-bottom: 7px; }
@@ -1497,7 +1498,7 @@
                 <button type="button" onclick="switchRole('admin')" id="btnAdmin" class="role-btn" data-i18n="login_admin">Login Admin</button>
             </div>
 
-            <div id="login-debug-status" class="hidden" role="status" aria-live="polite" style="margin:10px 0;padding:10px 12px;border-radius:14px;font-size:.72rem;line-height:1.45;background:rgba(255,255,255,.07);border:1px solid var(--border-color);"></div>
+            <div id="login-debug-status" class="hidden" role="status" aria-live="polite" style="margin:8px 0;padding:9px 11px;border-radius:14px;font-size:.72rem;line-height:1.45;background:rgba(255,255,255,.07);border:1px solid var(--border-color);"></div>
             <form id="loginForm" onsubmit="handleLogin(event)">
                 <div id="userAuthContainer">
                     <div id="user-login-panel" class="auth-step active">
@@ -1505,7 +1506,7 @@
                         <input type="password" id="user-login-password" data-i18n-placeholder="password" placeholder="Password">
                         <button type="submit" class="btn-accent" data-i18n="login_user_btn">Masuk sebagai User</button>
 
-                        <div style="display:flex;align-items:center;gap:10px;margin:14px 0;color:var(--text-muted);font-size:.72rem;">
+                        <div style="display:flex;align-items:center;gap:10px;margin:10px 0;color:var(--text-muted);font-size:.72rem;">
                             <span style="height:1px;background:var(--border-color);flex:1;"></span>
                             <span data-i18n="or">atau</span>
                             <span style="height:1px;background:var(--border-color);flex:1;"></span>
@@ -1513,13 +1514,13 @@
 
                         <div id="google-signin-button" style="width:100%;display:flex;justify-content:center;min-height:44px;"></div>
 
-                        <button type="button" onclick="startRegister()" class="btn-icon-minimal" style="width:100%; margin-top:8px; justify-content:center;" data-i18n="register">Daftar Akun Baru</button>
+                        <button type="button" onclick="startRegister()" class="btn-icon-minimal" style="width:100%; margin-top:7px; justify-content:center;" data-i18n="register">Daftar Akun Baru</button>
                     </div>
 
                     <div id="step-contact" class="auth-step">
                         <input type="email" id="contact-input" data-i18n-placeholder="email_verify" placeholder="Masukkan Email untuk verifikasi">
                         <button type="button" onclick="sendOTP()" class="btn-accent" data-i18n="send_otp">Kirim OTP</button>
-                        <button type="button" onclick="cancelRegister()" class="btn-icon-minimal" style="width:100%; margin-top:8px; justify-content:center;" data-i18n="back_login">Kembali ke Login</button>
+                        <button type="button" onclick="cancelRegister()" class="btn-icon-minimal" style="width:100%; margin-top:7px; justify-content:center;" data-i18n="back_login">Kembali ke Login</button>
                     </div>
 
                     <div id="step-otp" class="auth-step">
