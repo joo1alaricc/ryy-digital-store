@@ -3,5 +3,15 @@
   "name": "ryy-store",
   "compatibility_date": "2026-08-21",
   "compatibility_flags": ["nodejs_compat"],
-  "pages_build_output_dir": "."
+  "pages_build_output_dir": ".",
+  "kv_namespaces": [
+    {
+      "binding": "STORE_KV",
+      "id": "MASUKKAN_ID_STORE_RYY"
+    },
+    {
+      "binding": "INBOX_KV",
+      "id": "320f1a8cadfe46589c373674add320b6"
+    }
+  ]
 }
