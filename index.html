@@ -84,11 +84,6 @@
 
         .hidden { display: none !important; }
 
-        /* iOS dialog must override the global .hidden display rule when opened. */
-        .ios-dialog-overlay:not(.hidden) {
-            display: flex !important;
-        }
-
         /* iOS-style stacked notification center — stable absolute stack */
         #toast-container {
             position: fixed;
@@ -236,6 +231,11 @@
         }
 
         /* Apple-like confirmation / alert sheet, while retaining the store's purple/glass visual language */
+        /* Keep the iOS dialog visible even though the global .hidden rule uses !important. */
+        .ios-dialog-overlay.hidden { display:none !important; }
+        body.ios-dialog-open { overflow:hidden; }
+        .ios-dialog-overlay:not(.hidden) { display:flex !important; }
+
         .ios-dialog-overlay {
             position:fixed; inset:0; z-index:16000; display:flex; align-items:center; justify-content:center; padding:20px;
             background:rgba(0,0,0,.38); backdrop-filter:blur(18px) saturate(120%); -webkit-backdrop-filter:blur(18px) saturate(120%);
@@ -2504,14 +2504,27 @@
         }
 
         let iosDialogResolver = null;
+        let iosDialogPreviousFocus = null;
 
-        function closeIOSDialog(result = false) {
+        function setIOSDialogOpen(open) {
             const overlay = document.getElementById("ios-dialog-overlay");
             if (!overlay) return;
-            overlay.classList.add("hidden");
-            overlay.setAttribute("aria-hidden", "true");
+            overlay.classList.toggle("hidden", !open);
+            overlay.setAttribute("aria-hidden", open ? "false" : "true");
+            document.body.classList.toggle("ios-dialog-open", open);
+            if (open) {
+                iosDialogPreviousFocus = document.activeElement;
+                document.getElementById("ios-dialog-ok")?.focus({ preventScroll: true });
+            } else if (iosDialogPreviousFocus && typeof iosDialogPreviousFocus.focus === "function") {
+                try { iosDialogPreviousFocus.focus({ preventScroll: true }); } catch (_) {}
+                iosDialogPreviousFocus = null;
+            }
+        }
+
+        function closeIOSDialog(result = false) {
             const resolver = iosDialogResolver;
             iosDialogResolver = null;
+            setIOSDialogOpen(false);
             if (resolver) resolver(result);
         }
 
@@ -2522,17 +2535,19 @@
             const actions = document.getElementById("ios-dialog-actions");
             const cancel = document.getElementById("ios-dialog-cancel");
             const ok = document.getElementById("ios-dialog-ok");
-            if (!overlay || !title || !body || !actions || !cancel || !ok) return Promise.resolve(false);
+            if (!overlay || !title || !body || !actions || !cancel || !ok) {
+                console.error("iOS dialog elements tidak lengkap.");
+                return Promise.resolve(false);
+            }
             if (iosDialogResolver) closeIOSDialog(false);
             title.textContent = options.title || "RYY STORE";
-            body.textContent = message;
+            body.textContent = String(message ?? "");
             cancel.textContent = options.cancelText || "Batal";
             ok.textContent = options.okText || "OK";
-            ok.className = `ios-dialog-btn primary${options.danger ? " danger" : ""}`;
             cancel.className = "ios-dialog-btn";
+            ok.className = `ios-dialog-btn primary${options.danger ? " danger" : ""}`;
             actions.classList.remove("single");
-            overlay.classList.remove("hidden");
-            overlay.setAttribute("aria-hidden", "false");
+            setIOSDialogOpen(true);
             return new Promise(resolve => { iosDialogResolver = resolve; });
         }
 
@@ -2543,23 +2558,39 @@
             const actions = document.getElementById("ios-dialog-actions");
             const cancel = document.getElementById("ios-dialog-cancel");
             const ok = document.getElementById("ios-dialog-ok");
-            if (!overlay || !title || !body || !actions || !cancel || !ok) return;
+            if (!overlay || !title || !body || !actions || !cancel || !ok) {
+                console.error("iOS alert elements tidak lengkap.");
+                return Promise.resolve(false);
+            }
             if (iosDialogResolver) closeIOSDialog(false);
             title.textContent = options.title || "RYY STORE";
-            body.textContent = message;
+            body.textContent = String(message ?? "");
             ok.textContent = options.okText || "OK";
             ok.className = `ios-dialog-btn primary${options.danger ? " danger" : ""}`;
             cancel.className = "ios-dialog-btn hidden";
             actions.classList.add("single");
-            overlay.classList.remove("hidden");
-            overlay.setAttribute("aria-hidden", "false");
-            iosDialogResolver = () => {};
+            setIOSDialogOpen(true);
+            return new Promise(resolve => { iosDialogResolver = resolve; });
         }
 
         document.getElementById("ios-dialog-cancel")?.addEventListener("click", () => closeIOSDialog(false));
         document.getElementById("ios-dialog-ok")?.addEventListener("click", () => closeIOSDialog(true));
-        document.getElementById("ios-dialog-overlay")?.addEventListener("click", (event) => {
+        document.getElementById("ios-dialog-overlay")?.addEventListener("click", event => {
             if (event.target.id === "ios-dialog-overlay") closeIOSDialog(false);
+        });
+        document.addEventListener("keydown", event => {
+            const overlay = document.getElementById("ios-dialog-overlay");
+            if (!overlay || overlay.classList.contains("hidden")) return;
+            if (event.key === "Escape") {
+                event.preventDefault();
+                closeIOSDialog(false);
+            } else if (event.key === "Enter") {
+                const active = document.activeElement;
+                if (active?.tagName !== "TEXTAREA" && active?.tagName !== "INPUT") {
+                    event.preventDefault();
+                    closeIOSDialog(true);
+                }
+            }
         });
 
         function getStoreLogoUrl() {
@@ -2750,7 +2781,8 @@
             try {
                 const data = await apiRequest("/google-login", {
                     method: "POST",
-                    body: JSON.stringify({ credential: response.credential })
+                    body: JSON.stringify({ credential: response.credential }),
+                    skipAuth: true
                 });
                 saveUserSession(data.user, data.token);
                 localStorage.removeItem("has_seen_landing");
@@ -2759,65 +2791,6 @@
             } catch (error) {
                 console.error(error);
                 iosAlert(error.message || "Login Google gagal.");
-            }
-        }
-
-        function checkSessionState() {
-            const currentUser = JSON.parse(localStorage.getItem("current_user"));
-            const currentAdmin = JSON.parse(localStorage.getItem("current_admin"));
-            const hasSeenLanding = localStorage.getItem("has_seen_landing");
-
-            if (currentAdmin) {
-                document.getElementById("auth-section").classList.add("hidden");
-                document.getElementById("landing-section").classList.add("hidden");
-                document.getElementById("app-section").classList.remove("hidden");
-                launchAdminApp(currentAdmin);
-            } else if (!currentUser) {
-                document.getElementById("auth-section").classList.remove("hidden");
-                document.getElementById("landing-section").classList.add("hidden");
-                document.getElementById("app-section").classList.add("hidden");
-            } else if (!hasSeenLanding) {
-                document.getElementById("auth-section").classList.add("hidden");
-                document.getElementById("landing-section").classList.remove("hidden");
-                document.getElementById("app-section").classList.add("hidden");
-            } else {
-                document.getElementById("auth-section").classList.add("hidden");
-                document.getElementById("landing-section").classList.add("hidden");
-                document.getElementById("app-section").classList.remove("hidden");
-                launchUserApp();
-            }
-        }
-
-        async function handleLogin(event) {
-            event.preventDefault();
-            if (currentLoginRole === 'admin') {
-                const userOrEmail = document.getElementById('admin-username').value.trim();
-                const pass = document.getElementById('admin-password').value;
-                const token = document.getElementById('admin-token').value.trim();
-                const pin = document.getElementById('admin-pin').value.trim();
-
-                try {
-                    let response = await fetch('admin.json');
-                    let admins = await response.json();
-
-                    let validAdmin = admins.find(a => 
-                        (a.username === userOrEmail || a.email === userOrEmail) && 
-                        a.password === pass && 
-                        a.tokenDeveloper === token && 
-                        a.pin === pin
-                    );
-
-                    if (validAdmin) {
-                        localStorage.setItem('current_admin', JSON.stringify(validAdmin));
-                        showToast('Login Admin Berhasil!');
-                        checkSessionState();
-                    } else {
-                        iosAlert('Gagal! Data Admin, Token Developer, atau PIN tidak cocok.');
-                    }
-                } catch (error) {
-                    console.error('Gagal memuat admin.json:', error);
-                    iosAlert('Terjadi kesalahan sistem / file admin.json tidak ditemukan.');
-                }
             }
         }
 
@@ -3542,10 +3515,12 @@
         let profileOtpToken = ""; // reserved for future verified-contact API
 
         async function apiRequest(path, options = {}) {
-            const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
-            const token = localStorage.getItem("auth_token");
+            const { skipAuth = false, ...requestOptions } = options;
+            const headers = { "Content-Type": "application/json", ...(requestOptions.headers || {}) };
+            const token = skipAuth ? null : localStorage.getItem("auth_token");
             if (token) headers.Authorization = `Bearer ${token}`;
-            const response = await fetch(`${API_BASE}${path}`, { ...options, headers });
+            else if (skipAuth) delete headers.Authorization;
+            const response = await fetch(`${API_BASE}${path}`, { ...requestOptions, headers });
             let data = {};
             try { data = await response.json(); } catch (_) {}
             if (!response.ok) throw new Error(data.message || `Request gagal (${response.status})`);
@@ -3643,78 +3618,143 @@
             }
         }
 
+        let loginInProgress = false;
+
+        function setAuthSectionVisible(section) {
+            const auth = document.getElementById("auth-section");
+            const landing = document.getElementById("landing-section");
+            const app = document.getElementById("app-section");
+            if (!auth || !landing || !app) return;
+            auth.classList.toggle("hidden", section !== "auth");
+            landing.classList.toggle("hidden", section !== "landing");
+            app.classList.toggle("hidden", section !== "app");
+        }
+
+        function setLoginBusy(busy) {
+            loginInProgress = Boolean(busy);
+            const form = document.getElementById("loginForm");
+            if (!form) return;
+            form.setAttribute("aria-busy", busy ? "true" : "false");
+            form.querySelectorAll('button[type="submit"]').forEach(btn => {
+                btn.disabled = Boolean(busy);
+                btn.style.opacity = busy ? ".65" : "";
+                btn.style.pointerEvents = busy ? "none" : "";
+            });
+        }
+
         async function handleLogin(event) {
-            event.preventDefault();
-            if (currentLoginRole === "admin") {
-                const login = document.getElementById("admin-username").value.trim();
-                const password = document.getElementById("admin-password").value;
-                const tokenDeveloper = document.getElementById("admin-token").value.trim();
-                const pin = document.getElementById("admin-pin").value.trim();
-                try {
-                    const data = await apiRequest("/admin-login", {
+            event?.preventDefault();
+            if (loginInProgress) return;
+            setLoginBusy(true);
+
+            try {
+                if (currentLoginRole === "admin") {
+                    const login = document.getElementById("admin-username")?.value.trim();
+                    const password = document.getElementById("admin-password")?.value || "";
+                    const tokenDeveloper = document.getElementById("admin-token")?.value.trim() || "";
+                    const pin = document.getElementById("admin-pin")?.value.trim() || "";
+                    if (!login || !password || !tokenDeveloper || !pin) {
+                        throw new Error("Username/email, password, token developer, dan PIN wajib diisi.");
+                    }
+
+                    // Admin login must never reuse a stale user Authorization header.
+                    const response = await fetch(`${API_BASE}/admin-login`, {
                         method: "POST",
+                        headers: { "Content-Type": "application/json", "Accept": "application/json" },
                         body: JSON.stringify({ login, password, tokenDeveloper, pin })
                     });
-                    localStorage.removeItem("auth_token");
+                    const data = await response.json().catch(() => ({}));
+                    if (!response.ok || !data.token || !data.admin) {
+                        throw new Error(data.message || `Login admin gagal (${response.status}).`);
+                    }
+
+                    clearUserSession();
                     localStorage.setItem("admin_token", data.token);
                     localStorage.setItem("current_admin", JSON.stringify(data.admin));
-                        showToast("Login Admin Berhasil!");
+                    localStorage.removeItem("has_seen_landing");
+                    setAuthSectionVisible("app");
                     try {
-                        checkSessionState();
+                        launchAdminApp(data.admin);
                     } catch (renderError) {
-                        console.error("Gagal membuka panel admin setelah login:", renderError);
-                        iosAlert("Login admin berhasil, tetapi panel admin gagal dibuka. Silakan muat ulang halaman.");
+                        console.error("Admin app render error:", renderError);
+                        throw new Error("Login admin berhasil, tetapi panel admin gagal dibuka: " + (renderError.message || renderError));
                     }
-                } catch (error) {
-                    console.error(error);
-                    iosAlert(error.message);
+                    showToast("Login Admin Berhasil!");
+                    return;
                 }
-                return;
-            }
 
-            const login = document.getElementById("user-login-input").value.trim();
-            const password = document.getElementById("user-login-password").value;
-            if (!login || !password) { iosAlert("Username/email dan password wajib diisi."); return; }
-            try {
+                const login = document.getElementById("user-login-input")?.value.trim();
+                const password = document.getElementById("user-login-password")?.value || "";
+                if (!login || !password) throw new Error("Username/email dan password wajib diisi.");
+
                 const data = await apiRequest("/login", {
                     method: "POST",
-                    body: JSON.stringify({ login, password })
+                    body: JSON.stringify({ login, password }),
+                    skipAuth: true
                 });
+                if (!data?.token || !data?.user) throw new Error("Server login tidak mengembalikan sesi yang valid.");
+
+                localStorage.removeItem("current_admin");
+                localStorage.removeItem("admin_token");
                 saveUserSession(data.user, data.token);
                 localStorage.removeItem("has_seen_landing");
-                showToast("Login berhasil!");
+                setAuthSectionVisible("app");
                 try {
-                    checkSessionState();
+                    launchUserApp();
                 } catch (renderError) {
-                    console.error("Gagal membuka halaman setelah login:", renderError);
-                    iosAlert("Login berhasil, tetapi halaman toko gagal dibuka. Silakan muat ulang halaman.");
+                    console.error("User app render error:", renderError);
+                    throw new Error("Login berhasil, tetapi halaman toko gagal dibuka: " + (renderError.message || renderError));
                 }
+                showToast("Login berhasil!");
             } catch (error) {
-                console.error(error);
-                iosAlert(error.message);
+                console.error("Login error:", error);
+                iosAlert(error?.message || "Login gagal. Silakan coba lagi.", { title: "Login Gagal" });
+            } finally {
+                setLoginBusy(false);
             }
         }
 
         function checkSessionState() {
-            let currentUser=null,currentAdmin=null;
-            try{currentUser=JSON.parse(localStorage.getItem("current_user")||"null")}catch(_){}
-            try{currentAdmin=JSON.parse(localStorage.getItem("current_admin")||"null")}catch(_){}
-            if(currentAdmin && localStorage.getItem("admin_token")){
-                document.getElementById("auth-section").classList.add("hidden");
-                document.getElementById("landing-section").classList.add("hidden");
-                document.getElementById("app-section").classList.remove("hidden");
-                launchAdminApp(currentAdmin);
-            }else if(!currentUser || !localStorage.getItem("auth_token")){
-                clearUserSession();
-                document.getElementById("auth-section").classList.remove("hidden");
-                document.getElementById("landing-section").classList.add("hidden");
-                document.getElementById("app-section").classList.add("hidden");
-            }else{
-                document.getElementById("auth-section").classList.add("hidden");
-                document.getElementById("landing-section").classList.add("hidden");
-                document.getElementById("app-section").classList.remove("hidden");
-                launchUserApp();
+            let currentUser = null, currentAdmin = null;
+            try { currentUser = JSON.parse(localStorage.getItem("current_user") || "null"); } catch (_) { currentUser = null; }
+            try { currentAdmin = JSON.parse(localStorage.getItem("current_admin") || "null"); } catch (_) { currentAdmin = null; }
+
+            const adminToken = localStorage.getItem("admin_token");
+            const userToken = localStorage.getItem("auth_token");
+
+            // Never let a stale/partial session hide the login screen forever.
+            if (currentAdmin && adminToken) {
+                setAuthSectionVisible("app");
+                try {
+                    launchAdminApp(currentAdmin);
+                } catch (error) {
+                    console.error("Failed to restore admin session:", error);
+                    localStorage.removeItem("current_admin");
+                    localStorage.removeItem("admin_token");
+                    setAuthSectionVisible("auth");
+                    iosAlert("Sesi admin tidak dapat dipulihkan. Silakan login kembali.", { title: "Sesi Admin" });
+                }
+                return;
             }
+
+            if (currentUser && userToken) {
+                setAuthSectionVisible("app");
+                try {
+                    launchUserApp();
+                } catch (error) {
+                    console.error("Failed to restore user session:", error);
+                    clearUserSession();
+                    setAuthSectionVisible("auth");
+                    iosAlert("Sesi user tidak dapat dipulihkan. Silakan login kembali.", { title: "Sesi User" });
+                }
+                return;
+            }
+
+            // Clean up inconsistent storage before showing login.
+            clearUserSession();
+            localStorage.removeItem("current_admin");
+            localStorage.removeItem("admin_token");
+            setAuthSectionVisible("auth");
         }
 
         function logoutAccount() {
@@ -3799,57 +3839,34 @@
         }
 
         async function loadUserTableForAdmin() {
-            const container = document.getElementById("admin-user-list");
-            if (!container) {
-                console.error("Elemen #admin-user-list tidak ditemukan.");
-                return;
-            }
-            container.innerHTML = '<div style="padding:16px;text-align:center;color:var(--text-muted);">Memuat data user...</div>';
+            const tbody = document.getElementById("userTableBody");
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Memuat data...</td></tr>';
             try {
                 const token = localStorage.getItem("admin_token");
-                if (!token) throw new Error("Sesi admin tidak ditemukan. Silakan login kembali.");
-                const response = await fetch(`${API_BASE}/admin-users`, {
-                    method: "GET",
-                    headers: { Authorization: `Bearer ${token}` }
-                });
+                const response = await fetch(`${API_BASE}/admin-users`, { headers: { Authorization: `Bearer ${token}` } });
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.message || "Gagal mengambil data user.");
-                window.__adminUsers = Array.isArray(data.users) ? data.users : [];
-                if (!window.__adminUsers.length) {
-                    container.innerHTML = '<div style="padding:16px;text-align:center;color:var(--text-muted);">Belum ada user terdaftar.</div>';
+                if (!data.users.length) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Belum ada user terdaftar.</td></tr>';
                     return;
                 }
-                container.innerHTML = "";
-                window.__adminUsers.forEach((user, index) => {
-                    const card = document.createElement("div");
-                    card.className = "admin-user-card";
-                    card.dataset.userId = user.id;
-                    card.innerHTML = `
-                        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
-                            <div>
-                                <div style="font-weight:700;font-size:.9rem;">@${escapeHtml(user.username || "-")}</div>
-                                <div style="font-size:.7rem;color:var(--text-muted);margin-top:3px;">${escapeHtml(user.email || user.phone || "-")}</div>
-                            </div>
-                            <span style="font-size:.65rem;color:var(--text-muted);">${escapeHtml(user.authProvider || "local")}</span>
-                        </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
-                            <label style="font-size:.68rem;color:var(--text-muted);">Total item
-                                <input type="number" id="items_${index}" value="${Number(user.totalItemsBought || 0)}" min="0" style="width:100%;margin-top:4px;">
-                            </label>
-                            <label style="font-size:.68rem;color:var(--text-muted);">Total belanja
-                                <input type="number" id="spent_${index}" value="${Number(user.totalMoneySpent || 0)}" min="0" style="width:100%;margin-top:4px;">
-                            </label>
-                        </div>
-                        <div style="display:flex;gap:6px;margin-top:10px;">
-                            <button type="button" onclick="saveUserByAdmin(${index})" class="btn-admin-action btn-admin-save">Simpan</button>
-                            <button type="button" onclick="deleteUserByAdmin(${index})" class="btn-admin-action btn-admin-del">Hapus</button>
-                        </div>
-                    `;
-                    container.appendChild(card);
+                data.users.forEach((user, index) => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td><input type="text" id="username_${index}" value="${escapeHtml(user.username)}"></td>
+                        <td><input type="text" id="contact_${index}" value="${escapeHtml(user.email || user.phone || "")}"></td>
+                        <td><input type="number" id="items_${index}" value="${Number(user.totalItemsBought || 0)}" style="width: 70px;"></td>
+                        <td><input type="number" id="spent_${index}" value="${Number(user.totalMoneySpent || 0)}" style="width: 100px;"></td>
+                        <td><div style="display:flex;gap:4px;">
+<button onclick="saveUserByAdmin(${index})" class="btn-admin-action btn-admin-save">Simpan</button>
+<button onclick="deleteUserByAdmin(${index})" class="btn-admin-action btn-admin-del">Hapus</button></div></td>`;
+                    tr.dataset.userId = user.id;
+                    tbody.appendChild(tr);
                 });
+                window.__adminUsers = data.users;
             } catch (error) {
-                console.error("loadUserTableForAdmin:", error);
-                container.innerHTML = `<div style="padding:16px;text-align:center;color:#ff6b6b;">${escapeHtml(error.message || "Gagal memuat user.")}</div>`;
+                console.error(error);
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#ff6b6b;">${escapeHtml(error.message)}</td></tr>`;
             }
         }
 
@@ -3864,25 +3881,20 @@
                 const token = localStorage.getItem("admin_token");
                 const response = await fetch(`${API_BASE}/admin-users`, {
                     method: "PATCH",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`
-                    },
+                    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
                     body: JSON.stringify({
                         userId: user.id,
-                        action: "user",
-                        totalItemsBought: Number(document.getElementById(`items_${index}`)?.value) || 0,
-                        totalMoneySpent: Number(document.getElementById(`spent_${index}`)?.value) || 0
+                        username: document.getElementById(`username_${index}`).value.trim(),
+                        email: document.getElementById(`contact_${index}`).value.trim(),
+                        totalItemsBought: Number(document.getElementById(`items_${index}`).value) || 0,
+                        totalMoneySpent: Number(document.getElementById(`spent_${index}`).value) || 0
                     })
                 });
                 const data = await response.json();
                 if (!response.ok) throw new Error(data.message || "Gagal memperbarui user.");
                 showToast("Data user berhasil diperbarui!");
-                await loadUserTableForAdmin();
-            } catch (error) {
-                console.error("saveUserByAdmin:", error);
-                iosAlert(error.message || "Gagal memperbarui user.");
-            }
+                loadUserTableForAdmin();
+            } catch (error) { console.error(error); iosAlert(error.message); }
         }
 
         async function deleteUserByAdmin(index) {
