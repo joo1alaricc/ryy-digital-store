@@ -41,7 +41,8 @@ async function dispatch(request, env, targetHandler = legacyHandler) {
   }
   const res = makeRes();
   try {
-    await targetHandler(req, res);
+    const result = await targetHandler(req, res);
+    if (result && result.__streamResponse instanceof Response) return result.__streamResponse;
     return res.response();
   } catch (error) {
     console.error("RYY STORE request error:", error);
