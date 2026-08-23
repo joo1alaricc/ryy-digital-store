@@ -53,6 +53,48 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    // Image proxy for Yardansh CDN. The CDN intentionally blocks browser hotlinking
+    // with Cloudflare 1011, so images are fetched server-side and returned from
+    // this same Pages origin. Only the approved image host is allowed.
+    if (url.pathname === "/api/image-proxy") {
+      if (request.method !== "GET" && request.method !== "HEAD") {
+        return new Response("Method Not Allowed", { status: 405, headers: { "Allow": "GET, HEAD" } });
+      }
+      const raw = url.searchParams.get("url") || "";
+      let target;
+      try { target = new URL(raw); } catch {
+        return Response.json({ success: false, message: "URL gambar tidak valid." }, { status: 400 });
+      }
+      if (target.protocol !== "https:" || target.hostname !== "cloud.yardansh.com") {
+        return Response.json({ success: false, message: "Host gambar tidak diizinkan." }, { status: 403 });
+      }
+      // Force the CDN's raw representation; preserve no user-supplied query params
+      // so the proxy cannot be abused to request unrelated resources.
+      target.search = "";
+      target.searchParams.set("raw", "");
+      try {
+        const upstream = await fetch(target.toString(), {
+          method: request.method,
+          headers: {
+            "Accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+            "User-Agent": "RYY-Store-Image-Proxy/1.0"
+          },
+          cf: { cacheEverything: true, cacheTtl: 86400 }
+        });
+        if (!upstream.ok) {
+          return new Response("Upstream image unavailable", { status: upstream.status, headers: { "Cache-Control": "no-store" } });
+        }
+        const headers = new Headers(upstream.headers);
+        headers.set("Cache-Control", "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400");
+        headers.set("X-Content-Type-Options", "nosniff");
+        headers.set("Access-Control-Allow-Origin", url.origin);
+        return new Response(upstream.body, { status: upstream.status, headers });
+      } catch (error) {
+        console.error("Image proxy error:", error);
+        return Response.json({ success: false, message: "Gagal mengambil gambar dari CDN." }, { status: 502 });
+      }
+    }
+
     if (url.pathname.startsWith("/api/")) {
       if (request.method === "OPTIONS") {
         return new Response(null, {
