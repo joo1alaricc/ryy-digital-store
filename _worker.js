@@ -41,8 +41,7 @@ async function dispatch(request, env, targetHandler = legacyHandler) {
   }
   const res = makeRes();
   try {
-    const result = await targetHandler(req, res);
-    if (result && result.__streamResponse instanceof Response) return result.__streamResponse;
+    await targetHandler(req, res);
     return res.response();
   } catch (error) {
     console.error("RYY STORE request error:", error);
@@ -57,6 +56,21 @@ export default {
     // Image proxy for Yardansh CDN. The CDN intentionally blocks browser hotlinking
     // with Cloudflare 1011, so images are fetched server-side and returned from
     // this same Pages origin. Only the approved image host is allowed.
+    if (url.pathname === "/api/downloader-download") {
+      if (request.method !== "GET" && request.method !== "HEAD") return new Response("Method Not Allowed", {status:405});
+      const raw=url.searchParams.get("url")||"";
+      let target; try{target=new URL(raw)}catch{return new Response("Invalid media URL",{status:400})}
+      const host=target.hostname.toLowerCase();
+      const allowed=["tiktokcdn.com","tiktokv.com","tiktok.com","tiktokcdn-us.com","tiktokcdn-eu.com","googlevideo.com","youtube.com","youtu.be","fbcdn.net","instagram.com","cdninstagram.com","pinimg.com"];
+      if(target.protocol!=="https:" || !allowed.some(x=>host===x||host.endsWith("."+x))) return new Response("Media host tidak diizinkan",{status:403});
+      try{
+        const upstream=await fetch(target.toString(),{method:request.method,headers:{"User-Agent":"Mozilla/5.0","Accept":"video/*,audio/*,*/*;q=0.8"},redirect:"follow"});
+        if(!upstream.ok) return new Response("Media tidak tersedia",{status:upstream.status});
+        const headers=new Headers(upstream.headers); const ct=upstream.headers.get("content-type")||""; headers.set("Content-Disposition",`attachment; filename=ryy-store-media.${ct.includes("audio")?"mp3":"mp4"}`); headers.set("Cache-Control","no-store"); headers.set("X-Content-Type-Options","nosniff");
+        return new Response(upstream.body,{status:upstream.status,headers});
+      }catch(e){return new Response("Gagal mengambil media",{status:502})}
+    }
+
     if (url.pathname === "/api/image-proxy") {
       if (request.method !== "GET" && request.method !== "HEAD") {
         return new Response("Method Not Allowed", { status: 405, headers: { "Allow": "GET, HEAD" } });
