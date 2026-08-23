@@ -1031,6 +1031,61 @@
         @media(max-width:600px){.admin-form-grid.two,.admin-type-grid{grid-template-columns:1fr 1fr}.admin-type-grid .type-name-field{grid-column:1/-1}.admin-type-remove{grid-column:2;justify-self:end}}
 
     
+        /* ===== UI PATCH: adaptive price contrast ===== */
+        .adaptive-price,
+        .adaptive-price-text,
+        .adaptive-price-value {
+            color: var(--text-main) !important;
+            -webkit-text-fill-color: currentColor;
+            text-shadow: 0 1px 2px rgba(0,0,0,.24), 0 -1px 1px rgba(255,255,255,.08);
+            transition: color .2s ease, background-color .2s ease, text-shadow .2s ease;
+        }
+        .adaptive-price-text {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            max-width: 100%;
+            padding: 2px 6px;
+            border-radius: 8px;
+            background: color-mix(in srgb, var(--glass-surface) 72%, transparent);
+            border: 1px solid color-mix(in srgb, var(--glass-border) 70%, transparent);
+            backdrop-filter: blur(8px) saturate(135%);
+            -webkit-backdrop-filter: blur(8px) saturate(135%);
+        }
+        .adaptive-price-value {
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-end;
+            min-width: max-content;
+            padding: 3px 7px;
+            border-radius: 9px;
+            background: color-mix(in srgb, var(--glass-surface) 78%, transparent);
+            border: 1px solid color-mix(in srgb, var(--glass-border) 72%, transparent);
+            backdrop-filter: blur(8px) saturate(135%);
+            -webkit-backdrop-filter: blur(8px) saturate(135%);
+        }
+        .adaptive-price .reseller-final { color: var(--text-main) !important; }
+        .adaptive-price .reseller-arrow { color: var(--text-muted) !important; }
+        .type-option.selected .adaptive-price .reseller-final,
+        .type-option.selected .adaptive-price .reseller-arrow { color: #fff !important; }
+        .type-option.selected .adaptive-price-value {
+            color: #fff !important;
+            -webkit-text-fill-color: #fff;
+            background: rgba(0,0,0,.16);
+            border-color: rgba(255,255,255,.24);
+            text-shadow: 0 1px 2px rgba(0,0,0,.32);
+        }
+        body.light-mode .adaptive-price,
+        body.light-mode .adaptive-price-text,
+        body.light-mode .adaptive-price-value {
+            text-shadow: 0 1px 1px rgba(255,255,255,.8);
+        }
+        body.light-mode .type-option.selected .adaptive-price-value {
+            color: #fff !important;
+            -webkit-text-fill-color: #fff;
+            text-shadow: 0 1px 2px rgba(0,0,0,.3);
+        }
+
         /* ===== UI PATCH: catalog category scrolling + adaptive stock text + accent-selected variants ===== */
 
         /* 1) Keep every category button at its full natural width and allow
@@ -3299,7 +3354,7 @@
                 const name=productText(product,"name"), desc=productText(product,"description");
                 grid.innerHTML += `<div class="product-card" onclick="openProductDetail(${Number(product.id)})">
                     <div class="product-img-wrapper"><img src="${escapeHtml(imageDisplayUrl(product.image||""))}" alt="${escapeHtml(name)}" class="product-img"><span class="badge-stock ${isReady?'badge-ready':'badge-sold'}">${escapeHtml(isReady?t("ready"):t("sold"))}</span></div>
-                    <div class="product-info"><h3 class="product-name">${escapeHtml(name)}</h3><p class="product-desc">${escapeHtml(desc)}</p><div class="product-price">${firstType?`${escapeHtml(t("from_price"))} ${priceMarkup(firstType.price)}`:escapeHtml(t("price_unavailable"))}</div>${currentUserIsReseller()?'<span class="reseller-badge">Reseller aktif</span>':''}</div>
+                    <div class="product-info"><h3 class="product-name">${escapeHtml(name)}</h3><p class="product-desc">${escapeHtml(desc)}</p><div class="product-price adaptive-price">${firstType?`<span class="adaptive-price-text">${escapeHtml(t("from_price"))} ${priceMarkup(firstType.price)}</span>`:escapeHtml(t("price_unavailable"))}</div>${currentUserIsReseller()?'<span class="reseller-badge">Reseller aktif</span>':''}</div>
                 </div>`;
             });
         }
@@ -5092,7 +5147,7 @@ function startSupportPolling(){
     const list=$('modal-type-list');
     const types=Array.isArray(product.types)?product.types:[];
     selectedProductType=types.find(t=>typeStock(t)>0)||types[0]||null;
-    if(list) list.innerHTML=types.length?types.map((t,i)=>`<button type="button" class="type-option ${t===selectedProductType?'selected':''}" onclick="selectProductType(this,${i})"><span><strong>${esc(t.typeName||'Varian')}</strong><small>${t.durationDays?`${t.durationDays} hari`:'Lifetime'} · ${typeStock(t)} stok</small></span><b>Rp${Number(resellerPrice(t.price,sessionUser())||0).toLocaleString('id-ID')}</b></button>`).join(''):'<div style="color:var(--text-muted);font-size:.7rem">Varian belum tersedia.</div>';
+    if(list) list.innerHTML=types.length?types.map((t,i)=>`<button type="button" class="type-option ${t===selectedProductType?'selected':''}" onclick="selectProductType(this,${i})"><span><strong>${esc(t.typeName||'Varian')}</strong><small>${t.durationDays?`${t.durationDays} hari`:'Lifetime'} · ${typeStock(t)} stok</small></span><b class="adaptive-price-value">Rp${Number(resellerPrice(t.price,sessionUser())||0).toLocaleString('id-ID')}</b></button>`).join(''):'<div style="color:var(--text-muted);font-size:.7rem">Varian belum tersedia.</div>';
     const modal=$('product-detail-modal'); if(modal){modal.classList.remove('hidden');document.body.classList.add('modal-open');}
   };
 
