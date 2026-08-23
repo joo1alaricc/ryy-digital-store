@@ -2525,7 +2525,7 @@
                 const description=productText(product,"description");
                 grid.innerHTML += `
                     <div class="bs-card" onclick="openProductDetailFromPortfolio(${product.id})">
-                        <img src="${escapeHtml(product.image||"")}" alt="${escapeHtml(name)}" class="bs-img">
+                        <img src="${escapeHtml(imageDisplayUrl(product.image||""))}" alt="${escapeHtml(name)}" class="bs-img">
                         <div class="bs-content">
                             <h4>${escapeHtml(name)}</h4>
                             <p>${escapeHtml(description)}</p>
@@ -2908,6 +2908,16 @@
 
         let paymentProofDataUrl = "";
         function handlePaymentProofFile(event){const file=event.target.files?.[0];if(!file)return;if(!file.type.startsWith("image/")){iosAlert("Bukti pembayaran harus berupa gambar.");return;}if(file.size>3*1024*1024){iosAlert("Ukuran bukti pembayaran maksimal 3 MB.");return;}const reader=new FileReader();reader.onload=()=>{paymentProofDataUrl=String(reader.result||"");const preview=document.getElementById("payment-proof-preview");if(preview){preview.src=paymentProofDataUrl;preview.style.display="block";}const status=document.getElementById("payment-proof-status");if(status)status.textContent=`${file.name} · ${(file.size/1024/1024).toFixed(2)} MB`;};reader.readAsDataURL(file);}
+        function imageDisplayUrl(value){
+          const raw=String(value||"").trim();
+          if(!raw)return "";
+          try{
+            const u=new URL(raw,window.location.origin);
+            if(u.protocol==="https:" && u.hostname==="cloud.yardansh.com") return `/api/image-proxy?url=${encodeURIComponent(u.origin+u.pathname)}`;
+          }catch{}
+          return raw;
+        }
+
         async function uploadImage(dataUrl,kind="image"){if(!dataUrl)throw new Error("Gambar belum dipilih.");const data=await apiRequest("/upload-image",{method:"POST",body:JSON.stringify({image:dataUrl,kind})});if(!data.success||!data.url)throw new Error(data.message||"Upload gambar gagal: URL tidak diterima.");return data.url;}
         async function submitPaymentProofCheckout(){const targetPhone=document.getElementById("target-phone").value.trim();const paymentMethod=document.getElementById("payment-method").value;const selectedItems=cart.filter(i=>i.selected);if(!targetPhone||!paymentMethod||!selectedItems.length){iosAlert("Lengkapi nomor penerima, metode pembayaran, dan centang minimal 1 produk.");return;}if(!paymentProofDataUrl){iosAlert("Silakan upload bukti pembayaran terlebih dahulu.");return;}try{const status=document.getElementById("payment-proof-status");if(status)status.textContent="Mengupload bukti pembayaran...";const proofUrl=await uploadImage(paymentProofDataUrl,"payment-proof");await completeCheckout(targetPhone,paymentMethod,proofUrl);cart=cart.filter(i=>!i.selected);updateCartUI();paymentProofDataUrl="";const input=document.getElementById("payment-proof-input");if(input)input.value="";const preview=document.getElementById("payment-proof-preview");if(preview){preview.removeAttribute("src");preview.style.display="none";}document.getElementById("cart-modal").classList.add("hidden");await refreshCurrentUserSession();showToast("Bukti pembayaran dikirim. Menunggu pemeriksaan admin.");}catch(error){console.error(error);iosAlert(error.message||"Gagal mengirim bukti pembayaran.");}}
 
@@ -3198,7 +3208,7 @@
             container.innerHTML=entries.map(item=>{
                 const instagram=item?.socials?.instagram;
                 const social=instagram ? `<a class="distributor-social" href="${escapeHtml(instagram)}" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1.1" class="instagram-dot"></circle></svg></a>` : "";
-                const photo=item.photo ? `<img class="distributor-avatar" src="${escapeHtml(item.photo)}" alt="" loading="lazy">` : `<div class="distributor-avatar" aria-hidden="true"></div>`;
+                const photo=item.photo ? `<img class="distributor-avatar" src="${escapeHtml(imageDisplayUrl(item.photo))}" alt="" loading="lazy">` : `<div class="distributor-avatar" aria-hidden="true"></div>`;
                 return `<div class="distributor-card">
                     ${photo}
                     <div class="distributor-info"><div class="distributor-role">${escapeHtml(item.role||"")}</div><strong>${escapeHtml(item.name||"-")}</strong></div>
@@ -3288,7 +3298,7 @@
                 const firstType=Array.isArray(product.types)&&product.types.length?product.types.find(type=>typeStock(type)>0)||product.types[0]:null;
                 const name=productText(product,"name"), desc=productText(product,"description");
                 grid.innerHTML += `<div class="product-card" onclick="openProductDetail(${Number(product.id)})">
-                    <div class="product-img-wrapper"><img src="${escapeHtml(product.image||"")}" alt="${escapeHtml(name)}" class="product-img"><span class="badge-stock ${isReady?'badge-ready':'badge-sold'}">${escapeHtml(isReady?t("ready"):t("sold"))}</span></div>
+                    <div class="product-img-wrapper"><img src="${escapeHtml(imageDisplayUrl(product.image||""))}" alt="${escapeHtml(name)}" class="product-img"><span class="badge-stock ${isReady?'badge-ready':'badge-sold'}">${escapeHtml(isReady?t("ready"):t("sold"))}</span></div>
                     <div class="product-info"><h3 class="product-name">${escapeHtml(name)}</h3><p class="product-desc">${escapeHtml(desc)}</p><div class="product-price">${firstType?`${escapeHtml(t("from_price"))} ${priceMarkup(firstType.price)}`:escapeHtml(t("price_unavailable"))}</div>${currentUserIsReseller()?'<span class="reseller-badge">Reseller aktif</span>':''}</div>
                 </div>`;
             });
@@ -4316,7 +4326,7 @@
                 const stock=(p.types||[]).reduce((s,t)=>s+Number(t.stock||0),0);
                 return `<div class="admin-product-card">
                     <div class="admin-product-head">
-                        <img class="admin-product-thumb" src="${escapeHtml(p.image||"")}" alt="">
+                        <img class="admin-product-thumb" src="${escapeHtml(imageDisplayUrl(p.image||""))}" alt="">
                         <div class="admin-product-copy"><strong>${escapeHtml(p.name||"Produk")}</strong><small>${escapeHtml(p.category||"-")} · ID ${Number(p.id)}</small></div>
                         <button type="button" class="admin-edit-btn" onclick="openAdminProductEditor(${Number(p.id)})" title="Edit">${adminEditIcon()}</button>
                     </div>
@@ -5000,7 +5010,7 @@ function startSupportPolling(){
     $('profile-display-email') && ($('profile-display-email').textContent=primary);
     const avatar=$('profile-avatar-wrap');
     if(avatar){
-      if(u.avatar){ avatar.classList.remove('profile-avatar-empty'); avatar.innerHTML=`<img src="${esc(u.avatar)}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" onerror="this.parentElement.innerHTML='?';this.parentElement.classList.add('profile-avatar-empty')">`; }
+      if(u.avatar){ avatar.classList.remove('profile-avatar-empty'); avatar.innerHTML=`<img src="${esc(imageDisplayUrl(u.avatar))}" alt="Avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" onerror="this.parentElement.innerHTML='?';this.parentElement.classList.add('profile-avatar-empty')">`; }
       else { avatar.classList.add('profile-avatar-empty'); avatar.textContent=(display||'?').slice(0,1).toUpperCase(); }
     }
     $('remove-avatar-btn')?.classList.toggle('hidden',!u.avatar);
@@ -5176,7 +5186,7 @@ function startSupportPolling(){
         return `<div class="admin-pending-card" style="padding:14px;">
           <div style="display:flex;gap:8px;align-items:flex-start;"><div style="flex:1"><strong>@${esc(p.username||'user')}</strong><div class="subscription-meta">${esc(p.userEmail||p.userPhone||'-')} · ${esc(new Date(p.createdAt).toLocaleString('id-ID'))}</div></div><span class="admin-status-pill ${waiting?'':'active'}">${waiting?'Form diminta':'Siap diproses'}</span></div>
           <div style="margin-top:9px;font-size:.68rem;line-height:1.45"><b>Pesanan:</b> ${esc((p.items||[]).map(x=>`${x.productName} — ${x.typeName} × ${x.quantity}`).join(', '))}<br><b>Total:</b> Rp${Number(p.totalSpent||0).toLocaleString('id-ID')} · ${esc(p.paymentMethod||'-')} · ${esc(p.targetPhone||'-')}</div>
-          ${p.proofUrl?`<img class="admin-proof-thumb" src="${esc(p.proofUrl)}" alt="Bukti pembayaran">`:''}
+          ${p.proofUrl?`<img class="admin-proof-thumb" src="${esc(imageDisplayUrl(p.proofUrl))}" alt="Bukti pembayaran">`:''}
           ${responseText?`<div class="admin-response-box"><b>Data form user:</b><pre style="white-space:pre-wrap;margin:6px 0 0;font:inherit">${esc(responseText)}</pre></div>`:''}
           <div class="admin-form-request"><strong style="font-size:.68rem">Minta data user</strong><div class="admin-form-checks">${checks}</div><button type="button" class="admin-mini-btn" style="margin-top:8px" onclick="requestAdminPurchaseForm(${i})">Kirim Form ke Inbox</button></div>
           <textarea id="pending-note-${i}" class="admin-product-data" style="min-height:64px" placeholder="Catatan custom untuk user (opsional)"></textarea>
@@ -5267,7 +5277,7 @@ function startSupportPolling(){
     const u=window.__adminUsers?.[index];if(!u)return;window.__adminDetailUserIndex=index;
     const purchases=Array.isArray(u.purchaseHistory)?u.purchaseHistory:[];const refunds=Array.isArray(u.refundHistory)?u.refundHistory:[];const warranties=Array.isArray(u.warrantyHistory)?u.warrantyHistory:[];
     const fmt=v=>v?new Date(v).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}):'-';
-    const avatar=u.avatar?`<img src="${esc(u.avatar)}" style="width:72px;height:72px;border-radius:22px;object-fit:cover;border:1px solid var(--glass-border)">`:'<div class="profile-avatar profile-avatar-empty" style="width:72px;height:72px">?</div>';
+    const avatar=u.avatar?`<img src="${esc(imageDisplayUrl(u.avatar))}" style="width:72px;height:72px;border-radius:22px;object-fit:cover;border:1px solid var(--glass-border)">`:'<div class="profile-avatar profile-avatar-empty" style="width:72px;height:72px">?</div>';
     const purchaseHtml=purchases.length?purchases.map((p,pi)=>`<details class="admin-history-collapse"><summary><span>${esc((p.items||[]).map(i=>i.productName).filter(Boolean).join(', ')||'Pesanan')} · ${rupiah(p.totalSpent||0)}</span><small style="color:var(--text-muted);font-weight:600">${esc(p.status||'')} · ${fmt(p.createdAt)}</small></summary><div class="admin-history-collapse-body"><div class="admin-history-row">${(p.items||[]).map(i=>`${esc(i.productName)} — ${esc(i.typeName||'')} × ${Number(i.quantity||0)} · ${rupiah(i.priceFinal||0)}`).join('<br>')}<br><strong>${rupiah(p.totalSpent||0)}</strong>${p.adminNote?`<br>Catatan: ${esc(p.adminNote)}`:''}</div></div></details>`).join(''):'<div style="color:var(--text-muted);font-size:.64rem">Belum ada transaksi.</div>';
     const refundHtml=refunds.length?refunds.map(r=>`<div class="admin-history-row"><b>${esc(r.productName||'Refund')}</b> — ${esc(r.typeName||'')}<br>${fmt(r.createdAt)} · <strong>${esc(r.status||'pending')}</strong><br>Estimasi: ${rupiah(r.calculation?.refund||0)}</div>`).join(''):'<div style="color:var(--text-muted);font-size:.64rem">Belum ada refund.</div>';
     const warrantyHtml=warranties.length?warranties.map(r=>`<div class="admin-history-row"><b>${esc(r.productName||'Garansi')}</b> · ${fmt(r.createdAt)}<br>Status: <strong>${esc(r.status||'pending')}</strong><br>${esc(r.reason||'')}</div>`).join(''):'<div style="color:var(--text-muted);font-size:.64rem">Belum ada claim garansi.</div>';
@@ -5300,7 +5310,7 @@ function startSupportPolling(){
   const oldSave=window.saveAdminEditor;window.saveAdminEditor=async function(){const st=window.__adminEditorState;if(st?.kind==='user'&&st.field==='failedLoginAttempts'){} return oldSave?oldSave():undefined;};
 
   // Override user list with clickable compact cards.
-  window.loadUserTableForAdmin=async function(){const c=$('admin-user-list');if(!c)return;c.innerHTML='<div class="admin-config-note">Memuat data user...</div>';try{const token=localStorage.getItem('admin_token');const r=await fetch('/api/admin-users',{headers:{Authorization:`Bearer ${token}`,Accept:'application/json'},cache:'no-store'});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.message||`Gagal mengambil data user (${r.status}).`);window.__adminUsers=Array.isArray(d.users)?d.users:[];if(!window.__adminUsers.length){c.innerHTML='<div class="admin-config-note">Belum ada user terdaftar.</div>';return;}c.innerHTML=window.__adminUsers.map((u,i)=>`<div class="admin-user-card" onclick="openAdminUserDetail(${i})"><div class="admin-user-top"><div class="admin-user-avatar">${u.avatar?`<img src="${esc(u.avatar)}" style="width:100%;height:100%;object-fit:cover;border-radius:17px">`:String(u.displayName||u.username||'?').slice(0,1).toUpperCase()}</div><div class="admin-user-name"><strong>@${esc(u.username||'-')}</strong><span>${esc(u.email||u.phone||'-')}</span></div><button type="button" class="admin-mini-btn danger" onclick="event.stopPropagation();deleteUserByAdmin(${i})">Hapus</button></div><div class="admin-user-stats"><div class="admin-user-stat"><span>Belanja</span><strong>${rupiah(u.totalMoneySpent||0)}</strong></div><div class="admin-user-stat"><span>Item</span><strong>${Number(u.totalItemsBought||0)}</strong></div><div class="admin-user-stat"><span>Langganan</span><strong>${(u.subscriptions||[]).filter(s=>s.status==='active').length}</strong></div><div class="admin-user-stat"><span>Status</span><strong>${u.status?.banned?'Banned':u.status?.suspended?'Suspended':u.reseller?'Reseller':'Aktif'}</strong></div><div class="admin-user-stat"><span>Login</span><strong>${u.lastLoginAt?new Date(u.lastLoginAt).toLocaleDateString('id-ID'):'-'}</strong></div></div></div>`).join('');}catch(e){c.innerHTML=`<div class="admin-config-note" style="color:#ff6b6b">${esc(e.message)}</div>`;}};
+  window.loadUserTableForAdmin=async function(){const c=$('admin-user-list');if(!c)return;c.innerHTML='<div class="admin-config-note">Memuat data user...</div>';try{const token=localStorage.getItem('admin_token');const r=await fetch('/api/admin-users',{headers:{Authorization:`Bearer ${token}`,Accept:'application/json'},cache:'no-store'});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.message||`Gagal mengambil data user (${r.status}).`);window.__adminUsers=Array.isArray(d.users)?d.users:[];if(!window.__adminUsers.length){c.innerHTML='<div class="admin-config-note">Belum ada user terdaftar.</div>';return;}c.innerHTML=window.__adminUsers.map((u,i)=>`<div class="admin-user-card" onclick="openAdminUserDetail(${i})"><div class="admin-user-top"><div class="admin-user-avatar">${u.avatar?`<img src="${esc(imageDisplayUrl(u.avatar))}" style="width:100%;height:100%;object-fit:cover;border-radius:17px">`:String(u.displayName||u.username||'?').slice(0,1).toUpperCase()}</div><div class="admin-user-name"><strong>@${esc(u.username||'-')}</strong><span>${esc(u.email||u.phone||'-')}</span></div><button type="button" class="admin-mini-btn danger" onclick="event.stopPropagation();deleteUserByAdmin(${i})">Hapus</button></div><div class="admin-user-stats"><div class="admin-user-stat"><span>Belanja</span><strong>${rupiah(u.totalMoneySpent||0)}</strong></div><div class="admin-user-stat"><span>Item</span><strong>${Number(u.totalItemsBought||0)}</strong></div><div class="admin-user-stat"><span>Langganan</span><strong>${(u.subscriptions||[]).filter(s=>s.status==='active').length}</strong></div><div class="admin-user-stat"><span>Status</span><strong>${u.status?.banned?'Banned':u.status?.suspended?'Suspended':u.reseller?'Reseller':'Aktif'}</strong></div><div class="admin-user-stat"><span>Login</span><strong>${u.lastLoginAt?new Date(u.lastLoginAt).toLocaleDateString('id-ID'):'-'}</strong></div></div></div>`).join('');}catch(e){c.innerHTML=`<div class="admin-config-note" style="color:#ff6b6b">${esc(e.message)}</div>`;}};
 
   window.impersonateAdminUser=async function(index){
     if(!isSuper())return iosAlert('Fitur ini hanya untuk Super Admin.');
