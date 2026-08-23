@@ -988,9 +988,10 @@
         .type-option.selected{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent-glow), inset 0 1px rgba(255,255,255,.18), 0 12px 30px var(--accent-glow);}
 
         /* ===== Admin Studio / Config / Product manager ===== */
-        .admin-tabbar{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;margin:0 0 14px;padding:6px;border:1px solid var(--glass-border);border-radius:22px;background:var(--glass-surface);backdrop-filter:var(--glass-blur-soft);-webkit-backdrop-filter:var(--glass-blur-soft);box-shadow:var(--glass-shadow)}
-        .admin-tab{min-height:42px;border:0;border-radius:17px;background:transparent;color:var(--text-muted);font:inherit;font-size:.72rem}
-        .admin-tab.active{color:var(--text-main);background:rgba(255,255,255,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 22px rgba(0,0,0,.14)}
+        .admin-tabbar{position:fixed;left:0;top:0;bottom:0;width:min(285px,82vw);z-index:24000;display:flex;flex-direction:column;gap:6px;padding:78px 12px 18px;background:rgba(15,17,22,.94);border-right:1px solid var(--glass-border);backdrop-filter:blur(28px) saturate(170%);-webkit-backdrop-filter:blur(28px) saturate(170%);box-shadow:18px 0 55px rgba(0,0,0,.25);transform:translate3d(-102%,0,0);opacity:0;visibility:hidden;pointer-events:none;transition:transform .28s cubic-bezier(.22,1,.36,1),opacity .2s ease,visibility .2s}.admin-tabbar.open{transform:translate3d(0,0,0);opacity:1;visibility:visible;pointer-events:auto}.admin-tab{min-height:44px;width:100%;flex:none;text-align:left;padding:0 15px;border:0;border-radius:15px;background:transparent;color:var(--text-muted);font:inherit;font-size:.72rem}.admin-tab.active{color:var(--text-main);background:rgba(255,255,255,.13);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 22px rgba(0,0,0,.12)}
+.admin-menu-toggle{position:fixed;left:14px;top:14px;z-index:24010;width:44px;height:44px;border:1px solid var(--glass-border);border-radius:15px;background:var(--glass-surface);color:var(--text-main);display:grid;place-items:center;box-shadow:var(--glass-shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.admin-menu-toggle svg{width:21px;height:21px;fill:currentColor}.admin-sidebar-backdrop{position:fixed;inset:0;z-index:23990;background:rgba(0,0,0,.32);backdrop-filter:blur(3px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,visibility .22s}.admin-sidebar-backdrop.open{opacity:1;visibility:visible;pointer-events:auto}
+.admin-view{animation:adminViewIn .22s cubic-bezier(.22,1,.36,1)}@keyframes adminViewIn{from{opacity:0;transform:translate3d(0,5px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
         .admin-view{display:none}.admin-view.active{display:block}
         .admin-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
         .admin-glass-btn{border:1px solid var(--glass-border);border-radius:17px;padding:10px 14px;background:var(--glass-surface);color:var(--text-main);backdrop-filter:var(--glass-blur-soft);-webkit-backdrop-filter:var(--glass-blur-soft);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 10px 28px rgba(0,0,0,.14)}
@@ -1788,6 +1789,14 @@ body.modal-open { scroll-behavior: auto; }
                     </div>
                     <div id="home-category-grid" class="home-category-grid"></div>
                 </section>
+                <section class="home-section">
+                    <div class="section-heading"><div><span class="home-eyebrow">Komunitas</span><h2>Channel WhatsApp</h2></div></div>
+                    <a id="home-whatsapp-link" class="support-btn" href="#" target="_blank" rel="noopener" style="text-decoration:none;display:flex;justify-content:space-between;align-items:center;"><span><strong>Channel WhatsApp</strong><small>Ikuti informasi terbaru RYY STORE.</small></span><span>→</span></a>
+                </section>
+                <section class="home-section" id="home-testimonials-section">
+                    <div class="section-heading"><div><span class="home-eyebrow">Pengalaman pembeli</span><h2>Testimoni</h2></div></div>
+                    <div id="home-testimonials" class="home-category-grid"></div>
+                </section>
             </div>
 
             <!-- VIEW CATALOG (User) -->
@@ -1814,14 +1823,17 @@ body.modal-open { scroll-behavior: auto; }
                         <span id="admin-identity" style="font-weight:600;color:var(--accent);">Admin</span>
                     </div>
 
-                    <div class="admin-tabbar">
-                        <button type="button" class="admin-tab active" data-admin-tab="users" onclick="switchAdminTab('users')">User</button>
-                        <button type="button" class="admin-tab" data-admin-tab="products" onclick="switchAdminTab('products')">Produk</button>
-                        <button type="button" class="admin-tab" data-admin-tab="chat" onclick="switchAdminTab('chat')">Chat</button>
-                        <button type="button" class="admin-tab" data-admin-tab="support" onclick="switchAdminTab('support')">Support</button>
-                        <button type="button" class="admin-tab" data-admin-tab="broadcast" onclick="switchAdminTab('broadcast')">Broadcast</button>
-                        <button type="button" class="admin-tab" data-admin-tab="config" onclick="switchAdminTab('config')">Konfigurasi</button>
-                    </div>
+                    <button type="button" class="admin-menu-toggle" aria-label="Buka menu admin" onclick="toggleAdminSidebar()"><svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg></button>
+                    <div id="admin-sidebar-backdrop" class="admin-sidebar-backdrop" onclick="closeAdminSidebar()"></div>
+                    <nav id="admin-tabbar" class="admin-tabbar" aria-label="Menu admin">
+                        <button type="button" class="admin-tab active" data-admin-tab="users" onclick="switchAdminTab('users');closeAdminSidebar()">User</button>
+                        <button type="button" class="admin-tab" data-admin-tab="products" onclick="switchAdminTab('products');closeAdminSidebar()">Produk</button>
+                        <button type="button" class="admin-tab" data-admin-tab="chat" onclick="switchAdminTab('chat');closeAdminSidebar()">Chat</button>
+                        <button type="button" class="admin-tab" data-admin-tab="support" onclick="switchAdminTab('support');closeAdminSidebar()">Support</button>
+                        <button type="button" class="admin-tab" data-admin-tab="broadcast" onclick="switchAdminTab('broadcast');closeAdminSidebar()">Broadcast</button>
+                        <button type="button" class="admin-tab" data-admin-tab="proofs" onclick="switchAdminTab('proofs');closeAdminSidebar()">Bukti Transaksi</button>
+                        <button type="button" class="admin-tab" data-admin-tab="config" onclick="switchAdminTab('config');closeAdminSidebar()">Konfigurasi</button>
+                    </nav>
 
                     <section id="admin-view-users" class="admin-view active">
                         <div class="settings-panel" style="margin-top:0;margin-bottom:14px;">
@@ -1870,6 +1882,14 @@ body.modal-open { scroll-behavior: auto; }
                         </div>
                     </section>
 
+                    <section id="admin-view-proofs" class="admin-view">
+                        <div class="settings-panel" style="margin-top:0;">
+                            <div class="admin-toolbar"><div><h4>Bukti Transaksi</h4><p class="admin-config-note">Pilih user untuk melihat seluruh galeri bukti transaksi.</p></div><button type="button" class="admin-glass-btn" onclick="loadAdminTransactionProofs()">↻</button></div>
+                            <div id="admin-proof-user-list" class="admin-user-grid" style="margin-top:12px;"></div>
+                            <div id="admin-proof-gallery" style="margin-top:14px;"></div>
+                        </div>
+                    </section>
+
                     <section id="admin-view-config" class="admin-view">
                         <div class="admin-config-stack">
                             <div class="settings-panel" style="margin-top:0;">
@@ -1883,6 +1903,7 @@ body.modal-open { scroll-behavior: auto; }
                                         <label class="admin-form-label">Mulai Operasi<input id="cfg-store-since" class="admin-form-input"></label>
                                     </div>
                                     <label class="admin-form-label">Gambar Toko / Portfolio URL<input id="cfg-store-photo" class="admin-form-input" placeholder="https://..."></label>
+                                    <label class="admin-form-label">Channel WhatsApp URL<input id="cfg-whatsapp-link" class="admin-form-input" placeholder="https://chat.whatsapp.com/..."></label>
                                     <button type="button" class="admin-glass-btn accent" onclick="saveAdminSiteConfig()">Simpan Konfigurasi Toko</button>
                                 </div>
                             </div>
@@ -1929,6 +1950,7 @@ body.modal-open { scroll-behavior: auto; }
                                 <div id="cfg-admin-list" style="margin-top:10px;"></div>
                             </div>
                         </div>
+                        <footer style="text-align:center;color:var(--text-muted);font-size:.64rem;padding:24px 0 8px;">Copyright ©2026 Ryy-store.</footer>
                     </section>
                 </div>
             </div>
@@ -2122,9 +2144,8 @@ body.modal-open { scroll-behavior: auto; }
 
         <div id="maintenance-overlay" class="maintenance-overlay hidden" aria-live="polite">
             <div class="maintenance-card">
-                <div style="font-size:2.2rem;margin-bottom:10px;">🛠️</div>
-                <h2>RYY STORE sedang diperbaiki</h2>
-                <p>Website sedang dalam maintenance. Silakan kembali lagi nanti. Panel admin tetap tersedia untuk pengelola.</p>
+                <h2>RYY STORE</h2>
+                <p>Server sedang maintenance, kembali lagi nanti.</p>
             </div>
         </div>
 
@@ -2614,6 +2635,7 @@ body.modal-open { scroll-behavior: auto; }
                 // independent from the product catalog. Reseller entries are resolved
                 // server-side from users whose reseller flag is true.
                 await loadDistributorData();
+                await loadHomeTestimonials();
                 // Keep the currently visible catalog populated after async loading.
                 if (document.getElementById('product-grid')) {
                     renderCategories();
@@ -3387,6 +3409,14 @@ body.modal-open { scroll-behavior: auto; }
                 </div>`;
             }).join("") || `<div class="empty-state">${escapeHtml(t("pending_empty"))}</div>`;
         }
+        function renderHomeTestimonials(){
+            const box=document.getElementById("home-testimonials"); if(!box)return;
+            const items=[]; for(const u of (window.__testimonialUsers||[])){ for(const p of (u.pendingPurchases||[])){ if(p.status==="confirmed" && p.proofUrl) items.push({username:u.username||"user",proofUrl:p.proofUrl,createdAt:p.processedAt||p.createdAt,items:p.items||[]}); }}
+            items.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
+            box.innerHTML=items.slice(0,12).map(x=>`<div class="home-category-card testimonial-card"><div class="testimonial-proof"><img src="${escapeHtml(imageDisplayUrl(x.proofUrl))}" loading="lazy" alt="Bukti transaksi"><span>RYY STORE</span></div><div class="home-category-copy"><strong>@${escapeHtml(x.username)}</strong><small>${escapeHtml((x.items||[]).map(i=>i.productName).join(", ")||"Transaksi berhasil")} · ${escapeHtml(new Date(x.createdAt).toLocaleDateString("id-ID"))}</small></div></div>`).join("")||'<div class="empty-state">Belum ada testimoni.</div>';
+        }
+        async function loadHomeTestimonials(){try{const r=await fetch(`${API_BASE}/products/testimonials?ts=${Date.now()}`,{cache:"no-store"});if(r.ok){const d=await r.json();window.__testimonialUsers=d.users||[];renderHomeTestimonials();}}catch{}}
+
         function openHomeCategory(category){
             const target=String(category||"Semua");
             switchView("catalog",target);
@@ -3414,9 +3444,10 @@ body.modal-open { scroll-behavior: auto; }
             if (!grid) return;
             const listed=(Array.isArray(storeData.categories)?storeData.categories:[]).filter(c=>c!=="Semua");
             const fallback=[...new Set((storeData.products||[]).map(p=>p.category).filter(Boolean))];
-            const cats=listed.length?listed:fallback;
+            const hasBest=Array.isArray(storeData.products)&&storeData.products.some(p=>p.bestSeller===true);
+            const cats=[...(hasBest?["Best Seller"]:[]),...(listed.length?listed:fallback)].filter((c,i,a)=>a.indexOf(c)===i && (c==="Best Seller" || (storeData.products||[]).some(p=>p.category===c))).sort((a,b)=>a==="Best Seller"?-1:b==="Best Seller"?1:String(a).localeCompare(String(b),"id",{sensitivity:"base"}));
             grid.innerHTML=cats.map(cat=>{
-                const count=(storeData.products||[]).filter(p=>p.category===cat).length;
+                const count=cat==="Best Seller"?(storeData.products||[]).filter(p=>p.bestSeller===true).length:(storeData.products||[]).filter(p=>p.category===cat).length;
                 return `<button type="button" class="home-category-card" data-category="${escapeHtml(cat)}" onclick="openHomeCategory(this.dataset.category)">
                     <span class="home-category-icon"><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4zm10 0h6v6h-6z"/></svg></span>
                     <span class="home-category-copy"><strong>${escapeHtml(categoryLabel(cat))}</strong><small>${count} ${escapeHtml(t("products_count"))}</small></span>
@@ -3442,8 +3473,9 @@ body.modal-open { scroll-behavior: auto; }
             const products=Array.isArray(storeData.products)?storeData.products:[];
             const raw=Array.isArray(storeData.categories)?storeData.categories:["Semua"];
             const used=new Set(products.map(p=>String(p.category||"").trim()).filter(Boolean));
-            const categories=["Semua",...raw.filter(c=>String(c)!=="Semua" && used.has(String(c))),...Array.from(used).filter(c=>!raw.includes(c))];
-            const visible=categories.filter(cat=>cat==="Semua" || products.some(p=>String(p.category||"")===String(cat)));
+            const bestSellerUsed=products.some(p=>p.bestSeller===true);
+            const categories=["Semua",...(bestSellerUsed?["Best Seller"]:[]),...raw.filter(c=>String(c)!=="Semua" && String(c)!=="Best Seller" && used.has(String(c))),...Array.from(used).filter(c=>!raw.includes(c) && String(c)!=="Best Seller")].sort((a,b)=>a==="Semua"?-1:b==="Semua"?1:a==="Best Seller"?-1:b==="Best Seller"?1:String(a).localeCompare(String(b),"id",{sensitivity:"base"}));
+            const visible=categories.filter(cat=>cat==="Semua" || cat==="Best Seller" || products.some(p=>String(p.category||"")===String(cat)));
             const safeActive=visible.includes(activeCategory)?activeCategory:"Semua";
             container.innerHTML=visible.map(cat=>`<button type="button" data-category="${escapeHtml(cat)}" onclick="renderProducts(this.dataset.category)" class="cat-tab ${cat===safeActive?'active':''}">${escapeHtml(categoryLabel(cat))}</button>`).join("");
         }
@@ -3455,7 +3487,7 @@ body.modal-open { scroll-behavior: auto; }
             const grid=document.getElementById("product-grid");
             if(!grid) return;
             const products=Array.isArray(storeData.products)?storeData.products:[];
-            const categoryFiltered=activeCategory==="Semua"?products:products.filter(p=>p.category===activeCategory);
+            const categoryFiltered=activeCategory==="Semua"?products:activeCategory==="Best Seller"?products.filter(p=>p.bestSeller===true):products.filter(p=>p.category===activeCategory);
             const filtered=search?categoryFiltered.filter(p=>{ const hay=[p.name,p.description,p.category,...(Array.isArray(p.types)?p.types.map(x=>x.typeName):[])].filter(Boolean).join(" ").toLowerCase(); return hay.includes(search); }):categoryFiltered;
             const total=document.getElementById("catalog-total-products");
             if(total) total.textContent=`${filtered.length} ${t("products_count")}`;
@@ -3464,7 +3496,7 @@ body.modal-open { scroll-behavior: auto; }
                 grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--text-muted)">${escapeHtml(t("no_products"))}</div>`;
                 return;
             }
-            filtered.forEach(product=>{
+            filtered.sort((a,b)=>String(productText(a,"name")).localeCompare(String(productText(b,"name")),"id",{sensitivity:"base"})).forEach(product=>{
                 product.stock=productStock(product);
                 const isReady=product.stock>0;
                 const firstType=Array.isArray(product.types)&&product.types.length?product.types.find(type=>typeStock(type)>0)||product.types[0]:null;
@@ -4527,10 +4559,11 @@ body.modal-open { scroll-behavior: auto; }
                 __adminConfig=data.config||{};
                 const info=storeData?.storeInfo||{};
                 const set=(id,val)=>{const e=document.getElementById(id);if(e)e.value=val??""};
-                set("cfg-store-name",info.name);set("cfg-store-slogan",info.slogan);set("cfg-store-description",info.description);set("cfg-store-owner",info.owner);set("cfg-store-since",info.operatingSince);set("cfg-store-photo",info.urlPhoto);
+                set("cfg-store-name",info.name);set("cfg-store-slogan",info.slogan);set("cfg-store-description",info.description);set("cfg-store-owner",info.owner);set("cfg-store-since",info.operatingSince);set("cfg-store-photo",info.urlPhoto);set("cfg-whatsapp-link",info.whatsappLink);
                 set("cfg-ui-mode",__adminConfig.uiMode||"liquid-glass");set("cfg-font-family",__adminConfig.font?.family||"san-francisco");set("cfg-font-weight",__adminConfig.font?.weight||600);
                 const maintenance=document.getElementById("cfg-maintenance");if(maintenance)maintenance.checked=__adminConfig.maintenance===true;
                 renderAdminConfigAdmins();
+                renderAdminOtherTools?.();
             }catch(error){console.error(error);iosAlert(error.message);}
         }
 
@@ -4605,13 +4638,15 @@ Simpan data ini. Kredensial rahasia tidak ditampilkan lagi setelah ini.`;
             try{
                 const data=await adminApi("admin-config",{method:"PATCH",body:{
                     action:"site",
+                    whatsappLink:document.getElementById("cfg-whatsapp-link").value.trim(),
                     storeInfo:{
                         name:document.getElementById("cfg-store-name").value.trim(),
                         slogan:document.getElementById("cfg-store-slogan").value.trim(),
                         description:document.getElementById("cfg-store-description").value.trim(),
                         owner:document.getElementById("cfg-store-owner").value.trim(),
                         operatingSince:document.getElementById("cfg-store-since").value.trim(),
-                        urlPhoto:document.getElementById("cfg-store-photo").value.trim()
+                        urlPhoto:document.getElementById("cfg-store-photo").value.trim(),
+                        whatsappLink:document.getElementById("cfg-whatsapp-link").value.trim()
                     }
                 }});
                 __adminConfig=data.config;showToast("Portfolio toko berhasil diperbarui.");await loadStoreData();
@@ -4929,7 +4964,12 @@ async function refreshActiveAdminChat(){
 }
 async function loadAdminSupport(){const box=document.getElementById('admin-support-list');if(!box)return;try{const r=await fetch('/api/admin-support',{headers:{Authorization:`Bearer ${localStorage.getItem('admin_token')}`}});const d=await r.json();if(!r.ok)throw new Error(d.message||'Gagal memuat support.');box.innerHTML=(d.requests||[]).map(r=>`<div class="support-admin-card"><strong>${escapeHtml(r.type==='warranty'?'🛡️ Claim Garansi':'💸 Refund')} — @${escapeHtml(r.username||'user')}</strong><small>${escapeHtml(r.userEmail||'')} · ${escapeHtml(new Date(r.createdAt).toLocaleString('id-ID'))}</small><small>${r.type==='warranty'?`Produk: ${escapeHtml(r.productName||'')} · Error: ${escapeHtml(r.errorDate||'')}<br>Alasan: ${escapeHtml(r.reason||'')}`:`Produk: ${escapeHtml(r.productName||'')} — ${escapeHtml(r.typeName||'')}<br>Estimasi refund: ${rupiah(r.calculation?.refund||0)} · Sisa: ${Number(r.calculation?.remainingDays||0).toFixed(2)} hari`}</small><div style="display:flex;gap:7px;margin-top:8px;align-items:center"><span class="admin-status-pill ${r.status==='approved'||r.status==='completed'?'active':''}">${escapeHtml(r.status)}</span><select class="admin-form-select" style="margin:0;max-width:160px" onchange="setAdminSupportStatus('${escapeHtml(r.userId)}','${escapeHtml(r.id)}',this.value)"><option value="pending" ${r.status==='pending'?'selected':''}>pending</option><option value="approved" ${r.status==='approved'?'selected':''}>approved</option><option value="rejected" ${r.status==='rejected'?'selected':''}>rejected</option><option value="completed" ${r.status==='completed'?'selected':''}>completed</option></select><button class="admin-mini-btn" type="button" onclick="openAdminChatForUser('${escapeHtml(r.userEmail)}')">Chat</button></div></div>`).join('')||'<div style="color:var(--text-muted);font-size:.7rem;">Belum ada permintaan.</div>'}catch(e){box.innerHTML=`<div style="color:#ff6b6b;font-size:.7rem;">${escapeHtml(e.message)}</div>`}}
 async function setAdminSupportStatus(userId,requestId,status){try{const r=await fetch('/api/admin-support',{method:'PATCH',headers:{'Content-Type':'application/json',Authorization:`Bearer ${localStorage.getItem('admin_token')}`},body:JSON.stringify({userId,requestId,status})});const d=await r.json();if(!r.ok)throw new Error(d.message||'Gagal mengubah status.');showToast('Status support diperbarui.');loadAdminSupport()}catch(e){iosAlert(e.message||'Gagal mengubah status.')}}
-function switchAdminTab(tab){document.querySelectorAll('.admin-tab').forEach(b=>b.classList.toggle('active',b.dataset.adminTab===tab));document.querySelectorAll('.admin-view').forEach(v=>v.classList.remove('active'));document.getElementById(`admin-view-${tab}`)?.classList.add('active');if(tab==='users'){loadUserTableForAdmin();loadAdminPendingPurchases()}if(tab==='products')loadAdminProducts();if(tab==='config' && typeof loadAdminConfig==='function')loadAdminConfig();if(tab==='chat'){activeAdminChatEmail=null;closeAdminChatRoom();loadAdminChats();clearInterval(adminChatTimer);adminChatTimer=setInterval(()=>{if(activeAdminChatEmail)refreshActiveAdminChat();else loadAdminChats();},4000)}if(tab==='support')loadAdminSupport()}
+function toggleAdminSidebar(){document.getElementById('admin-tabbar')?.classList.toggle('open');document.getElementById('admin-sidebar-backdrop')?.classList.toggle('open');}
+function closeAdminSidebar(){document.getElementById('admin-tabbar')?.classList.remove('open');document.getElementById('admin-sidebar-backdrop')?.classList.remove('open');}
+async function loadAdminTransactionProofs(){const list=document.getElementById('admin-proof-user-list'),gallery=document.getElementById('admin-proof-gallery');if(!list)return;list.innerHTML='<div class="admin-config-note">Memuat user...</div>';gallery.innerHTML='';try{const r=await fetch('/api/admin-purchases',{headers:{Authorization:`Bearer ${localStorage.getItem('admin_token')}`,Accept:'application/json'},cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.message||'Gagal memuat bukti transaksi.');const map=new Map();for(const p of (d.purchases||[])){if(!p.proofUrl)continue;const key=p.userId;const row=map.get(key)||{userId:key,username:p.username,email:p.userEmail,proofs:[]};row.proofs.push(p);map.set(key,row);}window.__adminProofUsers=[...map.values()];list.innerHTML=window.__adminProofUsers.map((u,i)=>`<button type="button" class="admin-user-card" onclick="showAdminProofGallery(${i})"><div class="admin-user-top"><div class="admin-user-avatar">${escapeHtml(String(u.username||'?').slice(0,1).toUpperCase())}</div><div class="admin-user-name"><strong>@${escapeHtml(u.username||'-')}</strong><span>${escapeHtml(u.email||'-')}</span></div><span class="admin-chip">${u.proofs.length} foto</span></div></button>`).join('')||'<div class="admin-config-note">Belum ada bukti transaksi.</div>';}catch(e){list.innerHTML=`<div class="admin-config-note" style="color:#ff6b6b">${escapeHtml(e.message)}</div>`;}}
+function showAdminProofGallery(i){const u=window.__adminProofUsers?.[i],g=document.getElementById('admin-proof-gallery');if(!u||!g)return;g.innerHTML=`<div class="admin-toolbar"><div><h4>@${escapeHtml(u.username||'user')}</h4><p class="admin-config-note">${escapeHtml(u.email||'')}</p></div></div><div class="proof-gallery">${u.proofs.map(p=>`<figure><img src="${escapeHtml(imageDisplayUrl(p.proofUrl))}" alt="Bukti transaksi" loading="lazy"><figcaption>${escapeHtml(new Date(p.createdAt).toLocaleString('id-ID'))}<br>${escapeHtml((p.items||[]).map(i=>i.productName).join(', '))}</figcaption></figure>`).join('')}</div>`;}
+
+function switchAdminTab(tab){document.querySelectorAll('.admin-tab').forEach(b=>b.classList.toggle('active',b.dataset.adminTab===tab));document.querySelectorAll('.admin-view').forEach(v=>v.classList.remove('active'));document.getElementById(`admin-view-${tab}`)?.classList.add('active');if(tab==='users'){loadUserTableForAdmin();loadAdminPendingPurchases()}if(tab==='products')loadAdminProducts();if(tab==='config' && typeof loadAdminConfig==='function')loadAdminConfig();if(tab==='chat'){activeAdminChatEmail=null;closeAdminChatRoom();loadAdminChats();clearInterval(adminChatTimer);adminChatTimer=setInterval(()=>{if(activeAdminChatEmail)refreshActiveAdminChat();else loadAdminChats();},4000)}if(tab==='support')loadAdminSupport();if(tab==='proofs')loadAdminTransactionProofs()}
 
 // Replace the inbox form submit path with a native confirmation fallback; the original dialog was below the inbox sheet z-index.
 async function confirmInboxFormSubmission(){const st=window.__activeInboxForm;if(!st)return;const responses={},lines=[];st.fields.forEach((f,i)=>{const v=document.getElementById(`inbox-field-${i}`)?.value.trim()||'';responses[f.key]=v;lines.push(`${f.label}: ${v||'-'}`)});if(Object.values(responses).some(v=>!v)){iosAlert('Semua data pada form wajib diisi.');return}const ok=window.confirm(`Apakah data yang Anda masukan sudah benar?\n\n${lines.join('\n')}`);if(!ok)return;try{const d=await apiRequest('/inbox',{method:'POST',body:JSON.stringify({action:'submitForm',messageId:st.messageId,purchaseId:st.purchaseId,responses})});saveUserSession(d.user,localStorage.getItem('auth_token'));document.getElementById('inbox-form-overlay')?.classList.add('hidden');renderInbox();showToast('Data form berhasil dikirim ke admin.')}catch(err){iosAlert(err.message||'Gagal mengirim form.')}}
@@ -5384,7 +5424,7 @@ function startSupportPolling(){
     if(tab==='users'){loadUserTableForAdmin?.();loadAdminPendingPurchases();}
     if(tab==='products')loadAdminProducts?.();if(tab==='config'&&typeof loadAdminConfig==='function')loadAdminConfig();
     if(tab==='chat'){activeAdminChatEmail=null;closeAdminChatRoom?.();loadAdminChats?.();clearInterval(window.adminChatTimer);window.adminChatTimer=setInterval(()=>{if(activeAdminChatEmail)refreshActiveAdminChat?.();else loadAdminChats?.();},4000);}
-    if(tab==='support')loadAdminSupport?.();
+    if(tab==='support')loadAdminSupport?.();if(tab==='proofs')loadAdminTransactionProofs?.();
   };
 
   // Keep Inbox visible above the AI button after authentication.
