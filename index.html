@@ -5223,14 +5223,14 @@ function startSupportPolling(){
   const $=id=>document.getElementById(id);
   const esc=v=>typeof escapeHtml==='function'?escapeHtml(v):String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const getAdmin=()=>{try{return JSON.parse(localStorage.getItem('current_admin')||'null')}catch{return null}};
-  const isSuper=()=>{const a=getAdmin();const role=String(a?.role||'').toLowerCase();return role==='super'||role==='superadmin'||String(a?.username||'').toLowerCase()==='admin_utama'||String(localStorage.getItem('admin_super')||'')==='1'};
+  const isSuper=()=>{const a=getAdmin();const role=String(a?.role||'').toLowerCase();const username=String(a?.username||'').trim().toLowerCase();return role==='super'||role==='superadmin'||username==='admin_utama'||String(localStorage.getItem('admin_super')||'')==='1'};
   const user=()=>{try{return JSON.parse(localStorage.getItem('current_user')||'null')}catch{return null}};
 
   const style=document.createElement('style');style.textContent=`
     .floating-user-nav .inbox-nav-item .nav-icon-wrap{position:relative;display:grid;place-items:center}.floating-user-nav .inbox-nav-item svg{width:21px;height:21px;fill:currentColor}.inbox-nav-badge{position:absolute;right:-8px;top:-7px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;background:var(--accent);color:#fff;font-size:9px;font-weight:900;display:grid;place-items:center;border:2px solid var(--bg-main);box-shadow:0 5px 16px var(--accent-glow)}
     .support-fab{position:fixed;left:18px;bottom:max(155px,calc(env(safe-area-inset-bottom) + 150px));z-index:11620;width:52px;height:52px;border-radius:50%;border:1px solid var(--glass-border);background:rgba(255,255,255,.13);color:var(--text-main);display:grid;place-items:center;backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);box-shadow:0 16px 42px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.3)}.support-fab svg{width:24px;height:24px;fill:currentColor}.support-fab.hidden{display:none!important}.support-fab-dot{position:absolute;right:2px;top:2px;width:10px;height:10px;border-radius:50%;background:#28d17c;box-shadow:0 0 0 3px rgba(40,209,124,.12)}
     .impersonation-bar{position:fixed;top:max(12px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);z-index:26000;width:min(94vw,560px);padding:9px 11px;border:1px solid var(--glass-border);border-radius:18px;background:rgba(25,25,32,.82);backdrop-filter:blur(24px) saturate(180%);color:#fff;display:flex;align-items:center;gap:8px;box-shadow:0 15px 45px rgba(0,0,0,.3)}.impersonation-bar strong{font-size:.68rem;flex:1}.impersonation-bar button{border:1px solid rgba(255,255,255,.18);border-radius:12px;background:rgba(255,255,255,.1);color:#fff;padding:7px 9px;font-weight:800;font-size:.62rem}.impersonation-bar.hidden{display:none!important}
-    .admin-detail-section{margin-top:11px;padding:12px;border:1px solid var(--glass-border);border-radius:20px;background:rgba(255,255,255,.055)}.admin-detail-section h4{font-size:.76rem;margin-bottom:8px}.admin-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.admin-detail-item{padding:9px 10px;border-radius:14px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)}.admin-detail-item span{display:block;color:var(--text-muted);font-size:.58rem}.admin-detail-item strong{display:block;margin-top:3px;font-size:.68rem;word-break:break-word}.admin-detail-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.admin-detail-actions button{flex:1;min-width:120px}.admin-status-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;border-radius:14px;background:rgba(255,255,255,.05);margin-top:6px}.admin-status-row span{font-size:.67rem}.admin-history-row{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:.64rem;line-height:1.45}.admin-history-row:last-child{border-bottom:0}.admin-switch-mini{position:relative;width:43px;height:24px;display:inline-block}.admin-switch-mini input{opacity:0;width:0;height:0}.admin-switch-mini i{position:absolute;inset:0;border-radius:99px;background:rgba(255,255,255,.16);border:1px solid var(--glass-border)}.admin-switch-mini i:after{content:'';position:absolute;width:18px;height:18px;left:2px;top:2px;border-radius:50%;background:#fff;transition:.2s}.admin-switch-mini input:checked+i{background:var(--accent)}.admin-switch-mini input:checked+i:after{transform:translateX(19px)}
+    .admin-photo-link{display:inline-block;margin-top:5px;color:var(--accent);font-size:.58rem;text-decoration:none;word-break:break-all}.admin-photo-link:hover{text-decoration:underline}.admin-detail-section{margin-top:11px;padding:12px;border:1px solid var(--glass-border);border-radius:20px;background:rgba(255,255,255,.055)}.admin-detail-section h4{font-size:.76rem;margin-bottom:8px}.admin-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.admin-detail-item{padding:9px 10px;border-radius:14px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.08)}.admin-detail-item span{display:block;color:var(--text-muted);font-size:.58rem}.admin-detail-item strong{display:block;margin-top:3px;font-size:.68rem;word-break:break-word}.admin-detail-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.admin-detail-actions button{flex:1;min-width:120px}.admin-status-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;border-radius:14px;background:rgba(255,255,255,.05);margin-top:6px}.admin-status-row span{font-size:.67rem}.admin-history-row{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:.64rem;line-height:1.45}.admin-history-row:last-child{border-bottom:0}.admin-switch-mini{position:relative;width:43px;height:24px;display:inline-block}.admin-switch-mini input{opacity:0;width:0;height:0}.admin-switch-mini i{position:absolute;inset:0;border-radius:99px;background:rgba(255,255,255,.16);border:1px solid var(--glass-border)}.admin-switch-mini i:after{content:'';position:absolute;width:18px;height:18px;left:2px;top:2px;border-radius:50%;background:#fff;transition:.2s}.admin-switch-mini input:checked+i{background:var(--accent)}.admin-switch-mini input:checked+i:after{transform:translateX(19px)}
     .warranty-sheet{max-width:560px!important}.warranty-sheet .support-form-grid{gap:12px}.warranty-sheet label{padding:9px 10px;border-radius:16px;background:rgba(255,255,255,.055);border:1px solid var(--glass-border)}.warranty-sheet input,.warranty-sheet textarea,.warranty-sheet select{background:rgba(255,255,255,.08)!important;border-color:var(--glass-border)!important}.warranty-upload{padding:10px;border:1px dashed var(--glass-border);border-radius:17px;background:rgba(255,255,255,.04)}
     @media(max-width:700px){.admin-detail-grid{grid-template-columns:1fr}.admin-chat-layout{grid-template-columns:1fr}.admin-chat-list{max-height:180px}.support-fab{bottom:max(148px,calc(env(safe-area-inset-bottom) + 143px))}}
   `;document.head.appendChild(style);
@@ -5278,8 +5278,8 @@ function startSupportPolling(){
       <div class="admin-detail-section"><h4>Informasi Dasar</h4><div class="admin-detail-grid">
         <div class="admin-detail-item"><span>User ID</span><strong>${esc(u.id)}</strong></div><div class="admin-detail-item"><span>Username</span><strong>${esc(u.username)}</strong></div>
         <div class="admin-detail-item"><span>Email</span><strong>${esc(u.email||'-')}</strong></div><div class="admin-detail-item"><span>Kontak tambahan</span><strong>${esc(u.secondaryContact||'Belum ada')}</strong></div>
-        <div class="admin-detail-item"><span>Nomor telepon</span><strong>${esc(u.phone||'Belum ada')}</strong></div><div class="admin-detail-item"><span>Foto profil</span><strong>Tidak dapat diedit admin</strong></div>
-      </div><div class="admin-detail-actions"><button class="admin-mini-btn" onclick="toggleAdminFieldEditor('displayName')">Edit Nama</button><button class="admin-mini-btn" onclick="toggleAdminFieldEditor('phone')">Edit Telepon</button><button class="admin-mini-btn" onclick="toggleAdminFieldEditor('totalItemsBought','number')">Edit Total Item</button><button class="admin-mini-btn" onclick="toggleAdminFieldEditor('totalMoneySpent','number')">Edit Total Pengeluaran</button><button class="admin-mini-btn" onclick="toggleAdminFieldEditor('password','password')">Reset Password</button></div></div>
+        <div class="admin-detail-item"><span>Nomor telepon</span><strong>${esc(u.phone||'Belum ada')}</strong></div><div class="admin-detail-item"><span>Foto profil / URL</span><strong style="word-break:break-all">${esc(u.avatar||'Belum ada URL foto profil')}</strong>${u.avatar?`<a href="${esc(u.avatar)}" target="_blank" rel="noopener" class="admin-photo-link">Buka foto ↗</a>`:''}</div>
+      </div><div class="admin-detail-actions"><button class="admin-mini-btn" onclick="toggleAdminFieldEditor('displayName')">Edit Nama</button><button class="admin-mini-btn" onclick="toggleAdminFieldEditor('phone')">Edit Telepon</button><button class="admin-mini-btn accent" onclick="toggleAdminFieldEditor('avatar')">Edit URL Foto</button><button class="admin-mini-btn" onclick="toggleAdminFieldEditor('totalItemsBought','number')">Edit Total Item</button><button class="admin-mini-btn" onclick="toggleAdminFieldEditor('totalMoneySpent','number')">Edit Total Pengeluaran</button><button class="admin-mini-btn" onclick="toggleAdminFieldEditor('password','password')">Reset Password</button></div></div>
       <div class="admin-detail-section"><h4>Riwayat Aktivitas</h4><div class="admin-detail-grid"><div class="admin-detail-item"><span>Tanggal registrasi</span><strong>${fmt(u.createdAt)}</strong></div><div class="admin-detail-item"><span>Waktu terakhir login</span><strong>${fmt(u.lastLoginAt)}</strong></div><div class="admin-detail-item"><span>IP terakhir</span><strong>${esc(u.lastLoginIp||'-')}</strong></div><div class="admin-detail-item"><span>Perangkat</span><strong>${esc(u.lastLoginDevice||'-')}</strong></div><div class="admin-detail-item"><span>Browser</span><strong>${esc(u.lastLoginBrowser||'-')}</strong></div><div class="admin-detail-item"><span>Failed login attempts</span><strong>${Number(u.failedLoginAttempts||0)}</strong></div></div><div class="admin-detail-actions"><button class="admin-mini-btn" onclick="resetAdminFailedAttempts(${index})">Reset Percobaan Masuk</button></div></div>
       <div class="admin-detail-section"><h4>Status Akun & Keamanan</h4>
         ${[['banned','Banned'],['suspended','Suspended'],['reseller','Reseller']].map(([k,l])=>`<div class="admin-status-row"><span>${l}</span><label class="admin-switch-mini"><input type="checkbox" ${u.status?.[k]||((k==='reseller')&&u.reseller)?'checked':''} onchange="setAdminUserStatus(${index},'${k}',this.checked)"><i></i></label></div>`).join('')}
@@ -5312,6 +5312,11 @@ function startSupportPolling(){
       // Preserve the real admin session and temporarily use the generated user token.
       localStorage.setItem('impersonation_token',d.token);
       localStorage.setItem('impersonation_user',JSON.stringify(d.user));
+      const realAdmin=getAdmin();
+      if(realAdmin) localStorage.setItem('impersonation_admin',JSON.stringify(realAdmin));
+      // Keep admin_token for privileged API calls, but remove current_admin so
+      // the normal router cannot immediately switch back to the admin screen.
+      localStorage.removeItem('current_admin');
       localStorage.setItem('auth_token',d.token);
       localStorage.setItem('current_user',JSON.stringify(d.user));
       localStorage.setItem('ryy_impersonating','1');
@@ -5333,8 +5338,11 @@ function startSupportPolling(){
   window.exitImpersonation=function(){
     localStorage.removeItem('impersonation_token');localStorage.removeItem('impersonation_user');localStorage.removeItem('ryy_impersonating');
     $('admin-impersonation-bar')?.remove();
-    const a=getAdmin();const adminToken=localStorage.getItem('admin_token');
+    const savedAdmin=(()=>{try{return JSON.parse(localStorage.getItem('impersonation_admin')||'null')}catch{return null}})();
+    const adminToken=localStorage.getItem('admin_token');
+    const a=savedAdmin||getAdmin();
     if(a&&adminToken){localStorage.setItem('current_admin',JSON.stringify(a));localStorage.removeItem('current_user');localStorage.removeItem('auth_token');}
+    localStorage.removeItem('impersonation_admin');
     launchAdminApp(a||{});location.hash='#store';loadUserTableForAdmin();
   };
 
@@ -5342,7 +5350,15 @@ function startSupportPolling(){
   const originalApiRequest=window.apiRequest;
   if(originalApiRequest){window.apiRequest=function(path,options={}){if(localStorage.getItem('impersonation_token')&&!options.skipAuth){const headers={...(options.headers||{}),Authorization:`Bearer ${localStorage.getItem('impersonation_token')}`};return originalApiRequest(path,{...options,headers});}return originalApiRequest(path,options);};}
   const originalRefresh=window.refreshCurrentUserSession;
-  window.refreshCurrentUserSession=async function(){if(localStorage.getItem('impersonation_token')){const d=await apiRequest('/me');if(d?.user){localStorage.setItem('current_user',JSON.stringify(d.user));updateProfileDashboard();updateInboxUI();}return d?.user||user();}return originalRefresh?originalRefresh():user();};
+  window.refreshCurrentUserSession=async function(){
+    if(localStorage.getItem('impersonation_token')){
+      // The impersonation endpoint already returned a verified user snapshot.
+      // Avoid an immediate /me round-trip here: it caused a false 401 popup on
+      // slower mobile sessions while the UI was already switching successfully.
+      return user();
+    }
+    return originalRefresh?originalRefresh():user();
+  };
 
   // Five-tab navigation: Inbox joins the bottom bar.
   const originalSwitch=window.switchView;window.switchView=function(view,cat){if(localStorage.getItem('impersonation_token')&&view==='settings'){} if(view==='inbox'){openInbox();return;}return originalSwitch?originalSwitch(view,cat):undefined;};
@@ -5408,7 +5424,8 @@ function startSupportPolling(){
 
 /* Animation/performance pass: animate compositor-friendly properties only. */
 .orb{will-change:transform;transform:translate3d(0,0,0);backface-visibility:hidden;}
-.ai-fab,.support-fab,.floating-user-nav,.modal-content,.admin-edit-sheet,.admin-detail-sheet,.inbox-sheet,.support-chat,.ai-chat{backface-visibility:hidden;transform:translateZ(0);}
+.ai-fab,.support-fab,.modal-content,.admin-edit-sheet,.admin-detail-sheet,.inbox-sheet,.support-chat,.ai-chat{backface-visibility:hidden;transform:translateZ(0);}
+.floating-user-nav{backface-visibility:hidden;transform:translate3d(-50%,0,0)!important;}
 button,.btn,.admin-mini-btn,.support-btn,.floating-nav-item,input,textarea,select{transition:transform .18s cubic-bezier(.22,1,.36,1),opacity .18s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,color .18s ease;}
 button:active,.btn:active,.admin-mini-btn:active,.support-btn:active{transform:scale(.975) translateZ(0);}
 .toast.toast--enter,.toast.toast--leaving{filter:none !important;}
@@ -5423,6 +5440,8 @@ button:active,.btn:active,.admin-mini-btn:active,.support-btn:active{transform:s
 </style>
 <style id="ryy-v7-final">
 /* V7: compact floating launchers + external unread counters. */
+.floating-user-nav{left:50%!important;right:auto!important;width:min(92vw,430px)!important;max-width:calc(100vw - 24px)!important;box-sizing:border-box!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;transform:translate3d(-50%,0,0)!important;}
+.floating-user-nav .floating-nav-item{width:100%;min-width:0!important;padding:0 2px!important;overflow:hidden;}
 .ai-fab,.support-fab{left:18px!important;width:52px!important;height:52px!important;border-radius:50%!important;z-index:11620!important;}
 .ai-fab{bottom:max(104px,calc(env(safe-area-inset-bottom) + 100px))!important;}
 .support-fab{bottom:max(166px,calc(env(safe-area-inset-bottom) + 162px))!important;}
