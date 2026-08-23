@@ -2007,7 +2007,7 @@
 
         <!-- User Inbox -->
         <button id="inbox-fab" class="inbox-fab hidden" onclick="openInbox()" aria-label="Inbox"><span id="inbox-unread-badge" class="inbox-fab-badge hidden">0</span><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h4l2 2 2-2h8a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2m0 11h-7l-2 2-2-2H4V6h16zM7 9h10v2H7zm0 4h7v2H7z"/></svg></button>
-        <button id="support-fab" class="support-fab hidden" onclick="openSupportChat()" aria-label="Hubungi Admin"><span class="support-fab-dot"></span><svg viewBox="0 0 24 24"><path d="M12 2a8 8 0 0 0-8 8v4a3 3 0 0 0 3 3h1v-6H6v-1a6 6 0 0 1 12 0v1h-2v6h1a3 3 0 0 0 3-3v-4a8 8 0 0 0-8-8m-4 16h4v2H8z"/></svg></button>        <div id="inbox-overlay" class="inbox-overlay hidden" onclick="closeInbox(event)"><div class="inbox-sheet" onclick="event.stopPropagation()"><div class="inbox-head"><h3>Inbox</h3><button type="button" class="inbox-close" onclick="closeInbox()">×</button></div><div id="inbox-list"></div></div></div>
+        <button id="support-fab" class="support-fab hidden" onclick="openSupportChat()" aria-label="Hubungi Admin"><span id="support-unread-badge" class="floating-chat-badge hidden">0</span><span class="support-fab-dot"></span><svg viewBox="0 0 24 24"><path d="M12 2a8 8 0 0 0-8 8v4a3 3 0 0 0 3 3h1v-6H6v-1a6 6 0 0 1 12 0v1h-2v6h1a3 3 0 0 0 3-3v-4a8 8 0 0 0-8-8m-4 16h4v2H8z"/></svg></button>        <div id="inbox-overlay" class="inbox-overlay hidden" onclick="closeInbox(event)"><div class="inbox-sheet" onclick="event.stopPropagation()"><div class="inbox-head"><h3>Inbox</h3><button type="button" class="inbox-close" onclick="closeInbox()">×</button></div><div id="inbox-list"></div></div></div>
         <div id="inbox-form-overlay" class="inbox-overlay hidden" onclick="closeInboxForm(event)"><div class="inbox-sheet" onclick="event.stopPropagation()"><div class="inbox-head"><h3>Lengkapi Data</h3><button type="button" class="inbox-close" onclick="closeInboxForm()">×</button></div><div id="inbox-form-content"></div></div></div>
 
         <div id="support-modal-overlay" class="inbox-overlay hidden" onclick="closeSupportModal(event)"><div class="inbox-sheet" onclick="event.stopPropagation()"><div class="inbox-head"><h3 id="support-modal-title">Bantuan</h3><button type="button" class="inbox-close" onclick="closeSupportModal()">×</button></div><div id="support-modal-content"></div></div></div>
@@ -2015,7 +2015,7 @@
 
         <!-- RYY AI launcher -->
         <button id="ai-fab" class="ai-fab" onclick="toggleAIChat()" aria-label="RYY AI">
-            <span class="ai-fab-glow"></span>
+            <span id="ai-unread-badge" class="floating-chat-badge hidden">0</span><span class="ai-fab-glow"></span>
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10a4 4 0 0 1 4 4v7a4 4 0 0 1-4 4h-3.3l-2.7 3-2.7-3H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4m0 5v2h2V8zm4 0v2h2V8zm4 0v2h2V8zM7 13h10v2H7z"/></svg>
         </button>
 
@@ -2862,6 +2862,8 @@
             const opening = chat.classList.contains("hidden");
             chat.classList.toggle("hidden");
             if (opening) {
+                localStorage.setItem("ryy_ai_unread","0");
+                updateFloatingChatBadges?.();
                 renderAIWelcome();
                 setTimeout(()=>document.getElementById("ai-input")?.focus(),80);
             }
@@ -2873,7 +2875,13 @@
             const el=document.createElement("div"); el.className=`ai-message ${role}${typing ? " ai-typing" : ""}`;
             el.textContent=text;
             const time=document.createElement("span"); time.className="ai-message-time"; time.textContent=aiTime(); el.appendChild(time);
-            wrap.appendChild(el); wrap.scrollTop=wrap.scrollHeight; return el;
+            wrap.appendChild(el);
+            if(role === "ai" && document.getElementById("ai-chat")?.classList.contains("hidden") && !typing){
+                const next=Number(localStorage.getItem("ryy_ai_unread")||0)+1;
+                localStorage.setItem("ryy_ai_unread",String(Math.min(next,99)));
+                window.updateFloatingChatBadges?.();
+            }
+            wrap.scrollTop=wrap.scrollHeight; return el;
         }
         function renderAIWelcome(force=false) {
             const wrap=document.getElementById("ai-messages"); if(!wrap) return;
@@ -5300,6 +5308,7 @@ function startSupportPolling(){
     try{
       const d=await adminApi('admin-impersonate',{method:'POST',body:{userId:u.id}});
       if(!d?.token||!d?.user?.id)throw new Error('Server tidak mengembalikan sesi impersonation yang lengkap.');
+      if(d.impersonation!==true)throw new Error('Respons impersonation dari server tidak valid.');
       // Preserve the real admin session and temporarily use the generated user token.
       localStorage.setItem('impersonation_token',d.token);
       localStorage.setItem('impersonation_user',JSON.stringify(d.user));
@@ -5312,8 +5321,11 @@ function startSupportPolling(){
       bar.innerHTML=`<strong>👁 Melihat sebagai @${esc(d.user.username)}</strong><button onclick="exitImpersonation()">Kembali ke Admin</button>`;
       document.body.appendChild(bar);
       launchUserApp();
-      await refreshCurrentUserSession();
+      // The server already returned a verified user session and safe user object.
+      // Do not immediately call /me here: that extra request used to turn a
+      // successful impersonation into a visible HTTP 401 on slower mobile sessions.
       updateProfileDashboard();
+      updateInboxBadge?.();
       location.hash='#store';
       showToast(`Mode user aktif: @${d.user.username}`);
     }catch(e){console.error('impersonation',e);iosAlert(e.message||'Gagal membuka tampilan user.');}
@@ -5349,6 +5361,36 @@ function startSupportPolling(){
 </script>
 
 
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  window.updateFloatingChatBadges=async function(){
+    const ai=$('ai-unread-badge');
+    const support=$('support-unread-badge');
+    const aiCount=Math.max(0,Math.min(99,Number(localStorage.getItem('ryy_ai_unread')||0)));
+    if(ai){ai.textContent=aiCount>99?'99+':String(aiCount);ai.classList.toggle('hidden',aiCount===0);}
+    const token=localStorage.getItem('auth_token');
+    if(!token){support?.classList.add('hidden');return;}
+    try{
+      const d=await fetch(`${API_BASE}/chatting?peek=1`,{headers:{Authorization:`Bearer ${token}`,Accept:'application/json'},cache:'no-store'}).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.message||'');return j;});
+      const n=Math.max(0,Math.min(99,Number(d?.conversation?.unreadByUser||0)));
+      if(support){support.textContent=n>99?'99+':String(n);support.classList.toggle('hidden',n===0);}
+    }catch{ if(support) support.classList.add('hidden'); }
+  };
+  const oldOpenSupport=window.openSupportChat;
+  if(oldOpenSupport) window.openSupportChat=async function(...args){
+    try{localStorage.setItem('ryy_support_unread','0');}catch{}
+    const r=await oldOpenSupport(...args);
+    window.updateFloatingChatBadges?.();
+    return r;
+  };
+  const oldToggle=window.toggleAIChat;
+  if(oldToggle) window.toggleAIChat=function(...args){const r=oldToggle(...args);if(!$('ai-chat')?.classList.contains('hidden')){localStorage.setItem('ryy_ai_unread','0');window.updateFloatingChatBadges?.();}return r;};
+  setInterval(()=>window.updateFloatingChatBadges?.(),4000);
+  window.addEventListener('load',()=>setTimeout(()=>window.updateFloatingChatBadges?.(),250));
+})();
+</script>
+
 <style id="ryy-v6-polish">
 /* V6: separated support/AI launchers */
 .support-fab{bottom:max(220px,calc(env(safe-area-inset-bottom) + 214px)) !important;transition:transform .24s cubic-bezier(.22,1,.36,1),opacity .2s ease,box-shadow .24s ease !important;will-change:transform;}
@@ -5377,6 +5419,21 @@ button:active,.btn:active,.admin-mini-btn:active,.support-btn:active{transform:s
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important;}
+}
+</style>
+<style id="ryy-v7-final">
+/* V7: compact floating launchers + external unread counters. */
+.ai-fab,.support-fab{left:18px!important;width:52px!important;height:52px!important;border-radius:50%!important;z-index:11620!important;}
+.ai-fab{bottom:max(104px,calc(env(safe-area-inset-bottom) + 100px))!important;}
+.support-fab{bottom:max(166px,calc(env(safe-area-inset-bottom) + 162px))!important;}
+.floating-chat-badge{position:absolute!important;right:-7px!important;top:-8px!important;min-width:20px!important;height:20px!important;padding:0 5px!important;border-radius:999px!important;display:grid!important;place-items:center!important;background:var(--accent)!important;color:#fff!important;border:2px solid var(--bg-main)!important;font-size:9px!important;font-weight:900!important;line-height:1!important;box-shadow:0 6px 18px var(--accent-glow)!important;z-index:5!important;pointer-events:none!important;}
+.floating-chat-badge.hidden{display:none!important;}
+.ai-fab .ai-fab-glow{pointer-events:none!important;}
+.ai-fab,.support-fab{will-change:transform,opacity!important;transform:translate3d(0,0,0);transition:transform .22s cubic-bezier(.22,1,.36,1),opacity .18s ease,box-shadow .22s ease!important;}
+.ai-fab:active,.support-fab:active{transform:translate3d(0,0,0) scale(.92)!important;}
+@media (max-width:600px){
+  .ai-fab{bottom:max(100px,calc(env(safe-area-inset-bottom) + 96px))!important;}
+  .support-fab{bottom:max(160px,calc(env(safe-area-inset-bottom) + 156px))!important;}
 }
 </style>
 </body>
