@@ -984,7 +984,7 @@
         /* ===== Admin Studio / Config / Product manager ===== */
         .admin-tabbar{position:fixed;left:0;top:0;bottom:0;width:min(285px,82vw);z-index:24000;display:flex;flex-direction:column;gap:6px;padding:78px 12px 18px;background:rgba(15,17,22,.94);border-right:1px solid var(--glass-border);backdrop-filter:blur(28px) saturate(170%);-webkit-backdrop-filter:blur(28px) saturate(170%);box-shadow:18px 0 55px rgba(0,0,0,.25);transform:translate3d(-102%,0,0);opacity:0;visibility:hidden;pointer-events:none;transition:transform .28s cubic-bezier(.22,1,.36,1),opacity .2s ease,visibility .2s}.admin-tabbar.open{transform:translate3d(0,0,0);opacity:1;visibility:visible;pointer-events:auto}.admin-tab{min-height:44px;width:100%;flex:none;text-align:left;padding:0 15px;border:0;border-radius:15px;background:transparent;color:var(--text-muted);font:inherit;font-size:.72rem}.admin-tab.active{color:var(--text-main);background:rgba(255,255,255,.13);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 8px 22px rgba(0,0,0,.12)}
 .admin-menu-toggle{position:fixed;left:14px;top:14px;z-index:24010;width:44px;height:44px;border:1px solid var(--glass-border);border-radius:15px;background:var(--glass-surface);color:var(--text-main);display:grid;place-items:center;box-shadow:var(--glass-shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
-.admin-menu-toggle svg{width:21px;height:21px;fill:currentColor}.admin-sidebar-backdrop{position:fixed;inset:0;z-index:23990;background:rgba(0,0,0,.32);backdrop-filter:blur(3px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,visibility .22s}.admin-sidebar-backdrop.open{opacity:1;visibility:visible;pointer-events:auto}
+.admin-menu-toggle svg{width:21px;height:21px;fill:currentColor}#view-admin > .dashboard-container > .dashboard-header{padding-left:64px}.admin-sidebar-backdrop{position:fixed;inset:0;z-index:23990;background:rgba(0,0,0,.32);backdrop-filter:blur(3px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .22s ease,visibility .22s}.admin-sidebar-backdrop.open{opacity:1;visibility:visible;pointer-events:auto}
 .admin-view{animation:adminViewIn .22s cubic-bezier(.22,1,.36,1)}@keyframes adminViewIn{from{opacity:0;transform:translate3d(0,5px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
         .admin-view{display:none}.admin-view.active{display:block}
         .admin-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
@@ -4951,6 +4951,27 @@ function closeAdminChatRoom(){
   activeAdminChatEmail=null;
   document.getElementById('admin-chat-list')?.classList.remove('chat-room-open');
   document.querySelector('.admin-chat-window')?.classList.remove('open');
+}
+async function sendAdminChat(e){
+  if(e?.preventDefault)e.preventDefault();
+  const input=document.getElementById('admin-chat-input');
+  const text=input?.value.trim()||'';
+  if(!activeAdminChatEmail||!text)return;
+  input.value='';
+  try{
+    const r=await fetch('/api/chatting',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${localStorage.getItem('admin_token')}`},body:JSON.stringify({email:activeAdminChatEmail,text})});
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(d.message||'Gagal mengirim pesan.');
+    const box=document.getElementById('admin-chat-messages');
+    const c=d.conversation;
+    if(box)box.innerHTML=(c?.messages||[]).map(m=>`<div class="support-chat-message ${m.sender==='admin'?'admin':'user'}">${escapeHtml(m.text)}<span class="support-chat-time">${escapeHtml(new Date(m.createdAt).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}))}</span></div>`).join('')||'<div style="text-align:center;color:var(--text-muted);font-size:.65rem;margin:auto;">Belum ada pesan.</div>';
+    if(box)box.scrollTop=box.scrollHeight;
+    loadAdminChats();
+    setTimeout(()=>document.getElementById('admin-chat-input')?.focus(),0);
+  }catch(err){
+    input.value=text;
+    iosAlert(err.message||'Gagal mengirim pesan.');
+  }
 }
 async function refreshActiveAdminChat(){
   if(!activeAdminChatEmail)return;
