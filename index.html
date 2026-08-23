@@ -5215,7 +5215,7 @@ function startSupportPolling(){
   const $=id=>document.getElementById(id);
   const esc=v=>typeof escapeHtml==='function'?escapeHtml(v):String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const getAdmin=()=>{try{return JSON.parse(localStorage.getItem('current_admin')||'null')}catch{return null}};
-  const isSuper=()=>{const a=getAdmin();return a?.role==='super'||a?.role==='superadmin'||String(localStorage.getItem('admin_super')||'')==='1'};
+  const isSuper=()=>{const a=getAdmin();const role=String(a?.role||'').toLowerCase();return role==='super'||role==='superadmin'||String(a?.username||'').toLowerCase()==='admin_utama'||String(localStorage.getItem('admin_super')||'')==='1'};
   const user=()=>{try{return JSON.parse(localStorage.getItem('current_user')||'null')}catch{return null}};
 
   const style=document.createElement('style');style.textContent=`
@@ -5260,7 +5260,7 @@ function startSupportPolling(){
     const purchases=Array.isArray(u.purchaseHistory)?u.purchaseHistory:[];const refunds=Array.isArray(u.refundHistory)?u.refundHistory:[];const warranties=Array.isArray(u.warrantyHistory)?u.warrantyHistory:[];
     const fmt=v=>v?new Date(v).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}):'-';
     const avatar=u.avatar?`<img src="${esc(u.avatar)}" style="width:72px;height:72px;border-radius:22px;object-fit:cover;border:1px solid var(--glass-border)">`:'<div class="profile-avatar profile-avatar-empty" style="width:72px;height:72px">?</div>';
-    const purchaseHtml=purchases.length?purchases.map(p=>`<div class="admin-history-row"><b>${esc(p.status||'')}</b> · ${fmt(p.createdAt)}<br>${(p.items||[]).map(i=>`${esc(i.productName)} — ${esc(i.typeName||'')} × ${Number(i.quantity||0)} · ${rupiah(i.priceFinal||0)}`).join('<br>')}<br><strong>${rupiah(p.totalSpent||0)}</strong>${p.adminNote?`<br>Catatan: ${esc(p.adminNote)}`:''}</div>`).join(''):'<div style="color:var(--text-muted);font-size:.64rem">Belum ada transaksi.</div>';
+    const purchaseHtml=purchases.length?purchases.map((p,pi)=>`<details class="admin-history-collapse"><summary><span>${esc((p.items||[]).map(i=>i.productName).filter(Boolean).join(', ')||'Pesanan')} · ${rupiah(p.totalSpent||0)}</span><small style="color:var(--text-muted);font-weight:600">${esc(p.status||'')} · ${fmt(p.createdAt)}</small></summary><div class="admin-history-collapse-body"><div class="admin-history-row">${(p.items||[]).map(i=>`${esc(i.productName)} — ${esc(i.typeName||'')} × ${Number(i.quantity||0)} · ${rupiah(i.priceFinal||0)}`).join('<br>')}<br><strong>${rupiah(p.totalSpent||0)}</strong>${p.adminNote?`<br>Catatan: ${esc(p.adminNote)}`:''}</div></div></details>`).join(''):'<div style="color:var(--text-muted);font-size:.64rem">Belum ada transaksi.</div>';
     const refundHtml=refunds.length?refunds.map(r=>`<div class="admin-history-row"><b>${esc(r.productName||'Refund')}</b> — ${esc(r.typeName||'')}<br>${fmt(r.createdAt)} · <strong>${esc(r.status||'pending')}</strong><br>Estimasi: ${rupiah(r.calculation?.refund||0)}</div>`).join(''):'<div style="color:var(--text-muted);font-size:.64rem">Belum ada refund.</div>';
     const warrantyHtml=warranties.length?warranties.map(r=>`<div class="admin-history-row"><b>${esc(r.productName||'Garansi')}</b> · ${fmt(r.createdAt)}<br>Status: <strong>${esc(r.status||'pending')}</strong><br>${esc(r.reason||'')}</div>`).join(''):'<div style="color:var(--text-muted);font-size:.64rem">Belum ada claim garansi.</div>';
     const superButton=isSuper()?`<button type="button" class="admin-mini-btn accent" onclick="impersonateAdminUser(${index})">Log in as User</button>`:'';
@@ -5294,8 +5294,37 @@ function startSupportPolling(){
   // Override user list with clickable compact cards.
   window.loadUserTableForAdmin=async function(){const c=$('admin-user-list');if(!c)return;c.innerHTML='<div class="admin-config-note">Memuat data user...</div>';try{const token=localStorage.getItem('admin_token');const r=await fetch('/api/admin-users',{headers:{Authorization:`Bearer ${token}`,Accept:'application/json'},cache:'no-store'});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.message||`Gagal mengambil data user (${r.status}).`);window.__adminUsers=Array.isArray(d.users)?d.users:[];if(!window.__adminUsers.length){c.innerHTML='<div class="admin-config-note">Belum ada user terdaftar.</div>';return;}c.innerHTML=window.__adminUsers.map((u,i)=>`<div class="admin-user-card" onclick="openAdminUserDetail(${i})"><div class="admin-user-top"><div class="admin-user-avatar">${u.avatar?`<img src="${esc(u.avatar)}" style="width:100%;height:100%;object-fit:cover;border-radius:17px">`:String(u.displayName||u.username||'?').slice(0,1).toUpperCase()}</div><div class="admin-user-name"><strong>@${esc(u.username||'-')}</strong><span>${esc(u.email||u.phone||'-')}</span></div><button type="button" class="admin-mini-btn danger" onclick="event.stopPropagation();deleteUserByAdmin(${i})">Hapus</button></div><div class="admin-user-stats"><div class="admin-user-stat"><span>Belanja</span><strong>${rupiah(u.totalMoneySpent||0)}</strong></div><div class="admin-user-stat"><span>Item</span><strong>${Number(u.totalItemsBought||0)}</strong></div><div class="admin-user-stat"><span>Langganan</span><strong>${(u.subscriptions||[]).filter(s=>s.status==='active').length}</strong></div><div class="admin-user-stat"><span>Status</span><strong>${u.status?.banned?'Banned':u.status?.suspended?'Suspended':u.reseller?'Reseller':'Aktif'}</strong></div><div class="admin-user-stat"><span>Login</span><strong>${u.lastLoginAt?new Date(u.lastLoginAt).toLocaleDateString('id-ID'):'-'}</strong></div></div></div>`).join('');}catch(e){c.innerHTML=`<div class="admin-config-note" style="color:#ff6b6b">${esc(e.message)}</div>`;}};
 
-  window.impersonateAdminUser=async function(index){if(!isSuper())return iosAlert('Fitur ini hanya untuk Super Admin.');const u=window.__adminUsers?.[index];if(!u)return;try{const d=await adminApi('admin-impersonate',{method:'POST',body:{userId:u.id}});localStorage.setItem('impersonation_token',d.token);localStorage.setItem('impersonation_user',JSON.stringify(d.user));localStorage.setItem('current_user',JSON.stringify(d.user));$('admin-user-detail-overlay')?.classList.add('hidden');$('admin-impersonation-bar')?.remove();const bar=document.createElement('div');bar.id='admin-impersonation-bar';bar.className='impersonation-bar';bar.innerHTML=`<strong>👁 Melihat sebagai @${esc(d.user.username)}</strong><button onclick="exitImpersonation()">Kembali ke Admin</button>`;document.body.appendChild(bar);localStorage.setItem('ryy_impersonating','1');launchUserApp();updateProfileDashboard();location.hash='#store';showToast(`Mode user aktif: @${d.user.username}`);}catch(e){iosAlert(e.message||'Gagal membuka tampilan user.');}};
-  window.exitImpersonation=function(){localStorage.removeItem('impersonation_token');localStorage.removeItem('impersonation_user');localStorage.removeItem('ryy_impersonating');$('admin-impersonation-bar')?.remove();const a=getAdmin();if(a){localStorage.setItem('current_admin',JSON.stringify(a));localStorage.removeItem('current_user');localStorage.removeItem('auth_token');}launchAdminApp(a||{});location.hash='#store';loadUserTableForAdmin();};
+  window.impersonateAdminUser=async function(index){
+    if(!isSuper())return iosAlert('Fitur ini hanya untuk Super Admin.');
+    const u=window.__adminUsers?.[index]; if(!u)return;
+    try{
+      const d=await adminApi('admin-impersonate',{method:'POST',body:{userId:u.id}});
+      if(!d?.token||!d?.user?.id)throw new Error('Server tidak mengembalikan sesi impersonation yang lengkap.');
+      // Preserve the real admin session and temporarily use the generated user token.
+      localStorage.setItem('impersonation_token',d.token);
+      localStorage.setItem('impersonation_user',JSON.stringify(d.user));
+      localStorage.setItem('auth_token',d.token);
+      localStorage.setItem('current_user',JSON.stringify(d.user));
+      localStorage.setItem('ryy_impersonating','1');
+      $('admin-user-detail-overlay')?.classList.add('hidden');
+      $('admin-impersonation-bar')?.remove();
+      const bar=document.createElement('div');bar.id='admin-impersonation-bar';bar.className='impersonation-bar';
+      bar.innerHTML=`<strong>👁 Melihat sebagai @${esc(d.user.username)}</strong><button onclick="exitImpersonation()">Kembali ke Admin</button>`;
+      document.body.appendChild(bar);
+      launchUserApp();
+      await refreshCurrentUserSession();
+      updateProfileDashboard();
+      location.hash='#store';
+      showToast(`Mode user aktif: @${d.user.username}`);
+    }catch(e){console.error('impersonation',e);iosAlert(e.message||'Gagal membuka tampilan user.');}
+  };
+  window.exitImpersonation=function(){
+    localStorage.removeItem('impersonation_token');localStorage.removeItem('impersonation_user');localStorage.removeItem('ryy_impersonating');
+    $('admin-impersonation-bar')?.remove();
+    const a=getAdmin();const adminToken=localStorage.getItem('admin_token');
+    if(a&&adminToken){localStorage.setItem('current_admin',JSON.stringify(a));localStorage.removeItem('current_user');localStorage.removeItem('auth_token');}
+    launchAdminApp(a||{});location.hash='#store';loadUserTableForAdmin();
+  };
 
   // Make API calls use temporary impersonation token only while in that mode.
   const originalApiRequest=window.apiRequest;
@@ -5319,5 +5348,36 @@ function startSupportPolling(){
 })();
 </script>
 
+
+<style id="ryy-v6-polish">
+/* V6: separated support/AI launchers */
+.support-fab{bottom:max(220px,calc(env(safe-area-inset-bottom) + 214px)) !important;transition:transform .24s cubic-bezier(.22,1,.36,1),opacity .2s ease,box-shadow .24s ease !important;will-change:transform;}
+.ai-fab{bottom:max(150px,calc(env(safe-area-inset-bottom) + 144px)) !important;transition:transform .24s cubic-bezier(.22,1,.36,1),opacity .2s ease,box-shadow .24s ease !important;will-change:transform;}
+.support-fab:active,.ai-fab:active{transform:scale(.91) translateZ(0);}
+
+/* Compact transaction history: open the block only when needed. */
+.admin-history-collapse{border:1px solid var(--glass-border);border-radius:18px;background:rgba(255,255,255,.045);overflow:hidden;}
+.admin-history-collapse + .admin-history-collapse{margin-top:8px;}
+.admin-history-collapse>summary{list-style:none;cursor:pointer;padding:12px 13px;font-size:.68rem;font-weight:800;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.admin-history-collapse>summary::-webkit-details-marker{display:none;}
+.admin-history-collapse>summary::after{content:'›';font-size:1rem;color:var(--text-muted);transition:transform .22s ease;}
+.admin-history-collapse[open]>summary::after{transform:rotate(90deg);}
+.admin-history-collapse-body{padding:0 12px 12px;}
+
+/* Animation/performance pass: animate compositor-friendly properties only. */
+.orb{will-change:transform;transform:translate3d(0,0,0);backface-visibility:hidden;}
+.ai-fab,.support-fab,.floating-user-nav,.modal-content,.admin-edit-sheet,.admin-detail-sheet,.inbox-sheet,.support-chat,.ai-chat{backface-visibility:hidden;transform:translateZ(0);}
+button,.btn,.admin-mini-btn,.support-btn,.floating-nav-item,input,textarea,select{transition:transform .18s cubic-bezier(.22,1,.36,1),opacity .18s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,color .18s ease;}
+button:active,.btn:active,.admin-mini-btn:active,.support-btn:active{transform:scale(.975) translateZ(0);}
+.toast.toast--enter,.toast.toast--leaving{filter:none !important;}
+@media(max-width:700px){
+  .orb{filter:blur(52px);}
+  .support-fab{bottom:max(212px,calc(env(safe-area-inset-bottom) + 206px)) !important;}
+  .ai-fab{bottom:max(142px,calc(env(safe-area-inset-bottom) + 136px)) !important;}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important;}
+}
+</style>
 </body>
 </html>
