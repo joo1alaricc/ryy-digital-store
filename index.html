@@ -1530,6 +1530,112 @@
 </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
+
+<style id="ryy-smooth-performance-v11">
+/* RYY V11 — smoother motion without turning every interaction into a costly paint. */
+:root {
+  --motion-fast: .16s;
+  --motion-base: .22s;
+  --motion-slow: .32s;
+  --motion-ease: cubic-bezier(.22,1,.36,1);
+}
+
+/* Avoid the expensive `transition: all` pattern on mobile. */
+button, a, input, select, textarea, .product-card, .bs-card, .dash-card,
+.floating-nav, .floating-nav-item, .ai-fab, .inbox-fab, .type-option,
+.payment-trigger, .payment-option, .btn-accent, .btn-secondary-action {
+  transition-property: transform, opacity, color, background-color, border-color, box-shadow, filter;
+  transition-duration: var(--motion-base);
+  transition-timing-function: var(--motion-ease);
+}
+
+button:active, .type-option:active, .payment-option:active, .floating-nav-item:active,
+.btn-accent:active, .btn-secondary-action:active, .ai-fab:active, .inbox-fab:active {
+  transform: translateZ(0) scale(.975);
+}
+
+.product-card, .bs-card, .dash-card, .floating-nav, .ai-fab, .inbox-fab,
+.ios-dialog, .payment-sheet, .language-sheet, .checkout-box {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Keep large blurred backgrounds on their own compositor layer. */
+.bg-orbs, .orb-1, .orb-2, .orb-3 {
+  transform: translate3d(0,0,0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Mobile GPUs struggle when several 40px+ backdrop filters overlap. */
+@media (max-width: 700px) {
+  .glass-card, .dash-card, .product-card, .bs-card,
+  .floating-nav, .app-header, .catalog-search, .payment-trigger,
+  .checkout-box, .ai-fab, .inbox-fab {
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
+    backdrop-filter: blur(18px) saturate(150%);
+  }
+  .ai-chat-header, .ai-composer {
+    -webkit-backdrop-filter: blur(18px) saturate(155%);
+    backdrop-filter: blur(18px) saturate(155%);
+  }
+  .ios-dialog, .payment-sheet, .language-sheet {
+    -webkit-backdrop-filter: blur(24px) saturate(165%);
+    backdrop-filter: blur(24px) saturate(165%);
+  }
+  .product-card:hover, .bs-card:hover { transform: none; }
+}
+
+/* Don't animate layout-heavy properties such as width/height/margin. */
+.product-card img, .profile-avatar, .avatar, .admin-user-avatar {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Native smooth scrolling, but keep it off while a modal is open. */
+html { scroll-behavior: smooth; }
+body.modal-open { scroll-behavior: auto; }
+
+/* Respect accessibility while retaining the normal animated experience. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+</style>
+
+
+<style id="ryy-v12-motion">
+/* V12 premium motion layer: richer micro-interactions while staying compositor-friendly. */
+:root{--ryy-ease-spring:cubic-bezier(.16,1,.3,1);--ryy-ease-soft:cubic-bezier(.22,1,.36,1)}
+button,.role-btn,.floating-nav-item,.product-card,.dash-card,.bs-card,.settings-panel,.auth-card,.landing-box,.admin-detail-sheet,.admin-edit-sheet,.modal-content,.store-header{transition:transform .28s var(--ryy-ease-soft),opacity .22s ease,box-shadow .28s var(--ryy-ease-soft),background-color .22s ease,border-color .22s ease;
+}
+button:active,.role-btn:active,.floating-nav-item:active{transform:scale(.965);}
+.product-card,.dash-card,.bs-card{will-change:transform;transform:translateZ(0);}
+.product-card:hover,.dash-card:hover,.bs-card:hover{transform:translateY(-3px) scale(1.008);}
+.product-card:active,.dash-card:active,.bs-card:active{transform:translateY(0) scale(.985);}
+.floating-nav-item{position:relative;overflow:hidden;}
+.floating-nav-item::after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at center,rgba(255,255,255,.28),transparent 62%);opacity:0;transform:scale(.55);transition:opacity .35s ease,transform .45s var(--ryy-ease-spring);pointer-events:none;}
+.floating-nav-item:active::after,.floating-nav-item.active::after{opacity:.55;transform:scale(1);}
+.ai-fab,.support-fab{transition:transform .38s var(--ryy-ease-spring),box-shadow .38s var(--ryy-ease-spring),opacity .25s ease!important;}
+.ai-fab:hover,.support-fab:hover{transform:translate3d(0,-4px,0) scale(1.045)!important;}
+.ai-fab:active,.support-fab:active{transform:translate3d(0,0,0) scale(.91)!important;}
+.floating-chat-badge{animation:ryyBadgeIn .42s var(--ryy-ease-spring),ryyBadgePulse 2.8s ease-in-out .45s infinite;}
+@keyframes ryyBadgeIn{from{opacity:0;transform:scale(.35) translate(5px,-5px)}60%{transform:scale(1.16) translate(0,0)}to{opacity:1;transform:scale(1)}}
+@keyframes ryyBadgePulse{0%,100%{box-shadow:0 6px 18px var(--accent-glow)}50%{box-shadow:0 7px 24px var(--accent-glow),0 0 0 5px rgba(255,255,255,.05)}}
+.modal-content,.admin-detail-sheet,.admin-edit-sheet{animation:ryySheetIn .42s var(--ryy-ease-spring);}
+@keyframes ryySheetIn{from{opacity:0;transform:translateY(16px) scale(.965)}to{opacity:1;transform:translateY(0) scale(1)}}
+.toast,.notification,.ai-chat-window{animation:ryyFloatIn .42s var(--ryy-ease-spring);}
+@keyframes ryyFloatIn{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+img{transition:opacity .3s ease,transform .45s var(--ryy-ease-soft);}
+img[loading="lazy"]{opacity:.98;}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+
 </head>
 <body>
 
@@ -5520,5 +5626,21 @@ button:active,.btn:active,.admin-mini-btn:active,.support-btn:active{transform:s
   .support-fab{bottom:max(160px,calc(env(safe-area-inset-bottom) + 156px))!important;}
 }
 </style>
+
+<script id="ryy-v12-motion-js">
+(function(){
+  const ripple=(el)=>{ if(!el||el.dataset.ryyRipple==='1') return; el.dataset.ryyRipple='1'; el.addEventListener('pointerdown',e=>{
+    const r=document.createElement('span'); r.className='ryy-ripple'; const rect=el.getBoundingClientRect(); const size=Math.max(rect.width,rect.height)*1.15;
+    r.style.cssText=`position:absolute;width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px;border-radius:50%;background:rgba(255,255,255,.22);pointer-events:none;transform:scale(0);opacity:.8;animation:ryyRipple .55s cubic-bezier(.16,1,.3,1) forwards;z-index:0`;
+    if(getComputedStyle(el).position==='static') el.style.position='relative'; el.appendChild(r); setTimeout(()=>r.remove(),600);
+  },{passive:true});
+  };
+  document.addEventListener('DOMContentLoaded',()=>{
+    document.querySelectorAll('button,.floating-nav-item,.role-btn').forEach(ripple);
+  });
+  const st=document.createElement('style'); st.textContent='@keyframes ryyRipple{to{transform:scale(1);opacity:0}}'; document.head.appendChild(st);
+})();
+</script>
+
 </body>
 </html>
