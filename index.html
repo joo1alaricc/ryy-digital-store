@@ -194,41 +194,14 @@
         body.light-mode .toast-time { color:#1d1d1f; }
 
         .toast.toast--enter {
-            animation:toastEnter .58s cubic-bezier(.22,1,.36,1) both;
+            animation:toastEnter .24s ease-out both;
         }
         .toast.toast--leaving {
-            animation:toastExit .42s cubic-bezier(.4,0,.2,1) forwards;
+            animation:toastExit .2s ease-in forwards;
             pointer-events:none;
         }
-        @keyframes toastEnter {
-            from {
-                transform:translate3d(-50%, -155%, 0) scale(.92);
-                opacity:0;
-                filter:blur(10px);
-            }
-            65% {
-                transform:translate3d(-50%, 7px, 0) scale(1.015);
-                opacity:1;
-                filter:blur(0);
-            }
-            to {
-                transform:translate3d(-50%, 0, 0) scale(1);
-                opacity:1;
-                filter:blur(0);
-            }
-        }
-        @keyframes toastExit {
-            from {
-                transform:translate3d(-50%, var(--toast-y), 0) scale(var(--toast-scale));
-                opacity:var(--toast-opacity);
-                filter:blur(var(--toast-blur));
-            }
-            to {
-                transform:translate3d(-50%, -155%, 0) scale(.92);
-                opacity:0;
-                filter:blur(10px);
-            }
-        }
+        @keyframes toastEnter { from { opacity:0; transform:translate3d(-50%, -7px, 0); } to { opacity:var(--toast-opacity); transform:translate3d(-50%, var(--toast-y), 0) scale(var(--toast-scale)); } }
+        @keyframes toastExit { from { opacity:var(--toast-opacity); transform:translate3d(-50%, var(--toast-y), 0) scale(var(--toast-scale)); } to { opacity:0; transform:translate3d(-50%, calc(var(--toast-y) - 5px), 0) scale(.985); } }
 
         /* Apple-like confirmation / alert sheet, while retaining the store's purple/glass visual language */
         /* Keep the iOS dialog visible even though the global .hidden rule uses !important. */
@@ -1306,6 +1279,16 @@
             pointer-events:none; animation:blurPreviewIn .18s cubic-bezier(.22,1,.36,1) both;
         }
         .blur-drag-preview.show { display:block; }
+        /* Other Tools / Downloader */
+        .other-tool-launch{width:100%;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:7px}
+        .downloader-sheet{width:min(94vw,620px);max-height:min(88vh,760px);overflow:auto;border:1px solid var(--glass-border);border-radius:26px;background:var(--glass-surface);backdrop-filter:blur(28px) saturate(165%);-webkit-backdrop-filter:blur(28px) saturate(165%);box-shadow:0 28px 90px rgba(0,0,0,.38);padding:16px;animation:downloaderFadeIn .24s ease both}
+        .downloader-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.downloader-head h3{margin:0;font-size:1rem}.downloader-head p{margin:4px 0 0;font-size:.68rem;color:var(--text-muted)}
+        .downloader-form-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}.downloader-form-row input{min-width:0}.downloader-status{margin-top:9px;font-size:.68rem;color:var(--text-muted)}
+        .downloader-result{margin-top:13px}.downloader-preview{width:100%;aspect-ratio:9/16;max-height:420px;object-fit:cover;border-radius:20px;background:#000;display:block}.downloader-meta{padding:11px 2px}.downloader-meta strong{display:block;font-size:.84rem}.downloader-meta small{display:block;color:var(--text-muted);font-size:.67rem;margin-top:4px;line-height:1.45}.downloader-caption{margin-top:8px;font-size:.72rem;line-height:1.45;color:var(--text-main)}
+        .downloader-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.downloader-option{border:1px solid var(--glass-border);border-radius:16px;padding:10px;text-align:left;background:rgba(255,255,255,.055);color:var(--text-main);cursor:pointer;transition:transform .18s ease,background .18s ease,border-color .18s ease}.downloader-option:active{transform:scale(.985)}.downloader-option strong{display:block;font-size:.73rem}.downloader-option small{display:block;color:var(--text-muted);font-size:.62rem;margin-top:3px}.downloader-option.disabled{opacity:.48;cursor:not-allowed}
+        @keyframes downloaderFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+        @media(max-width:560px){.downloader-form-row{grid-template-columns:1fr}.downloader-options{grid-template-columns:1fr}.downloader-sheet{padding:14px;border-radius:22px}}
+
         @keyframes blurPreviewIn { from{opacity:0;transform:translate(-50%,-46%) scale(.96)} to{opacity:1;transform:translate(-50%,-50%) scale(1)} }
         .blur-preview-head { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:2px 3px 10px; }
         .blur-preview-head strong { font-size:.78rem; }
@@ -1606,34 +1589,6 @@ body.modal-open { scroll-behavior: auto; }
     scroll-behavior: auto !important;
   }
 }
-</style>
-
-
-<style id="ryy-v12-motion">
-/* V12 premium motion layer: richer micro-interactions while staying compositor-friendly. */
-:root{--ryy-ease-spring:cubic-bezier(.16,1,.3,1);--ryy-ease-soft:cubic-bezier(.22,1,.36,1)}
-button,.role-btn,.floating-nav-item,.product-card,.dash-card,.bs-card,.settings-panel,.auth-card,.landing-box,.admin-detail-sheet,.admin-edit-sheet,.modal-content,.store-header{transition:transform .28s var(--ryy-ease-soft),opacity .22s ease,box-shadow .28s var(--ryy-ease-soft),background-color .22s ease,border-color .22s ease;
-}
-button:active,.role-btn:active,.floating-nav-item:active{transform:scale(.965);}
-.product-card,.dash-card,.bs-card{will-change:transform;transform:translateZ(0);}
-.product-card:hover,.dash-card:hover,.bs-card:hover{transform:translateY(-3px) scale(1.008);}
-.product-card:active,.dash-card:active,.bs-card:active{transform:translateY(0) scale(.985);}
-.floating-nav-item{position:relative;overflow:hidden;}
-.floating-nav-item::after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at center,rgba(255,255,255,.28),transparent 62%);opacity:0;transform:scale(.55);transition:opacity .35s ease,transform .45s var(--ryy-ease-spring);pointer-events:none;}
-.floating-nav-item:active::after,.floating-nav-item.active::after{opacity:.55;transform:scale(1);}
-.ai-fab,.support-fab{transition:transform .38s var(--ryy-ease-spring),box-shadow .38s var(--ryy-ease-spring),opacity .25s ease!important;}
-.ai-fab:hover,.support-fab:hover{transform:translate3d(0,-4px,0) scale(1.045)!important;}
-.ai-fab:active,.support-fab:active{transform:translate3d(0,0,0) scale(.91)!important;}
-.floating-chat-badge{animation:ryyBadgeIn .42s var(--ryy-ease-spring),ryyBadgePulse 2.8s ease-in-out .45s infinite;}
-@keyframes ryyBadgeIn{from{opacity:0;transform:scale(.35) translate(5px,-5px)}60%{transform:scale(1.16) translate(0,0)}to{opacity:1;transform:scale(1)}}
-@keyframes ryyBadgePulse{0%,100%{box-shadow:0 6px 18px var(--accent-glow)}50%{box-shadow:0 7px 24px var(--accent-glow),0 0 0 5px rgba(255,255,255,.05)}}
-.modal-content,.admin-detail-sheet,.admin-edit-sheet{animation:ryySheetIn .42s var(--ryy-ease-spring);}
-@keyframes ryySheetIn{from{opacity:0;transform:translateY(16px) scale(.965)}to{opacity:1;transform:translateY(0) scale(1)}}
-.toast,.notification,.ai-chat-window{animation:ryyFloatIn .42s var(--ryy-ease-spring);}
-@keyframes ryyFloatIn{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
-img{transition:opacity .3s ease,transform .45s var(--ryy-ease-soft);}
-img[loading="lazy"]{opacity:.98;}
-@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
 
 </head>
@@ -2056,6 +2011,11 @@ img[loading="lazy"]{opacity:.98;}
                         <h4 data-i18n="distributor">Distributor</h4>
                         <div id="distributor-list" class="distributor-grid" style="margin-top:10px;"></div>
                     </div>
+                    <div class="settings-panel other-tools-panel">
+                        <h4>Other Tools</h4>
+                        <p class="support-note">Tools tambahan untuk kebutuhan cepat. Downloader memproses link melalui API RYY Store.</p>
+                        <button type="button" class="support-btn accent other-tool-launch" onclick="openDownloaderTool()">⬇️ Downloader Video</button>
+                    </div>
                     <div class="settings-panel" id="support-tools-panel">
                         <h4>Bantuan & Layanan</h4>
                         <p class="support-note">Gunakan menu ini untuk pengajuan garansi, menghitung estimasi refund, mengecek sisa durasi, atau menghubungi admin secara real-time.</p>
@@ -2209,6 +2169,15 @@ img[loading="lazy"]{opacity:.98;}
         </div>
 
         <!-- PROFILE AVATAR CROP MODAL -->
+        <div id="downloader-modal" class="modal-overlay hidden" onclick="closeDownloaderTool(event)">
+            <div class="downloader-sheet" onclick="event.stopPropagation()">
+                <div class="downloader-head"><div><h3>Downloader Video</h3><p>Masukkan link dari platform yang didukung.</p></div><button type="button" class="btn-close" onclick="closeDownloaderTool()">&times;</button></div>
+                <div class="downloader-form-row"><input id="downloader-url-input" type="url" placeholder="https://vt.tiktok.com/..." autocomplete="off"><button type="button" class="btn-accent" onclick="runDownloaderTool()">Proses</button></div>
+                <div id="downloader-status" class="downloader-status">Siap menerima link.</div>
+                <div id="downloader-result" class="downloader-result hidden"></div>
+            </div>
+        </div>
+
         <div id="avatar-crop-modal" class="modal-overlay hidden">
             <div class="modal-content">
                 <div class="modal-top">
@@ -3404,7 +3373,7 @@ img[loading="lazy"]{opacity:.98;}
             if (!grid) return;
             const listed=(Array.isArray(storeData.categories)?storeData.categories:[]).filter(c=>c!=="Semua");
             const fallback=[...new Set((storeData.products||[]).map(p=>p.category).filter(Boolean))];
-            const cats=listed.length?listed:fallback;
+            const cats=(listed.length?listed:fallback).filter(cat=>(storeData.products||[]).some(p=>p.category===cat));
             grid.innerHTML=cats.map(cat=>{
                 const count=(storeData.products||[]).filter(p=>p.category===cat).length;
                 return `<button type="button" class="home-category-card" data-category="${escapeHtml(cat)}" onclick="openHomeCategory(this.dataset.category)">
@@ -3429,12 +3398,14 @@ img[loading="lazy"]{opacity:.98;}
         function renderCategories(activeCategory="Semua") {
             const container=document.getElementById("category-tabs");
             if(!container) return;
-            container.innerHTML="";
-            const categories=Array.isArray(storeData.categories)&&storeData.categories.length?storeData.categories:["Semua"];
-            categories.forEach(cat=>{
-                const active=cat===activeCategory;
-                container.innerHTML += `<button type="button" data-category="${escapeHtml(cat)}" onclick="renderProducts(this.dataset.category)" class="cat-tab ${active?'active':''}">${escapeHtml(categoryLabel(cat))}</button>`;
-            });
+            const products=Array.isArray(storeData.products)?storeData.products:[];
+            const available=new Set(products.map(p=>String(p.category||"")).filter(Boolean));
+            const configured=Array.isArray(storeData.categories)&&storeData.categories.length?storeData.categories:[];
+            const categories=["Semua", ...configured.filter(c=>c!=="Semua" && available.has(String(c)))];
+            // Include categories present in products even if the store config forgot to list them.
+            available.forEach(c=>{ if(!categories.includes(c)) categories.push(c); });
+            const safeActive=categories.includes(activeCategory)?activeCategory:"Semua";
+            container.innerHTML=categories.map(cat=>`<button type="button" data-category="${escapeHtml(cat)}" onclick="renderProducts(this.dataset.category)" class="cat-tab ${cat===safeActive?'active':''}">${escapeHtml(categoryLabel(cat))}</button>`).join("");
         }
 
         function renderProducts(category) {
@@ -4860,6 +4831,49 @@ function closeSupportModal(e){if(e&&e.target!==e.currentTarget)return;document.g
 function openSupportModal(title,html){document.getElementById("support-modal-title").textContent=title;document.getElementById("support-modal-content").innerHTML=html;document.getElementById("support-modal-overlay")?.classList.remove("hidden")}
 function supportFileToDataUrl(input){return new Promise((resolve,reject)=>{const f=input?.files?.[0];if(!f)return resolve("");if(!f.type.startsWith("image/"))return reject(new Error("File harus berupa gambar."));if(f.size>3*1024*1024)return reject(new Error("Screenshot maksimal 3 MB."));const r=new FileReader();r.onload=()=>resolve(String(r.result||""));r.onerror=()=>reject(new Error("Gagal membaca screenshot."));r.readAsDataURL(f)})}
 function warrantyProductOptions(){const u=currentSessionUser();const subs=supportSubscriptions();if(!subs.length)return '<option value="">Tidak ada produk aktif</option>';return subs.map((s,i)=>`<option value="${i}">${escapeHtml(s.productName||"Produk")}${s.typeName?` — ${escapeHtml(s.typeName)}`:""}</option>`).join("")}
+function openDownloaderTool(){
+    const modal=document.getElementById('downloader-modal'); if(!modal) return;
+    modal.classList.remove('hidden'); document.body.classList.add('modal-open');
+    const input=document.getElementById('downloader-url-input'); if(input){ input.focus(); input.select(); }
+}
+function closeDownloaderTool(e){
+    if(e && e.target!==e.currentTarget) return;
+    document.getElementById('downloader-modal')?.classList.add('hidden');
+    if(!document.querySelector('.modal-overlay:not(.hidden)')) document.body.classList.remove('modal-open');
+}
+function downloaderMediaUrl(media, filename, inline=false){
+    return `/api/downloader?media=${encodeURIComponent(media)}&filename=${encodeURIComponent(filename||'RYY-Store-Download')}${inline?'&inline=1':''}`;
+}
+function downloaderOptionLabel(m){
+    const q=String(m?.quality||'').toLowerCase();
+    if(q.includes('audio')) return 'Audio';
+    if(q.includes('no_watermark')||q.includes('no watermark')||q==='hd') return 'No Watermark';
+    if(q.includes('watermark')) return 'With Watermark';
+    return String(m?.quality||m?.type||'Media').replace(/_/g,' ');
+}
+async function runDownloaderTool(){
+    const input=document.getElementById('downloader-url-input'); const status=document.getElementById('downloader-status'); const result=document.getElementById('downloader-result');
+    const url=input?.value.trim(); if(!url){ showToast('Masukkan link video terlebih dahulu.'); input?.focus(); return; }
+    if(status) status.textContent='Memproses link...'; result?.classList.add('hidden'); if(result) result.innerHTML='';
+    try{
+        const d=await apiRequest(`/downloader?url=${encodeURIComponent(url)}`);
+        const r=d.result||{}; const medias=Array.isArray(r.medias)?r.medias.filter(m=>m?.url):[];
+        if(!medias.length) throw new Error('Tidak ada pilihan media yang tersedia.');
+        const video=medias.find(m=>String(m.type)==='video')||medias[0];
+        const thumb=r.thumbnail||''; const title=r.title||'Video'; const author=r.author||r.unique_id||'-'; const source=r.source||'-';
+        const options=medias.map((m,i)=>{const label=downloaderOptionLabel(m); const ext=m.extension||((m.type==='audio')?'mp3':'mp4'); const fname=`${title}-${label}`; return `<button type="button" class="downloader-option" onclick="downloadDownloaderMedia(${JSON.stringify(m.url)},${JSON.stringify(fname)},${JSON.stringify(ext)})"><strong>⬇️ ${escapeHtml(label)}</strong><small>${escapeHtml(String(m.width?`${m.width}×${m.height} · `:'')+(m.data_size?`${Math.round(Number(m.data_size)/1024/1024*10)/10} MB · `:'')+(m.extension||''))}</small></button>`}).join('');
+        result.innerHTML=`${video?.type==='video'&&video?.url?`<video class="downloader-preview" controls playsinline preload="metadata" poster="${escapeHtml(thumb)}"><source src="${escapeHtml(downloaderMediaUrl(video.url,'preview.mp4',true))}" type="video/mp4"></video>`:''}<div class="downloader-meta"><strong>${escapeHtml(r.unique_id?`@${r.unique_id}`:author)} · ${escapeHtml(source)}</strong><small>${escapeHtml(author)}${r.duration?` · ${escapeHtml(String(r.duration))} detik`:''}</small><div class="downloader-caption">${escapeHtml(title)}</div></div><div class="downloader-options">${options}</div>`;
+        result.classList.remove('hidden'); if(status) status.textContent=`Berhasil diproses · ${medias.length} pilihan media`;
+    }catch(e){ console.error(e); if(status) status.textContent=e.message||'Gagal memproses link.'; showToast(e.message||'Gagal memproses link.'); }
+}
+async function downloadDownloaderMedia(media, name, ext){
+    try{
+        const filename=(name||'RYY-Store-Download').replace(/\.[a-zA-Z0-9]{2,8}$/,'')+'.'+ext;
+        const a=document.createElement('a'); a.href=downloaderMediaUrl(media,filename); a.download=filename; a.rel='noopener'; document.body.appendChild(a); a.click(); a.remove();
+        showToast('Download dimulai.');
+    }catch(e){ showToast('Gagal memulai download.'); }
+}
+
 function openWarrantyForm(){const u=currentSessionUser()||{};openSupportModal("Claim Garansi",`<div class="support-form-grid"><div class="support-note">Catatan: garansi diproses berdasarkan data pembelian dan bukti yang Anda kirim. Isi semua data dengan benar agar admin dapat memeriksa akun.</div><label>Email yang digunakan<input id="w-email" type="email" value="${escapeHtml(u.email||"")}" placeholder="Email akun"></label><label>Nama Produk<select id="w-product" onchange="syncWarrantyDuration()">${warrantyProductOptions()}</select></label><label>Durasi Produk<input id="w-duration" readonly placeholder="Otomatis dari produk"></label><label>Tanggal Beli<input id="w-purchase-date" type="date"></label><label>Tanggal Error<input id="w-error-date" type="date"></label><label>Alasan<textarea id="w-reason" rows="4" placeholder="Jelaskan masalah yang terjadi..."></textarea></label><label>Screenshot saat login pertama kali<input id="w-first" type="file" accept="image/*"></label><label>Screenshot saat error<input id="w-error" type="file" accept="image/*"></label><button type="button" class="support-btn accent" onclick="submitWarrantyRequest()">Kirim Claim Garansi</button></div>`);syncWarrantyDuration()}
 function syncWarrantyDuration(){const u=currentSessionUser();const sub=supportSubscriptions()[Number(document.getElementById("w-product")?.value)||0];const el=document.getElementById("w-duration");if(el)el.value=sub?`${sub.durationDays||"Lifetime"} Hari${sub.typeName?` — ${sub.typeName}`:""}`:"";const purchase=purchaseForSubscription(u,sub);const pd=document.getElementById("w-purchase-date");if(pd&&purchase?.createdAt)pd.value=new Date(purchase.createdAt).toISOString().slice(0,10)}
 async function submitWarrantyRequest(){try{const u=currentSessionUser()||{};const sub=supportSubscriptions()[Number(document.getElementById("w-product")?.value)||0];if(!sub)throw new Error("Tidak ada produk aktif untuk diajukan garansi.");const purchase=purchaseForSubscription(u,sub);const first=await supportFileToDataUrl(document.getElementById("w-first"));const errShot=await supportFileToDataUrl(document.getElementById("w-error"));if(!first||!errShot)throw new Error("Kedua screenshot wajib diisi.");showToast("Mengupload screenshot garansi...");const firstUrl=await uploadImage(first,"warranty-first-login");const errorUrl=await uploadImage(errShot,"warranty-error");const payload={type:"warranty",emailUsed:document.getElementById("w-email")?.value.trim(),productName:sub.productName,duration:document.getElementById("w-duration")?.value.trim(),purchaseDate:document.getElementById("w-purchase-date")?.value,errorDate:document.getElementById("w-error-date")?.value,reason:document.getElementById("w-reason")?.value.trim(),firstLoginScreenshot:firstUrl,errorScreenshot:errorUrl,purchaseId:purchase?.id||"",subscriptionId:sub.id};const d=await apiRequest("/support",{method:"POST",body:JSON.stringify(payload)});saveUserSession(d.user,localStorage.getItem("auth_token"));closeSupportModal();showToast(d.message||"Claim garansi berhasil dikirim.")}catch(e){iosAlert(e.message||"Gagal mengirim claim garansi.")}}
@@ -5626,21 +5640,5 @@ button:active,.btn:active,.admin-mini-btn:active,.support-btn:active{transform:s
   .support-fab{bottom:max(160px,calc(env(safe-area-inset-bottom) + 156px))!important;}
 }
 </style>
-
-<script id="ryy-v12-motion-js">
-(function(){
-  const ripple=(el)=>{ if(!el||el.dataset.ryyRipple==='1') return; el.dataset.ryyRipple='1'; el.addEventListener('pointerdown',e=>{
-    const r=document.createElement('span'); r.className='ryy-ripple'; const rect=el.getBoundingClientRect(); const size=Math.max(rect.width,rect.height)*1.15;
-    r.style.cssText=`position:absolute;width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px;border-radius:50%;background:rgba(255,255,255,.22);pointer-events:none;transform:scale(0);opacity:.8;animation:ryyRipple .55s cubic-bezier(.16,1,.3,1) forwards;z-index:0`;
-    if(getComputedStyle(el).position==='static') el.style.position='relative'; el.appendChild(r); setTimeout(()=>r.remove(),600);
-  },{passive:true});
-  };
-  document.addEventListener('DOMContentLoaded',()=>{
-    document.querySelectorAll('button,.floating-nav-item,.role-btn').forEach(ripple);
-  });
-  const st=document.createElement('style'); st.textContent='@keyframes ryyRipple{to{transform:scale(1);opacity:0}}'; document.head.appendChild(st);
-})();
-</script>
-
 </body>
 </html>
