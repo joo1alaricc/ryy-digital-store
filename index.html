@@ -1537,6 +1537,7 @@
 .downloader-sheet{width:min(100%,620px);max-height:88vh;overflow:auto;padding:16px;border:1px solid var(--glass-border);border-radius:28px;background:var(--card-bg);box-shadow:0 24px 80px rgba(0,0,0,.35)}
 .downloader-media{width:100%;max-height:52vh;border-radius:20px;background:#000;display:block}.downloader-meta{padding:10px 2px}.downloader-meta strong{display:block}.downloader-meta small{display:block;color:var(--text-muted);margin-top:4px}.downloader-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.downloader-option{border:1px solid var(--glass-border);border-radius:17px;background:rgba(255,255,255,.07);padding:11px;text-align:left;color:inherit}.downloader-option strong{display:block;font-size:.7rem}.downloader-option small{display:block;color:var(--text-muted);margin-top:3px}.downloader-overlay{position:fixed;inset:0;z-index:22000;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;padding:14px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}.downloader-overlay.hidden{display:none!important}
 @media(max-width:600px){.downloader-options{grid-template-columns:1fr}.downloader-overlay{align-items:center;padding:14px}.downloader-sheet{border-radius:28px;max-height:88vh}}
+        .product-option-checks{display:flex;flex-wrap:wrap;gap:7px}.product-option-checks label{display:flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--glass-border);border-radius:14px;background:rgba(255,255,255,.06);font-size:.68rem;color:var(--text-main);cursor:pointer}.product-option-checks input{accent-color:var(--accent)}.product-parameter-fields{display:grid;gap:8px}.product-parameter-fields label{font-size:.64rem;color:var(--text-muted)}.product-parameter-fields input{margin-top:4px}.admin-form-checks{display:flex;flex-wrap:wrap;gap:7px}.admin-form-check{display:flex!important;align-items:center;gap:6px;padding:7px 9px;border:1px solid var(--glass-border);border-radius:12px;background:rgba(255,255,255,.05);font-size:.64rem!important;cursor:pointer}.admin-form-check input{accent-color:var(--accent)}
 </style>
 </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -2282,6 +2283,8 @@ body.modal-open { scroll-behavior: auto; }
                 
                 <h4 data-i18n="choose_variant" style="font-size:0.78rem; margin-bottom:6px; font-weight:600;">Pilih Varian / Tipe:</h4>
                 <div id="modal-type-list" class="type-select-list"></div>
+                <div id="modal-product-options"></div>
+                <div id="modal-product-parameters"></div>
 
                 <div class="product-action-row">
                     <button onclick="addSelectedProductToCart(false)" class="btn-secondary-action" data-i18n="add_cart">Tambah ke Keranjang</button>
@@ -3637,9 +3640,10 @@ body.modal-open { scroll-behavior: auto; }
                 const unitPrice = currentUserIsReseller() && Number(item.basePrice||0)>=8000
                     ? `<span class="reseller-price"><span class="reseller-original">Rp${Number(item.basePrice).toLocaleString("id-ID")}</span><span class="reseller-arrow">→</span><span class="reseller-final">Rp${Number(item.price).toLocaleString("id-ID")}</span></span>`
                     : `Rp${Number(item.price||0).toLocaleString("id-ID")}`;
+                const extra=[]; if(Array.isArray(item.options)&&item.options.length)extra.push(`Opsi: ${item.options.map(escapeHtml).join(', ')}`); if(item.parameters&&typeof item.parameters==='object')Object.entries(item.parameters).forEach(([k,v])=>extra.push(`${escapeHtml(k)}: ${escapeHtml(v)}`));
                 container.innerHTML += `<div class="cart-row">
                     <div class="cart-row-left"><input type="checkbox" ${item.selected?'checked':''} onchange="toggleItemSelection('${item.cartItemId}')" style="width:16px;height:16px;margin:0;cursor:pointer;">
-                    <div class="cart-row-info"><h4>${escapeHtml(item.name)} (${item.quantity}x)</h4><p>${unitPrice}</p></div></div>
+                    <div class="cart-row-info"><h4>${escapeHtml(item.name)} (${item.quantity}x)</h4><p>${unitPrice}</p>${extra.length?`<small style="display:block;margin-top:4px;color:var(--text-muted);line-height:1.35">${extra.join('<br>')}</small>`:''}</div></div>
                     <button onclick="removeFromCart('${item.cartItemId}')" class="btn-del">Hapus</button>
                 </div>`;
             });
@@ -4505,6 +4509,23 @@ body.modal-open { scroll-behavior: auto; }
             return '<svg viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px;fill:currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25Zm14.71-9.04c.39-.39.39-1.02 0-1.41l-1.51-1.51a.9959.9959 0 0 0-1.41 0l-.83.83 3.75 3.75.83-.83ZM20.71 4.04l-.78-.78a1.003 1.003 0 0 0-1.42 0l-.83.83 2.2 2.2.83-.83c.39-.39.39-1.03 0-1.42Z"/></svg>';
         }
 
+        function adminProductOptionRow(value="") {
+            const row=document.createElement("div"); row.className="admin-product-option-row"; row.style.cssText="display:flex;gap:7px;align-items:center;margin-bottom:7px;";
+            row.innerHTML=`<input class="admin-form-input ap-option-value" style="flex:1" value="${escapeHtml(value||"")}" placeholder="Contoh: Telkomsel"><button type="button" class="admin-type-remove" onclick="this.closest('.admin-product-option-row').remove()">×</button>`;
+            return row;
+        }
+        function adminProductParameterOptionList(selected=[]) {
+            const fields={email:"Email",emailPassword:"Password Email",mlId:"ID ML",ffId:"ID FF",meterNumber:"Nomor meter",phone:"Nomor telepon",ewalletNumber:"Nomor e-wallet"};
+            return Object.entries(fields).map(([key,label])=>`<label class="admin-form-check"><input type="checkbox" class="ap-parameter" value="${key}" ${selected.includes(key)?"checked":""}>${escapeHtml(label)}</label>`).join("");
+        }
+        async function uploadAdminImageFromInput(input) {
+            const file=input?.files?.[0]; if(!file)return;
+            if(!file.type.startsWith("image/")){iosAlert("File harus berupa gambar.");input.value="";return;}
+            if(file.size>4*1024*1024){iosAlert("Foto produk maksimal 4 MB.");input.value="";return;}
+            const status=document.getElementById("ap-image-status"); if(status)status.textContent="Mengupload gambar...";
+            const reader=new FileReader(); reader.onload=async()=>{try{const data=await adminApi("upload-image",{method:"POST",body:{image:String(reader.result||""),kind:"product"}});const imageInput=document.getElementById("ap-image");if(imageInput)imageInput.value=data.url||"";const preview=document.getElementById("ap-image-preview");if(preview){preview.src=data.url||"";preview.classList.remove("hidden");}if(status)status.textContent="Gambar berhasil diupload.";}catch(e){if(status)status.textContent="Upload gagal.";iosAlert(e.message||"Gagal mengupload gambar.");}}; reader.readAsDataURL(file);
+        }
+
         function adminProductTypeRow(type={}) {
             const row=document.createElement("div");
             row.className="admin-type-row";
@@ -4521,34 +4542,21 @@ body.modal-open { scroll-behavior: auto; }
 
         function openAdminProductEditor(id=null) {
             const product=id==null?null:__adminProducts.find(p=>Number(p.id)===Number(id));
-            __adminProductEditId=product?Number(product.id):null;
-            document.getElementById("admin-product-title").textContent=product?"Edit Produk":"Tambah Produk";
-            const form=document.getElementById("admin-product-form");
-            form.innerHTML=`
-                <div class="admin-form-grid">
-                    <div class="admin-form-grid two">
-                        <label class="admin-form-label">ID Produk (opsional untuk produk baru)<input id="ap-id" class="admin-form-input" type="number" min="1" value="${product?Number(product.id):""}" ${product?"readonly":""}></label>
-                        <label class="admin-form-label">Nama Produk<input id="ap-name" class="admin-form-input" value="${escapeHtml(product?.name||"")}"></label>
-                    </div>
-                    <div class="category-picker-wrap">
-                        <label class="admin-form-label">Kategori
-                            <input id="ap-category" class="admin-form-input" autocomplete="off" value="${escapeHtml(product?.category||"")}" oninput="showAdminCategorySuggestions(this.value)" onfocus="showAdminCategorySuggestions(this.value)">
-                        </label>
-                        <div id="ap-category-suggest" class="category-suggest hidden"></div>
-                    </div>
-                    <label class="admin-form-label">Deskripsi Bahasa Indonesia
-                        <textarea id="ap-description" class="admin-form-textarea" placeholder="Tulis deskripsi Indonesia saja. EN/KO dibuat otomatis.">${escapeHtml(product?.description||"")}</textarea>
-                    </label>
-                    <label class="admin-form-label">Gambar / Image URL<input id="ap-image" class="admin-form-input" value="${escapeHtml(product?.image||"")}"></label>
-                    <label style="display:flex;align-items:center;gap:9px;font-size:.7rem;color:var(--text-main);"><input id="ap-best" type="checkbox" ${product?.bestSeller?"checked":""}> Best Seller</label>
-                    <div>
-                        <div class="admin-toolbar" style="margin:0 0 7px;"><strong style="font-size:.72rem;">Tipe Produk</strong><button type="button" class="admin-glass-btn" onclick="document.getElementById('ap-types').appendChild(adminProductTypeRow())">＋ Tipe</button></div>
-                        <div id="ap-types" class="admin-types-wrap"></div>
-                    </div>
-                    <p class="admin-config-note">Stok total produk dihitung otomatis dari seluruh stok tipe. Terjemahan Inggris dan Korea dibuat server-side menggunakan endpoint NexRay yang kamu berikan.</p>
-                </div>`;
-            const types=document.getElementById("ap-types");
-            (product?.types?.length?product.types:[{}]).forEach(t=>types.appendChild(adminProductTypeRow(t)));
+            __adminProductEditId=product?Number(product.id):null; document.getElementById("admin-product-title").textContent=product?"Edit Produk":"Tambah Produk";
+            const form=document.getElementById("admin-product-form"); const options=Array.isArray(product?.options)?product.options:[], parameters=Array.isArray(product?.parameters)?product.parameters:[];
+            form.innerHTML=`<div class="admin-form-grid">
+                <div class="admin-form-grid two"><label class="admin-form-label">ID Produk (opsional untuk produk baru)<input id="ap-id" class="admin-form-input" type="number" min="1" value="${product?Number(product.id):""}" ${product?"readonly":""}></label><label class="admin-form-label">Nama Produk<input id="ap-name" class="admin-form-input" value="${escapeHtml(product?.name||"")}"></label></div>
+                <div class="category-picker-wrap"><label class="admin-form-label">Kategori<input id="ap-category" class="admin-form-input" autocomplete="off" value="${escapeHtml(product?.category||"")}" oninput="showAdminCategorySuggestions(this.value)" onfocus="showAdminCategorySuggestions(this.value)"></label><div id="ap-category-suggest" class="category-suggest hidden"></div></div>
+                <label class="admin-form-label">Deskripsi Bahasa Indonesia<textarea id="ap-description" class="admin-form-textarea" placeholder="Tulis deskripsi Indonesia saja. EN/KO dibuat otomatis.">${escapeHtml(product?.description||"")}</textarea></label>
+                <div><label class="admin-form-label">Foto Produk</label><div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;"><input id="ap-image-file" class="admin-form-input" type="file" accept="image/*" onchange="uploadAdminImageFromInput(this)" style="flex:1;min-width:190px;"><span id="ap-image-status" style="font-size:.62rem;color:var(--text-muted);">Upload langsung dari web</span></div><input id="ap-image" class="admin-form-input" value="${escapeHtml(product?.image||"")}" readonly placeholder="URL hasil upload akan muncul di sini" style="margin-top:7px;"><img id="ap-image-preview" src="${escapeHtml(product?.image||"")}" alt="Preview foto produk" class="${product?.image?'':'hidden'}" style="display:block;width:86px;height:86px;object-fit:cover;border-radius:18px;margin-top:8px;border:1px solid var(--glass-border);"></div>
+                <div><div class="admin-toolbar" style="margin:0 0 7px;"><strong style="font-size:.72rem;">Tambahkan Opsi</strong><button type="button" class="admin-glass-btn" onclick="document.getElementById('ap-options').appendChild(adminProductOptionRow())">＋ Opsi</button></div><div id="ap-options" class="admin-types-wrap"></div><p class="admin-config-note" style="margin-top:5px;">Contoh: Telkomsel, Axis. User dapat memilih opsi ini saat membeli produk.</p></div>
+                <div><div class="admin-toolbar" style="margin:0 0 7px;"><strong style="font-size:.72rem;">Tambahkan Parameter</strong></div><div id="ap-parameters" class="admin-form-checks">${adminProductParameterOptionList(parameters)}</div><p class="admin-config-note" style="margin-top:5px;">Parameter yang dipilih wajib diisi user saat checkout.</p></div>
+                <label style="display:flex;align-items:center;gap:9px;font-size:.7rem;color:var(--text-main);"><input id="ap-best" type="checkbox" ${product?.bestSeller?"checked":""}> Best Seller</label>
+                <div><div class="admin-toolbar" style="margin:0 0 7px;"><strong style="font-size:.72rem;">Tipe Produk</strong><button type="button" class="admin-glass-btn" onclick="document.getElementById('ap-types').appendChild(adminProductTypeRow())">＋ Tipe</button></div><div id="ap-types" class="admin-types-wrap"></div></div>
+                <p class="admin-config-note">Stok total produk dihitung otomatis dari seluruh stok tipe. Terjemahan Inggris dan Korea dibuat server-side menggunakan endpoint NexRay.</p>
+            </div>`;
+            const types=document.getElementById("ap-types"); (product?.types?.length?product.types:[{}]).forEach(t=>types.appendChild(adminProductTypeRow(t)));
+            const optionBox=document.getElementById("ap-options"); options.forEach(v=>optionBox.appendChild(adminProductOptionRow(v)));
             document.getElementById("admin-product-overlay").classList.remove("hidden");
         }
 
@@ -4582,15 +4590,9 @@ body.modal-open { scroll-behavior: auto; }
                 stock:Number(row.querySelector(".pt-stock")?.value||0),
                 durationDays:row.querySelector(".pt-duration")?.value===""?null:Number(row.querySelector(".pt-duration")?.value||0)
             }));
-            const body={
-                id:Number(document.getElementById("ap-id")?.value||0)||undefined,
-                name:document.getElementById("ap-name")?.value.trim(),
-                category:document.getElementById("ap-category")?.value.trim(),
-                description:document.getElementById("ap-description")?.value.trim(),
-                image:document.getElementById("ap-image")?.value.trim(),
-                bestSeller:document.getElementById("ap-best")?.checked===true,
-                types
-            };
+            const options=[...document.querySelectorAll("#ap-options .ap-option-value")].map(i=>i.value.trim()).filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i);
+            const parameters=[...document.querySelectorAll("#ap-parameters .ap-parameter:checked")].map(i=>i.value);
+            const body={id:Number(document.getElementById("ap-id")?.value||0)||undefined,name:document.getElementById("ap-name")?.value.trim(),category:document.getElementById("ap-category")?.value.trim(),description:document.getElementById("ap-description")?.value.trim(),image:document.getElementById("ap-image")?.value.trim(),bestSeller:document.getElementById("ap-best")?.checked===true,options,parameters,types};
             if(__adminProductEditId!=null) body.id=__adminProductEditId;
             if(!body.name||!body.category||!body.description||!types.length||types.some(t=>!t.typeName)){iosAlert("Lengkapi nama, kategori, deskripsi, dan semua tipe produk.");return;}
             try{
@@ -5427,31 +5429,28 @@ function startSupportPolling(){
     const types=Array.isArray(product.types)?product.types:[];
     selectedProductType=types.find(t=>typeStock(t)>0)||types[0]||null;
     if(list) list.innerHTML=types.length?types.map((t,i)=>`<button type="button" class="type-option ${t===selectedProductType?'selected':''}" onclick="selectProductType(this,${i})"><span><strong>${esc(t.typeName||'Varian')}</strong><small>${t.durationDays?`${t.durationDays} hari`:'Lifetime'} · ${typeStock(t)} stok</small></span><b class="adaptive-price-value">Rp${Number(resellerPrice(t.price,sessionUser())||0).toLocaleString('id-ID')}</b></button>`).join(''):'<div style="color:var(--text-muted);font-size:.7rem">Varian belum tersedia.</div>';
+    const optionsBox=$('modal-product-options'), options=Array.isArray(product.options)?product.options:[];
+    if(optionsBox) optionsBox.innerHTML=options.length?`<h4 style="font-size:.78rem;margin:12px 0 6px;font-weight:600;">Pilih Opsi:</h4><div class="product-option-checks">${options.map(o=>`<label><input type="checkbox" class="modal-product-option" value="${esc(o)}"><span>${esc(o)}</span></label>`).join('')}</div>`:'';
+    const paramsBox=$('modal-product-parameters'), fieldLabels={email:"Email",emailPassword:"Password Email",mlId:"ID ML",ffId:"ID FF",meterNumber:"Nomor meter",phone:"Nomor telepon",ewalletNumber:"Nomor e-wallet"}, params=Array.isArray(product.parameters)?product.parameters:[];
+    if(paramsBox) paramsBox.innerHTML=params.length?`<h4 style="font-size:.78rem;margin:12px 0 6px;font-weight:600;">Data yang harus diisi:</h4><div class="product-parameter-fields">${params.map(key=>`<label>${esc(fieldLabels[key]||key)}<input type="text" class="modal-product-parameter" data-key="${esc(key)}" placeholder="Masukkan ${esc((fieldLabels[key]||key).toLowerCase())}" autocomplete="off"></label>`).join('')}</div>`:'';
     const modal=$('product-detail-modal'); if(modal){modal.classList.remove('hidden');document.body.classList.add('modal-open');}
   };
 
   window.toggleProductDetail = function(){const m=$('product-detail-modal');if(!m)return;m.classList.toggle('hidden');if(m.classList.contains('hidden'))document.body.classList.remove('modal-open');else document.body.classList.add('modal-open');};
 
   window.addSelectedProductToCart = function(buyNow=false){
-    if(!currentActiveProduct||!selectedProductType){iosAlert('Pilih varian produk terlebih dahulu.');return;}
-    if(typeStock(selectedProductType)<1){iosAlert('Varian ini sedang habis.');return;}
-    const u=sessionUser(); const price=Number(resellerPrice(selectedProductType.price,u)||0);
-    const key=`${currentActiveProduct.id}::${selectedProductType.typeName}`;
-    const existing=cart.find(i=>i.key===key);
-    if(existing){if(existing.quantity>=typeStock(selectedProductType)){iosAlert('Jumlah melebihi stok.');return;}existing.quantity+=1;existing.selected=true;}
-    else cart.push({cartItemId:`cart_${Date.now()}_${Math.random().toString(36).slice(2,7)}`,key,id:Number(currentActiveProduct.id),name:productText(currentActiveProduct,'name'),typeName:selectedProductType.typeName,quantity:1,price,basePrice:Number(selectedProductType.price||0),durationDays:selectedProductType.durationDays??null,selected:true});
-    updateCartUI();
-    toggleProductDetail();
-    if(buyNow) { toggleCart(); }
-    else showToast('Produk ditambahkan ke keranjang.');
+    if(!currentActiveProduct||!selectedProductType){iosAlert('Pilih varian produk terlebih dahulu.');return;} if(typeStock(selectedProductType)<1){iosAlert('Varian ini sedang habis.');return;}
+    const options=[...document.querySelectorAll('.modal-product-option:checked')].map(i=>i.value), parameters={}; let invalid=false;
+    document.querySelectorAll('.modal-product-parameter').forEach(input=>{const key=input.dataset.key,value=input.value.trim();if(!value)invalid=true;else parameters[key]=value;});
+    if((Array.isArray(currentActiveProduct.parameters)?currentActiveProduct.parameters:[]).length&&invalid){iosAlert('Lengkapi semua parameter produk terlebih dahulu.');return;}
+    const u=sessionUser(),price=Number(resellerPrice(selectedProductType.price,u)||0),key=`${currentActiveProduct.id}::${selectedProductType.typeName}::${JSON.stringify(options)}::${JSON.stringify(parameters)}`,existing=cart.find(i=>i.key===key);
+    if(existing){if(existing.quantity>=typeStock(selectedProductType)){iosAlert('Jumlah melebihi stok.');return;}existing.quantity+=1;existing.selected=true;} else cart.push({cartItemId:`cart_${Date.now()}_${Math.random().toString(36).slice(2,7)}`,key,id:Number(currentActiveProduct.id),name:productText(currentActiveProduct,'name'),typeName:selectedProductType.typeName,quantity:1,price,basePrice:Number(selectedProductType.price||0),durationDays:selectedProductType.durationDays??null,options,parameters,selected:true});
+    updateCartUI(); toggleProductDetail(); if(buyNow)toggleCart(); else showToast('Produk ditambahkan ke keranjang.');
   };
-
   window.completeCheckout = async function(targetPhone,paymentMethod,proofUrl){
-    const selected=cart.filter(i=>i.selected).map(i=>({id:i.id,typeName:i.typeName,quantity:i.quantity}));
+    const selected=cart.filter(i=>i.selected).map(i=>({id:i.id,typeName:i.typeName,quantity:i.quantity,options:Array.isArray(i.options)?i.options:[],parameters:i.parameters&&typeof i.parameters==='object'?i.parameters:{}}));
     if(!selected.length) throw new Error('Tidak ada produk yang dipilih.');
-    const d=await apiRequest('/checkout',{method:'POST',body:JSON.stringify({items:selected,targetPhone,paymentMethod,proofUrl})});
-    if(d?.user) saveUserSession(d.user,localStorage.getItem('auth_token'));
-    return d;
+    const d=await apiRequest('/checkout',{method:'POST',body:JSON.stringify({items:selected,targetPhone,paymentMethod,proofUrl})}); if(d?.user)saveUserSession(d.user,localStorage.getItem('auth_token')); return d;
   };
 
   window.openCart = window.toggleCart;
@@ -5519,7 +5518,7 @@ function startSupportPolling(){
         const waiting=fs.required?.length&&!fs.complete;
         return `<div class="admin-pending-card" style="padding:14px;">
           <div style="display:flex;gap:8px;align-items:flex-start;"><div style="flex:1"><strong>@${esc(p.username||'user')}</strong><div class="subscription-meta">${esc(p.userEmail||p.userPhone||'-')} · ${esc(new Date(p.createdAt).toLocaleString('id-ID'))}</div></div><span class="admin-status-pill ${waiting?'':'active'}">${waiting?'Form diminta':'Siap diproses'}</span></div>
-          <div style="margin-top:9px;font-size:.68rem;line-height:1.45"><b>Pesanan:</b> ${esc((p.items||[]).map(x=>`${x.productName} — ${x.typeName} × ${x.quantity}`).join(', '))}<br><b>Total:</b> Rp${Number(p.totalSpent||0).toLocaleString('id-ID')} · ${esc(p.paymentMethod||'-')} · ${esc(p.targetPhone||'-')}</div>
+          <div style="margin-top:9px;font-size:.68rem;line-height:1.45"><b>Pesanan:</b> ${esc((p.items||[]).map(x=>{const o=Array.isArray(x.options)&&x.options.length?` · Opsi: ${x.options.join(', ')}`:'';const params=x.parameters&&typeof x.parameters==='object'?Object.entries(x.parameters).map(([k,v])=>`${k}: ${v}`).join(', '):'';return `${x.productName} — ${x.typeName} × ${x.quantity}${o}${params?` · ${params}`:''}`}).join(' | '))}<br><b>Total:</b> Rp${Number(p.totalSpent||0).toLocaleString('id-ID')} · ${esc(p.paymentMethod||'-')} · ${esc(p.targetPhone||'-')}</div>
           ${p.proofUrl?`<img class="admin-proof-thumb" src="${esc(imageDisplayUrl(p.proofUrl))}" alt="Bukti pembayaran">`:''}
           ${responseText?`<div class="admin-response-box"><b>Data form user:</b><pre style="white-space:pre-wrap;margin:6px 0 0;font:inherit">${esc(responseText)}</pre></div>`:''}
           <div class="admin-form-request"><strong style="font-size:.68rem">Minta data user</strong><div class="admin-form-checks">${checks}</div><button type="button" class="admin-mini-btn" style="margin-top:8px" onclick="requestAdminPurchaseForm(${i})">Kirim Form ke Inbox</button></div>
