@@ -571,7 +571,9 @@
 
         .product-info { padding: 10px; display: flex; flex-direction: column; flex-grow: 1; }
         .product-name { font-size: 0.86rem; font-weight: 600; margin-bottom: 3px; color: var(--text-main); }
-        .product-desc { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 6px; flex-grow: 1; line-height: 1.3; }
+        .product-desc { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 6px; flex-grow: 1; line-height: 1.45; white-space: pre-line; overflow-wrap:anywhere; }
+        .product-desc-more { color:var(--accent); font-weight:800; text-decoration:none; cursor:pointer; white-space:nowrap; }
+        .product-desc-more:hover { text-decoration:underline; }
         .product-price { font-size: 0.82rem; font-weight: 600; color: var(--accent); }
 
         .dashboard-container {
@@ -2021,7 +2023,7 @@ body.modal-open { scroll-behavior: auto; }
                             <button onclick="setThemeMode('dark')" id="btn-mode-dark" class="mode-btn active" data-i18n="dark">🌙 Mode Gelap</button>
                             <button onclick="setThemeMode('light')" id="btn-mode-light" class="mode-btn" data-i18n="light">☀️ Mode Terang</button>
                         </div>
-                        <label data-i18n="choose_accent" style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Pilih Warna Aksen:</label>
+                        <label id="accent-settings-label" data-i18n="choose_accent" style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Pilih Warna Aksen:</label>
                         <div class="color-grid">
                             <div class="color-option" onclick="setAccentColor('#38bdf8', '#0284c7', 'Sky Blue')"><span class="color-swatch" style="background:#38bdf8;"></span>Sky Blue</div>
                             <div class="color-option" onclick="setAccentColor('#0d9488', '#115e59', 'Teal')"><span class="color-swatch" style="background:#0d9488;"></span>Teal</div>
@@ -2036,16 +2038,21 @@ body.modal-open { scroll-behavior: auto; }
                         </div>
                     </div>
 
-                    <div class="settings-panel user-visual-settings-panel">
-                        <h4>Tampilan Web</h4>
-                        <p class="user-settings-help">Atur gaya tampilan dan intensitas blur untuk perangkat ini. Perubahan tidak memengaruhi user lain.</p>
-                        <button type="button" id="user-visual-open-button" class="user-visual-setting-button" onclick="openUserVisualModal()">
-                            <span class="setting-copy">
-                                <strong id="user-visual-setting-title">Blur Standard · 50%</strong>
-                                <small id="user-visual-setting-subtitle">Sudut default · blur sedang</small>
-                            </span>
-                            <span class="setting-chevron">›</span>
-                        </button>
+                    <div class="settings-panel user-visual-settings-panel theme-settings-panel">
+                        <div class="theme-settings-head">
+                            <div><h4>Tema Web</h4><p class="user-settings-help">Pilih salah satu dari 4 tema. Pengaturan hanya berlaku di perangkat/user ini.</p></div>
+                        </div>
+                        <div id="theme-grid" class="theme-grid">
+                            <button type="button" class="theme-option" data-theme="liquid-glass" onclick="setWebTheme('liquid-glass')"><span class="theme-swatch theme-swatch-glass"></span><strong>Liquid Glass</strong><small>Default · transparan · blur</small></button>
+                            <button type="button" class="theme-option" data-theme="minimalist" onclick="setWebTheme('minimalist')"><span class="theme-swatch theme-swatch-minimal"></span><strong>Minimalist</strong><small>Bersih · terang/gelap · tanpa aksen</small></button>
+                            <button type="button" class="theme-option" data-theme="liquid-glass-solid" onclick="setWebTheme('liquid-glass-solid')"><span class="theme-swatch theme-swatch-solid"></span><strong>Liquid Glass Solid</strong><small>Warna random · bisa atur terang/gelap</small></button>
+                            <button type="button" class="theme-option" data-theme="neumorphic" onclick="setWebTheme('neumorphic')"><span class="theme-swatch theme-swatch-neumorphic"></span><strong>Neumorphic</strong><small>Timbul · tombol masuk saat ditekan</small></button>
+                        </div>
+                        <div id="solid-theme-controls" class="solid-theme-controls hidden">
+                            <div class="solid-control-row"><div><strong>Intensitas warna</strong><small>Geser untuk membuat blok lebih terang atau lebih gelap.</small></div><output id="solid-brightness-value">50%</output></div>
+                            <input id="solid-brightness-range" class="solid-brightness-range" type="range" min="0" max="100" value="50" aria-label="Intensitas warna Liquid Glass Solid" oninput="setSolidBrightness(this.value)">
+                            <button type="button" class="admin-glass-btn" onclick="randomizeSolidTheme(true)">↻ Acak warna blok</button>
+                        </div>
                     </div>
 
                     <div class="settings-panel chat-style-settings-panel">
@@ -2270,7 +2277,7 @@ body.modal-open { scroll-behavior: auto; }
                     <button onclick="toggleProductDetail()" class="btn-close">&times;</button>
                 </div>
                 <img id="modal-prod-img" src="" alt="" class="product-preview-square" onclick="openProductImagePreview()">
-                <p id="modal-prod-desc" style="font-size:0.72rem; color:var(--text-muted); margin-bottom:6px; line-height:1.22;"></p>
+                <p id="modal-prod-desc" style="font-size:0.72rem; color:var(--text-muted); margin-bottom:6px; line-height:1.45; white-space:pre-line; overflow-wrap:anywhere;"></p>
                 <p id="modal-prod-stock" style="font-size:0.75rem; font-weight:600; color:var(--accent); margin-bottom:10px;">Stok Tersedia: -</p>
                 
                 <h4 data-i18n="choose_variant" style="font-size:0.78rem; margin-bottom:6px; font-weight:600;">Pilih Varian / Tipe:</h4>
@@ -2664,6 +2671,7 @@ body.modal-open { scroll-behavior: auto; }
             const userMode=localStorage.getItem('ryy_user_ui_mode') || 'standard';
             const userBlur=Number(localStorage.getItem('ryy_user_blur') ?? USER_UI_MODES[userMode]?.blur ?? 50);
             initUserVisualPreferences();
+            initWebTheme();
             initChatStylePreference();
         }
 
@@ -2682,6 +2690,7 @@ body.modal-open { scroll-behavior: auto; }
         }
 
         function setAccentColor(hexColor, glowColor, colorName) {
+            if (localStorage.getItem('ryy_web_theme') === 'minimalist') { showToast('Tema Minimalist tidak memakai warna aksen.'); return; }
             document.documentElement.style.setProperty('--accent', hexColor);
             document.documentElement.style.setProperty('--accent-glow', glowColor);
             localStorage.setItem("accent_hex", hexColor);
@@ -2691,6 +2700,71 @@ body.modal-open { scroll-behavior: auto; }
                 el.classList.toggle("selected", el.innerText.includes(colorName));
             });
             showToast(`Aksen diubah ke ${colorName}`);
+        }
+
+        const WEB_THEMES = ['liquid-glass','minimalist','liquid-glass-solid','neumorphic'];
+        const SOLID_THEME_PALETTE = ['#38bdf8','#0d9488','#9d4edd','#4d908e','#800020','#b79ced','#ff70a6','#1d3557','#2ec4b6','#4a4e69'];
+        const SOLID_SURFACES = '.settings-panel,.dash-card,.product-card,.bs-card,.modal-content,.dashboard-container,.landing-box,.auth-card,.admin-product-card,.admin-user-card,.admin-pending-card,.subscription-card,.distributor-card,.home-category-card,.support-btn,.admin-glass-btn,.mode-btn,.color-option,.type-option,.cart-row,.language-picker-button';
+        function solidColor(hex, brightness=50) {
+            const n=parseInt(String(hex).replace('#',''),16);
+            let r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+            const brightnessValue=Number.isFinite(Number(brightness))?Number(brightness):50; const factor=Math.max(0.35,Math.min(1.65,0.55+brightnessValue/100));
+            r=Math.max(0,Math.min(255,Math.round(r*factor)));g=Math.max(0,Math.min(255,Math.round(g*factor)));b=Math.max(0,Math.min(255,Math.round(b*factor)));
+            return `rgba(${r},${g},${b},${document.body.classList.contains('light-mode')?0.38:0.30})`;
+        }
+        function randomizeSolidTheme(notify=false) {
+            if(localStorage.getItem('ryy_web_theme')!=='liquid-glass-solid') return;
+            const brightness=Math.max(0,Math.min(100,Number(localStorage.getItem('ryy_solid_brightness')??50)));
+            document.querySelectorAll(SOLID_SURFACES).forEach((el)=>{
+                const color=SOLID_THEME_PALETTE[Math.floor(Math.random()*SOLID_THEME_PALETTE.length)];
+                el.style.setProperty('--solid-block-bg',solidColor(color,brightness));
+                el.dataset.solidColor=color;
+            });
+            if(notify) showToast('Warna tiap blok diacak.');
+        }
+        function paintNewSolidSurfaces() {
+            if(localStorage.getItem('ryy_web_theme')!=='liquid-glass-solid') return;
+            const brightness=Math.max(0,Math.min(100,Number(localStorage.getItem('ryy_solid_brightness')??50)));
+            document.querySelectorAll(SOLID_SURFACES).forEach(el=>{
+                if(!el.dataset.solidColor){
+                    const color=SOLID_THEME_PALETTE[Math.floor(Math.random()*SOLID_THEME_PALETTE.length)];
+                    el.dataset.solidColor=color;
+                    el.style.setProperty('--solid-block-bg',solidColor(color,brightness));
+                }
+            });
+        }
+        function setSolidBrightness(value, persist=true) {
+            const brightness=Math.max(0,Math.min(100,Number(value)||0));
+            if(persist) localStorage.setItem('ryy_solid_brightness',String(brightness));
+            const out=document.getElementById('solid-brightness-value'); if(out) out.textContent=`${brightness}%`;
+            const range=document.getElementById('solid-brightness-range'); if(range && Number(range.value)!==brightness) range.value=String(brightness);
+            if(localStorage.getItem('ryy_web_theme')==='liquid-glass-solid'){
+                document.querySelectorAll(SOLID_SURFACES).forEach(el=>{const color=el.dataset.solidColor||SOLID_THEME_PALETTE[0];el.style.setProperty('--solid-block-bg',solidColor(color,brightness));});
+            }
+        }
+        function refreshThemeUI(theme) {
+            document.querySelectorAll('.theme-option').forEach(el=>el.classList.toggle('selected',el.dataset.theme===theme));
+            const controls=document.getElementById('solid-theme-controls');
+            controls?.classList.toggle('hidden',theme!=='liquid-glass-solid');
+            if(theme==='liquid-glass-solid') setSolidBrightness(Number(localStorage.getItem('ryy_solid_brightness')??50),false);
+        }
+        function setWebTheme(theme,persist=true) {
+            if(!WEB_THEMES.includes(theme)) theme='liquid-glass';
+            document.body.classList.remove('theme-liquid-glass','theme-minimalist','theme-liquid-glass-solid','theme-neumorphic');
+            document.body.classList.add(`theme-${theme}`);
+            if(persist) localStorage.setItem('ryy_web_theme',theme);
+            refreshThemeUI(theme);
+            if(theme==='liquid-glass-solid') randomizeSolidTheme(false);
+            else document.querySelectorAll(SOLID_SURFACES).forEach(el=>{el.style.removeProperty('--solid-block-bg');delete el.dataset.solidColor;});
+            if(theme==='minimalist') document.querySelectorAll('.color-option').forEach(el=>el.classList.remove('selected'));
+        }
+        function initWebTheme() {
+            const theme=WEB_THEMES.includes(localStorage.getItem('ryy_web_theme'))?localStorage.getItem('ryy_web_theme'):'liquid-glass';
+            setWebTheme(theme,false);
+            if(!window.__solidThemeObserver && document.body){
+                window.__solidThemeObserver=new MutationObserver(()=>{ if(localStorage.getItem('ryy_web_theme')==='liquid-glass-solid') paintNewSolidSurfaces(); });
+                window.__solidThemeObserver.observe(document.body,{subtree:true,childList:true});
+            }
         }
 
         function initLandingPageInfo() {
@@ -2714,13 +2788,13 @@ body.modal-open { scroll-behavior: auto; }
 
             bestSellers.forEach(product => {
                 const name=productText(product,"name");
-                const description=productText(product,"description");
+                const description=productDescriptionPreview(productText(product,"description"),250);
                 grid.innerHTML += `
                     <div class="bs-card" onclick="openProductDetailFromPortfolio(${product.id})">
                         <img src="${escapeHtml(imageDisplayUrl(product.image||""))}" alt="${escapeHtml(name)}" class="bs-img">
                         <div class="bs-content">
                             <h4>${escapeHtml(name)}</h4>
-                            <p>${escapeHtml(description)}</p>
+                            <p class="home-description">${escapeHtml(description.text)}${description.truncated?` <span class="product-desc-more" onclick="event.stopPropagation();openProductDetail(${Number(product.id)})">...Selengkapnya</span>`:''}</p>
                         </div>
                     </div>
                 `;
@@ -3041,6 +3115,7 @@ body.modal-open { scroll-behavior: auto; }
             document.getElementById("landing-section").classList.add("hidden");
             document.getElementById("app-section").classList.remove("hidden");
             launchUserApp();
+            setTimeout(()=>switchView("catalog"),0);
         }
 
         function backToLanding() {
@@ -3120,8 +3195,8 @@ body.modal-open { scroll-behavior: auto; }
             ids.forEach(id => { if (!document.getElementById(id)) console.warn("Missing UI element:", id); });
             document.getElementById("userNavActions")?.classList.remove("hidden");
             document.getElementById("adminNavActions")?.classList.add("hidden");
-            document.getElementById("view-home")?.classList.add("hidden");
-            document.getElementById("view-catalog")?.classList.remove("hidden");
+            document.getElementById("view-home")?.classList.remove("hidden");
+            document.getElementById("view-catalog")?.classList.add("hidden");
             document.getElementById("view-admin")?.classList.add("hidden");
             document.getElementById("view-profile")?.classList.add("hidden");
             document.getElementById("view-settings")?.classList.add("hidden");
@@ -3132,8 +3207,8 @@ body.modal-open { scroll-behavior: auto; }
             if (name) name.innerText = storeText("name") || "RYY STORE";
             if (slogan) slogan.innerText = storeText("slogan") || "";
             try { initCatalogSearch?.(); } catch (e) { console.warn("Catalog search init skipped:", e); }
-            try { updateCatalogHeaderControls?.("catalog"); } catch (e) { console.warn("Catalog controls skipped:", e); }
-            try { renderCategories?.(); renderProducts?.("Semua"); } catch (e) { console.warn("Catalog render skipped:", e); }
+            try { updateCatalogHeaderControls?.("home"); } catch (e) { console.warn("Catalog controls skipped:", e); }
+            try { renderHomeView?.(); renderCategories?.(); renderProducts?.("Semua"); } catch (e) { console.warn("Home/catalog render skipped:", e); }
             try { setDynamicGreeting?.(); } catch (e) { console.warn("Greeting skipped:", e); }
             try { updateProfileDashboard?.(); } catch (e) { console.warn("Profile dashboard skipped:", e); }
         }
@@ -3294,6 +3369,16 @@ body.modal-open { scroll-behavior: auto; }
 
         function productText(product, field) {
             return product?.i18n?.[currentLanguage]?.[field] || product?.[field] || "";
+        }
+
+        function normalizeDescription(value) {
+            return String(value ?? "").replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+        }
+
+        function productDescriptionPreview(value, limit=250) {
+            const text = normalizeDescription(value);
+            if (text.length <= limit) return { text, truncated:false };
+            return { text:text.slice(0, limit).trimEnd(), truncated:true };
         }
 
         function storeText(field) {
@@ -3499,10 +3584,11 @@ body.modal-open { scroll-behavior: auto; }
                 product.stock=productStock(product);
                 const isReady=product.stock>0;
                 const firstType=Array.isArray(product.types)&&product.types.length?product.types.find(type=>typeStock(type)>0)||product.types[0]:null;
-                const name=productText(product,"name"), desc=productText(product,"description");
+                const name=productText(product,"name"), desc=productDescriptionPreview(productText(product,"description"),250);
+                const descHtml=`${escapeHtml(desc.text)}${desc.truncated?` <span class="product-desc-more" role="button" tabindex="0" onclick="event.stopPropagation();openProductDetail(${Number(product.id)})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();openProductDetail(${Number(product.id)})}">...Selengkapnya</span>`:''}`;
                 grid.innerHTML += `<div class="product-card" onclick="openProductDetail(${Number(product.id)})">
                     <div class="product-img-wrapper"><img src="${escapeHtml(imageDisplayUrl(product.image||""))}" alt="${escapeHtml(name)}" class="product-img"><span class="badge-stock ${isReady?'badge-ready':'badge-sold'}">${escapeHtml(isReady?t("ready"):t("sold"))}</span></div>
-                    <div class="product-info"><h3 class="product-name">${escapeHtml(name)}</h3><p class="product-desc">${escapeHtml(desc)}</p><div class="product-price adaptive-price">${firstType?`<span class="adaptive-price-text">${escapeHtml(t("from_price"))} ${priceMarkup(firstType.price)}</span>`:escapeHtml(t("price_unavailable"))}</div>${currentUserIsReseller()?'<span class="reseller-badge">Reseller aktif</span>':''}</div>
+                    <div class="product-info"><h3 class="product-name">${escapeHtml(name)}</h3><p class="product-desc">${descHtml}</p><div class="product-price adaptive-price">${firstType?`<span class="adaptive-price-text">${escapeHtml(t("from_price"))} ${priceMarkup(firstType.price)}</span>`:escapeHtml(t("price_unavailable"))}</div>${currentUserIsReseller()?'<span class="reseller-badge">Reseller aktif</span>':''}</div>
                 </div>`;
             });
         }
@@ -4098,13 +4184,21 @@ body.modal-open { scroll-behavior: auto; }
         });
 
         function logoutAccount() {
+            window.__ryyAuthTransitionUntil = 0;
+            clearInterval(adminChatTimer);
+            adminChatTimer=null;
             clearUserSession();
             localStorage.removeItem("current_admin");
             localStorage.removeItem("admin_token");
             localStorage.removeItem("has_seen_landing");
+            localStorage.removeItem("impersonation_token");
+            localStorage.removeItem("impersonation_user");
+            localStorage.removeItem("impersonation_admin");
+            localStorage.removeItem("ryy_impersonating");
+            try { switchRole("user"); } catch (_) {}
             forceAuthScreen();
-            switchRole("user");
             showToast("Berhasil keluar akun");
+            setTimeout(()=>{ if(!localStorage.getItem("auth_token")&&!localStorage.getItem("admin_token")) window.location.replace("/#login"); },80);
         }
 
         async function recordPurchase() {
@@ -4669,13 +4763,19 @@ Simpan data ini. Kredensial rahasia tidak ditampilkan lagi setelah ini.`;
             const overlay=document.getElementById("maintenance-overlay");
             const isAdmin=!!localStorage.getItem("admin_token");
             if(window.__siteMaintenance && !isAdmin){
-                // Keep authentication visible so an admin can still sign in,
-                // while the public store/landing area remains inaccessible.
-                document.getElementById("auth-section")?.classList.remove("hidden");
-                document.getElementById("landing-section")?.classList.add("hidden");
-                document.getElementById("app-section")?.classList.add("hidden");
-                document.getElementById("maintenance-auth-banner")?.classList.remove("hidden");
-                overlay?.classList.add("hidden");
+                const hasUserSession=!!localStorage.getItem("auth_token") && !!localStorage.getItem("current_user");
+                document.getElementById("maintenance-auth-banner")?.classList.toggle("hidden", hasUserSession);
+                if(hasUserSession){
+                    document.getElementById("auth-section")?.classList.add("hidden");
+                    document.getElementById("landing-section")?.classList.add("hidden");
+                    document.getElementById("app-section")?.classList.remove("hidden");
+                    overlay?.classList.remove("hidden");
+                }else{
+                    document.getElementById("auth-section")?.classList.remove("hidden");
+                    document.getElementById("landing-section")?.classList.add("hidden");
+                    document.getElementById("app-section")?.classList.add("hidden");
+                    overlay?.classList.add("hidden");
+                }
             }else{
                 document.getElementById("maintenance-auth-banner")?.classList.add("hidden");
                 overlay?.classList.add("hidden");
@@ -4693,11 +4793,9 @@ Simpan data ini. Kredensial rahasia tidak ditampilkan lagi setelah ini.`;
         // Override the app launcher only for maintenance protection.
         const __originalLaunchUserApp = launchUserApp;
         launchUserApp = function(...args) {
-            if(window.__siteMaintenance===true && !localStorage.getItem("admin_token")){
-                applySiteConfig({maintenance:true,font:__adminConfig?.font,uiMode:__adminConfig?.uiMode});
-                return;
-            }
-            return __originalLaunchUserApp.apply(this,args);
+            const result=__originalLaunchUserApp.apply(this,args);
+            if(window.__siteMaintenance===true && !localStorage.getItem("admin_token")) applySiteConfig({maintenance:true,font:__adminConfig?.font,uiMode:__adminConfig?.uiMode});
+            return result;
         };
 
         const __originalLaunchAdminApp = launchAdminApp;
@@ -4710,11 +4808,9 @@ Simpan data ini. Kredensial rahasia tidak ditampilkan lagi setelah ini.`;
         // Load site config before normal session routing.
         const __originalCheckSessionState = checkSessionState;
         checkSessionState = function(...args) {
-            if(window.__siteMaintenance===true && !localStorage.getItem("admin_token")){
-                applySiteConfig({maintenance:true,font:__adminConfig?.font,uiMode:__adminConfig?.uiMode});
-                return;
-            }
-            return __originalCheckSessionState.apply(this,args);
+            const result=__originalCheckSessionState.apply(this,args);
+            if(window.__siteMaintenance===true && !localStorage.getItem("admin_token")) applySiteConfig({maintenance:true,font:__adminConfig?.font,uiMode:__adminConfig?.uiMode});
+            return result;
         };
 
         // Initial site config fetch; DOMContentLoaded handler above will also load store data.
@@ -4927,13 +5023,19 @@ async function loadAdminChats(){
   const list=document.getElementById('admin-chat-list');
   const room=document.querySelector('.admin-chat-window');
   if(!list||!room)return;
-  list.classList.remove('chat-room-open'); room.classList.remove('open');
+  const keepEmail=activeAdminChatEmail;
   try{
     const d=await fetch('/api/chatting',{headers:{Authorization:`Bearer ${localStorage.getItem('admin_token')}`},cache:'no-store'}).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.message||'Gagal memuat chat.');return j});
     adminChats=d.conversations||[];
     list.innerHTML=adminChats.map((c,i)=>`<button type="button" class="admin-chat-contact ${c.email===activeAdminChatEmail?'active':''}" onclick="selectAdminChat(${i})"><strong>${escapeHtml(c.username||c.email)}</strong><small>${c.unreadByAdmin?`● ${c.unreadByAdmin} baru · `:''}${escapeHtml(c.email)}${c.updatedAt?` · ${escapeHtml(new Date(c.updatedAt).toLocaleString('id-ID',{dateStyle:'short',timeStyle:'short'}))}`:''}</small></button>`).join('')||'<div style="padding:24px;text-align:center;color:var(--text-muted);font-size:.68rem;">Belum ada percakapan.<br><span style="font-size:.58rem;">Percakapan user akan muncul di sini.</span></div>';
-    // Intentionally do not auto-open a room. The admin must choose a user first, WhatsApp-style.
-  }catch(e){list.innerHTML=`<div style="padding:12px;color:#ff6b6b;font-size:.65rem;">${escapeHtml(e.message)}</div>`;room.classList.remove('open');list.classList.remove('chat-room-open');}
+    if(keepEmail){
+      const idx=adminChats.findIndex(c=>c.email===keepEmail);
+      if(idx>=0) selectAdminChat(idx);
+      else { activeAdminChatEmail=null; list.classList.remove('chat-room-open'); room.classList.remove('open'); }
+    } else {
+      list.classList.remove('chat-room-open'); room.classList.remove('open');
+    }
+  }catch(e){list.innerHTML=`<div style="padding:12px;color:#ff6b6b;font-size:.65rem;">${escapeHtml(e.message)}</div>`;if(!keepEmail){room.classList.remove('open');list.classList.remove('chat-room-open');}}
 }
 function selectAdminChat(i){
   const c=adminChats[i];if(!c)return;
@@ -5318,7 +5420,7 @@ function startSupportPolling(){
     currentActiveProduct=product;
     product.stock=productStock(product);
     $('modal-prod-name') && ($('modal-prod-name').textContent=productText(product,'name'));
-    $('modal-prod-desc') && ($('modal-prod-desc').textContent=productText(product,'description'));
+    $('modal-prod-desc') && ($('modal-prod-desc').textContent=normalizeDescription(productText(product,'description')));
     const img=$('modal-prod-img'); if(img){img.src=product.image||'';img.alt=productText(product,'name');}
     $('modal-prod-stock') && ($('modal-prod-stock').textContent=`Stok Tersedia: ${product.stock} unit`);
     const list=$('modal-type-list');
@@ -5696,6 +5798,43 @@ button:active,.btn:active,.admin-mini-btn:active,.support-btn:active{transform:s
   .ai-fab{bottom:max(100px,calc(env(safe-area-inset-bottom) + 96px))!important;}
   .support-fab{bottom:max(160px,calc(env(safe-area-inset-bottom) + 156px))!important;}
 }
+
+        /* ===== RYY THEME PACK ===== */
+        .theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+        .theme-option{position:relative;display:grid;grid-template-columns:38px 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center;text-align:left;padding:11px;border:1px solid var(--glass-border);border-radius:18px;background:var(--glass-surface);color:var(--text-main);font:inherit;cursor:pointer;transition:.2s ease;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 20px rgba(0,0,0,.08)}
+        .theme-option strong{font-size:.72rem}.theme-option small{grid-column:2;color:var(--text-muted);font-size:.57rem;line-height:1.25;margin-top:2px}.theme-option.selected{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-glow),inset 0 1px 0 rgba(255,255,255,.18)}.theme-option:active{transform:scale(.985)}
+        .theme-swatch{grid-row:1 / span 2;width:38px;height:38px;border-radius:13px;border:1px solid var(--glass-border);display:block;box-shadow:inset 0 1px 0 rgba(255,255,255,.28)}
+        .theme-swatch-glass{background:linear-gradient(145deg,rgba(255,255,255,.35),color-mix(in srgb,var(--accent) 45%,transparent),rgba(255,255,255,.06));backdrop-filter:blur(10px)}
+        .theme-swatch-minimal{background:linear-gradient(145deg,#fff,#e9e9ee)}
+        .theme-swatch-solid{background:linear-gradient(135deg,#ff70a6,#38bdf8 48%,#9d4edd)}
+        .theme-swatch-neumorphic{background:#dfe3ea;box-shadow:7px 7px 12px rgba(0,0,0,.22),-7px -7px 12px rgba(255,255,255,.9)}
+        .solid-theme-controls{margin-top:12px;padding:12px;border:1px solid var(--glass-border);border-radius:20px;background:var(--glass-surface)}
+        .solid-control-row{display:flex;align-items:center;gap:10px;justify-content:space-between}.solid-control-row div{min-width:0}.solid-control-row strong{display:block;font-size:.68rem}.solid-control-row small{display:block;color:var(--text-muted);font-size:.57rem;line-height:1.3;margin-top:3px}.solid-control-row output{font-size:.72rem;color:var(--accent);font-weight:800;flex:none}.solid-brightness-range{width:100%;margin:11px 0 10px;accent-color:var(--accent)}
+        .solid-theme-controls .admin-glass-btn{width:100%;padding:9px 12px}
+        body.theme-minimalist .color-grid,body.theme-minimalist #accent-settings-label,body.theme-liquid-glass-solid .color-grid,body.theme-liquid-glass-solid #accent-settings-label{display:none!important}
+        body.theme-minimalist .settings-panel,body.theme-minimalist .dash-card,body.theme-minimalist .product-card,body.theme-minimalist .bs-card,body.theme-minimalist .modal-content,body.theme-minimalist .dashboard-container,body.theme-minimalist .landing-box,body.theme-minimalist .auth-card,body.theme-minimalist .admin-product-card,body.theme-minimalist .admin-glass-btn,body.theme-minimalist .support-btn{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:var(--card-bg);box-shadow:0 5px 18px rgba(0,0,0,.06);border-color:var(--border-color);border-radius:16px}
+        body.theme-minimalist .btn-accent{background:var(--text-main);color:var(--bg-main);box-shadow:none}
+        body.theme-minimalist .mode-btn.active{background:var(--text-main);color:var(--bg-main);border-color:var(--text-main);box-shadow:none}
+        body.theme-minimalist .product-card:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,0,0,.08)}
+        body.theme-minimalist .orb{opacity:.035!important;filter:blur(100px)}
+        body.theme-minimalist .product-price,body.theme-minimalist .home-portfolio-body>p:not(.home-description){color:var(--text-main)}
+        body.theme-liquid-glass-solid{--glass-blur:blur(18px)}
+        body.theme-liquid-glass-solid .orb{opacity:.08}
+        body.theme-liquid-glass-solid .dash-card,body.theme-liquid-glass-solid .settings-panel,body.theme-liquid-glass-solid .product-card,body.theme-liquid-glass-solid .bs-card,body.theme-liquid-glass-solid .modal-content,body.theme-liquid-glass-solid .landing-box,body.theme-liquid-glass-solid .auth-card,body.theme-liquid-glass-solid .dashboard-container,body.theme-liquid-glass-solid .admin-product-card,body.theme-liquid-glass-solid .admin-user-card,body.theme-liquid-glass-solid .admin-pending-card,body.theme-liquid-glass-solid .subscription-card,body.theme-liquid-glass-solid .distributor-card,body.theme-liquid-glass-solid .home-category-card,body.theme-liquid-glass-solid .support-btn,body.theme-liquid-glass-solid .admin-glass-btn{background:var(--solid-block-bg, var(--glass-surface))!important;border-color:color-mix(in srgb,var(--solid-block-bg, var(--accent)) 65%,var(--glass-border))!important;backdrop-filter:blur(20px) saturate(155%)!important;-webkit-backdrop-filter:blur(20px) saturate(155%)!important;box-shadow:0 12px 30px rgba(0,0,0,.12),inset 0 1px 0 rgba(255,255,255,.18)}
+        body.theme-liquid-glass-solid .theme-option.selected{background:color-mix(in srgb,var(--accent) 28%,var(--solid-block-bg,#222))!important}
+        body.theme-neumorphic{--bg-main:#e7ebf1;--card-bg:#e7ebf1;--surface-solid:#e7ebf1;--text-main:#27313d;--text-muted:#68727f;--border-color:rgba(255,255,255,.65);--glass-border:rgba(255,255,255,.75);--glass-surface:#e7ebf1;--glass-shadow:9px 9px 18px rgba(163,174,190,.55),-9px -9px 18px rgba(255,255,255,.95)}
+        body.theme-neumorphic.light-mode{--bg-main:#e7ebf1;--card-bg:#e7ebf1;--surface-solid:#e7ebf1;--text-main:#27313d;--text-muted:#68727f}
+        body.theme-neumorphic:not(.light-mode){--bg-main:#20252c;--card-bg:#20252c;--surface-solid:#20252c;--text-main:#e8edf4;--text-muted:#9aa5b2;--border-color:rgba(255,255,255,.06);--glass-border:rgba(255,255,255,.08);--glass-surface:#20252c;--glass-shadow:9px 9px 18px rgba(0,0,0,.45),-7px -7px 16px rgba(255,255,255,.035)}
+        body.theme-neumorphic .orb{opacity:0!important}
+        body.theme-neumorphic .settings-panel,body.theme-neumorphic .dash-card,body.theme-neumorphic .product-card,body.theme-neumorphic .bs-card,body.theme-neumorphic .modal-content,body.theme-neumorphic .dashboard-container,body.theme-neumorphic .landing-box,body.theme-neumorphic .auth-card,body.theme-neumorphic .admin-product-card,body.theme-neumorphic .admin-user-card,body.theme-neumorphic .admin-pending-card,body.theme-neumorphic .subscription-card,body.theme-neumorphic .distributor-card,body.theme-neumorphic .home-category-card,body.theme-neumorphic .support-btn,body.theme-neumorphic .admin-glass-btn,body.theme-neumorphic .mode-btn,body.theme-neumorphic .color-option,body.theme-neumorphic .type-option{background:var(--glass-surface)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border:0!important;box-shadow:var(--glass-shadow)!important}
+        body.theme-neumorphic button:active,body.theme-neumorphic .btn-accent:active,body.theme-neumorphic .btn-secondary-action:active,body.theme-neumorphic .floating-nav-item:active,body.theme-neumorphic .admin-tab:active{transform:translateY(2px);box-shadow:inset 5px 5px 10px rgba(0,0,0,.18),inset -4px -4px 8px rgba(255,255,255,.55)!important}
+        body.theme-neumorphic:not(.light-mode) button:active,body.theme-neumorphic:not(.light-mode) .btn-accent:active,body.theme-neumorphic:not(.light-mode) .btn-secondary-action:active{box-shadow:inset 5px 5px 10px rgba(0,0,0,.5),inset -4px -4px 8px rgba(255,255,255,.035)!important}
+        body.theme-neumorphic .btn-accent{color:#fff;border:0;box-shadow:7px 7px 14px rgba(163,174,190,.48),-7px -7px 14px rgba(255,255,255,.9)!important}
+        body.theme-neumorphic:not(.light-mode) .btn-accent{box-shadow:7px 7px 14px rgba(0,0,0,.45),-6px -6px 12px rgba(255,255,255,.04)!important}
+        body.theme-neumorphic .theme-option.selected{box-shadow:inset 4px 4px 8px rgba(0,0,0,.15),inset -4px -4px 8px rgba(255,255,255,.7)!important}
+        @media(max-width:600px){.theme-grid{grid-template-columns:1fr}.theme-option{min-height:58px}}
+        .product-desc,.home-description,#modal-prod-desc,.inbox-message-body{white-space:pre-line}
+        .product-desc-more{font-size:.68rem}
 </style>
 
 <script id="ryy-v15-tools-broadcast">
