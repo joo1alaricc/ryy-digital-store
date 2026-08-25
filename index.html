@@ -1629,7 +1629,7 @@ body.modal-open { scroll-behavior: auto; }
 
 <style id="ryy-whatsapp-admin-style">
 .wa-admin-grid{display:grid;gap:12px}.wa-admin-card{padding:16px;border-radius:22px;background:rgba(255,255,255,.055);border:1px solid var(--glass-border)}.wa-admin-status{display:flex;align-items:center;gap:8px;font-weight:800}.wa-admin-dot{width:9px;height:9px;border-radius:50%;background:#777;box-shadow:0 0 0 4px rgba(255,255,255,.05)}.wa-admin-dot.on{background:#32d583;box-shadow:0 0 0 4px rgba(50,213,131,.13)}.wa-admin-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.wa-admin-actions button{flex:1;min-width:120px}.wa-admin-code{font-size:1.2rem;letter-spacing:.18em;font-weight:900;text-align:center;padding:16px;border-radius:18px;background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px dashed color-mix(in srgb,var(--accent) 35%,transparent);margin-top:10px}.wa-admin-msg{display:flex;flex-direction:column;gap:5px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}.wa-admin-msg small{color:var(--text-muted);font-size:.6rem}.wa-admin-msg b{font-size:.7rem}.wa-admin-msg p{margin:0;font-size:.72rem;white-space:pre-wrap;word-break:break-word}.wa-send-row{display:flex;gap:7px;margin-top:10px}.wa-send-row input{margin:0}.wa-send-row button{flex:0 0 auto}
-</style>
+.wa-admin-diagnostic{margin:10px 0 0;padding:12px;border-radius:16px;white-space:pre-wrap;word-break:break-word;font:600 .68rem/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--text-main);background:rgba(0,0,0,.12);border:1px solid var(--glass-border);max-height:260px;overflow:auto}</style>
 </head>
 <body>
 
@@ -1902,7 +1902,7 @@ body.modal-open { scroll-behavior: auto; }
                                 <div class="admin-toolbar"><div><h4>WhatsApp Bot</h4><p class="admin-config-note">Bot berjalan di Node.js/Pterodactyl dan terhubung lewat secure bridge.</p></div><button type="button" class="admin-glass-btn" onclick="loadWhatsAppBotPanel()">↻</button></div>
                                 <div style="margin-top:12px;display:flex;justify-content:space-between;gap:12px;align-items:center"><div class="wa-admin-status"><i id="wa-admin-dot" class="wa-admin-dot"></i><span id="wa-admin-status">Memuat...</span></div><span id="wa-admin-number" class="admin-chip">-</span></div>
                                 <div class="admin-config-note" style="margin-top:8px">Bot ID: <b id="wa-admin-id">-</b></div>
-                                <div class="wa-admin-actions"><button type="button" class="admin-glass-btn accent" onclick="pairWhatsAppBot()">Hubungkan Nomor</button><button type="button" class="admin-glass-btn" onclick="disconnectWhatsAppBot()">Putuskan</button><button type="button" class="admin-glass-btn" onclick="restartWhatsAppBot()">Restart Bot</button></div>
+                                <div class="wa-admin-actions"><button type="button" class="admin-glass-btn accent" onclick="pairWhatsAppBot()">Hubungkan Nomor</button><button type="button" class="admin-glass-btn" onclick="disconnectWhatsAppBot()">Putuskan</button><button type="button" class="admin-glass-btn" onclick="restartWhatsAppBot()">Restart Bot</button></div><div style="margin-top:10px"><button type="button" class="btn-secondary-action" onclick="diagnoseWhatsAppBridge()">Tes koneksi &amp; autentikasi</button><pre id="wa-admin-diagnostic" class="wa-admin-diagnostic">Tekan "Tes koneksi" untuk melihat detail autentikasi bridge.</pre></div>
                                 <div id="wa-admin-pair-code" class="wa-admin-code hidden"></div>
                             </div>
                             <div class="wa-admin-card">
@@ -5116,7 +5116,54 @@ async function loadAdminTransactionProofs(){const list=document.getElementById('
 function showAdminProofGallery(i){const u=window.__adminProofUsers?.[i],g=document.getElementById('admin-proof-gallery');if(!u||!g)return;g.innerHTML=`<div class="admin-toolbar"><div><h4>@${escapeHtml(u.username||'user')}</h4><p class="admin-config-note">${escapeHtml(u.email||'')}</p></div></div><div class="proof-gallery">${u.proofs.map(p=>`<figure><img src="${escapeHtml(imageDisplayUrl(p.proofUrl))}" alt="Bukti transaksi" loading="lazy"><figcaption>${escapeHtml(new Date(p.createdAt).toLocaleString('id-ID'))}<br>${escapeHtml((p.items||[]).map(i=>i.productName).join(', '))}</figcaption></figure>`).join('')}</div>`;}
 
 
-async function loadWhatsAppBotPanel(){const st=document.getElementById('wa-admin-status');if(!st)return;try{const d=await adminApi('whatsapp-bot');const online=d.status==='connected'||d.connected===true;st.textContent=online?'Connected':(d.status==='pairing'?'Pairing...':'Disconnected');document.getElementById('wa-admin-dot')?.classList.toggle('on',online);document.getElementById('wa-admin-number').textContent=d.number||'-';document.getElementById('wa-admin-id').textContent=d.botId||'-';const code=d.pairingCode||'';const box=document.getElementById('wa-admin-pair-code');if(box){box.textContent=code?`Kode Pairing: ${code}`:'';box.classList.toggle('hidden',!code)}const boxm=document.getElementById('wa-admin-messages');if(boxm)boxm.innerHTML=(d.messages||[]).slice().reverse().map(m=>`<div class="wa-admin-msg"><small>${escapeHtml(m.sender||m.chat||'-')} · ${m.timestamp?new Date(m.timestamp).toLocaleString('id-ID'):''}</small><b>${m.fromMe?'Bot':'Masuk'}</b><p>${escapeHtml(m.text||'[media]')}</p></div>`).join('')||'<div class="admin-config-note">Belum ada pesan.</div>';}catch(e){st.textContent='Bridge tidak terhubung';document.getElementById('wa-admin-dot')?.classList.remove('on');document.getElementById('wa-admin-messages')?.replaceChildren(Object.assign(document.createElement('div'),{className:'admin-config-note',textContent:e.message||'Gagal menghubungi bot.'}));}}
+async function loadWhatsAppBotPanel(){
+  const st=document.getElementById('wa-admin-status');if(!st)return;
+  try{
+    const d=await adminApi('whatsapp-bot');
+    const online=d.status==='connected'||d.connected===true;
+    st.textContent=online?'Connected':(d.status==='pairing'?'Pairing...':'Disconnected');
+    document.getElementById('wa-admin-dot')?.classList.toggle('on',online);
+    document.getElementById('wa-admin-number').textContent=d.number||'-';
+    document.getElementById('wa-admin-id').textContent=d.botId||'-';
+    const code=d.pairingCode||'';
+    const box=document.getElementById('wa-admin-pair-code');
+    if(box){box.textContent=code?`Kode Pairing: ${code}`:'';box.style.display=code?'block':'none'}
+    const list=document.getElementById('wa-admin-messages');
+    if(list)list.innerHTML=(d.messages||[]).slice(-12).reverse().map(m=>`<div class="wa-admin-msg"><b>${escapeHtml(m.sender||m.chat||'-')}</b><p>${escapeHtml(m.text||'')}</p><small>${m.timestamp?new Date(m.timestamp).toLocaleString('id-ID'):''}</small></div>`).join('')||'<div class="admin-config-note">Belum ada pesan.</div>';
+    const diag=document.getElementById('wa-admin-diagnostic');
+    if(diag)diag.textContent='Tekan "Tes koneksi" untuk melihat detail autentikasi bridge.';
+  }catch(e){
+    st.textContent='Error';
+    const diag=document.getElementById('wa-admin-diagnostic');
+    if(diag)diag.textContent=e.message||'Gagal menghubungi bot.';
+    document.getElementById('wa-admin-messages')?.replaceChildren(Object.assign(document.createElement('div'),{className:'admin-config-note',textContent:e.message||'Gagal menghubungi bot.'}));
+  }
+}
+async function diagnoseWhatsAppBridge(){
+  const box=document.getElementById('wa-admin-diagnostic');
+  if(box)box.textContent='Menguji koneksi bridge...';
+  try{
+    const d=await adminApi('whatsapp-bot',{method:'POST',body:{action:'diagnose'}});
+    const h=d.health||{},a=d.authenticatedRequest||{};
+    const upstream=a.response||{};
+    const lines=[
+      `Bridge URL: ${d.bridgeUrl||'-'}`,
+      `BOT ID terkirim: ${d.botIdSent||'-'}`,
+      `Secret terkonfigurasi: ${d.secretConfigured?'YA':'TIDAK'}`,
+      `Authorization terkirim: ${d.authorizationSent?'YA':'TIDAK'}`,
+      `X-Bot-ID terkirim: ${d.botIdHeaderSent?'YA':'TIDAK'}`,
+      `Health: ${h.ok?'OK':'GAGAL'}${h.status?` (HTTP ${h.status})`:''}`,
+      `Health bot: ${h.response?.connected===true?'Connected':(h.response?.status||'-')}`,
+      `Authenticated /status: ${a.ok?'OK':'GAGAL'}${a.status?` (HTTP ${a.status})`:''}`,
+      `Pesan bridge: ${upstream.message||d.message||'-'}`,
+      upstream.reason?`Reason: ${upstream.reason}`:'',
+      upstream.botId?`Bot ID dari bridge: ${upstream.botId}`:'',
+    ].filter(Boolean);
+    if(box)box.textContent=lines.join('\\n');
+  }catch(e){
+    if(box)box.textContent=e.message||'Tes koneksi gagal.';
+  }
+}
 async function pairWhatsAppBot(){const phone=prompt('Masukkan nomor WhatsApp yang ingin dipairing (628xxx):');if(!phone)return;try{const d=await adminApi('whatsapp-bot',{method:'POST',body:{action:'pair',phone}});if(d.pairingCode)alert(`Kode Pairing: ${d.pairingCode}`);else showToast('Pairing dimulai. Tunggu kode lalu refresh panel.');await loadWhatsAppBotPanel();}catch(e){iosAlert(e.message||'Gagal memulai pairing.')}}
 async function disconnectWhatsAppBot(){try{await adminApi('whatsapp-bot',{method:'POST',body:{action:'disconnect'}});showToast('Bot diputuskan.');await loadWhatsAppBotPanel();}catch(e){iosAlert(e.message||'Gagal memutuskan bot.')}}
 async function restartWhatsAppBot(){try{await adminApi('whatsapp-bot',{method:'POST',body:{action:'restart'}});showToast('Bot sedang direstart.');setTimeout(loadWhatsAppBotPanel,2500)}catch(e){iosAlert(e.message||'Gagal restart bot.')}}
