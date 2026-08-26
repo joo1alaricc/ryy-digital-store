@@ -5170,7 +5170,7 @@ function recalculateRefund(){const box=document.getElementById("refund-result");
 async function submitRefundRequest(){try{const {sub,p,calc}=selectedRefundData();if(!sub||!p)throw new Error("Produk pembelian tidak ditemukan.");const d=await apiRequest("/support",{method:"POST",body:JSON.stringify({type:"refund",purchaseId:p.id,subscriptionId:sub.id})});closeSupportModal();showToast(`Refund diajukan: ${rupiah(calc.refund)}`);saveUserSession(d.user,localStorage.getItem("auth_token"))}catch(e){iosAlert(e.message||"Gagal mengajukan refund.")}}
 function openDurationTool(){const u=currentSessionUser();openSupportModal("Cek Sisa Durasi",`<div class="support-form-grid"><label>Produk<select id="d-product" onchange="syncDurationTool()">${subscriptionSelectOptions()}</select></label><label>Tanggal pembelian<input id="d-purchase-date" type="date" onchange="syncDurationTool()"></label><label>Tanggal hari ini<input id="d-today-date" type="date" readonly></label><div id="duration-result" class="support-result"></div></div>`);const today=new Date();document.getElementById("d-today-date").value=today.toISOString().slice(0,10);syncDurationTool()}
 function syncDurationTool(){const u=currentSessionUser();const sub=supportSubscriptions()[Number(document.getElementById("d-product")?.value)||0];const p=purchaseForSubscription(u,sub);const pd=document.getElementById("d-purchase-date");if(pd&&!pd.value&&p?.createdAt)pd.value=new Date(p.createdAt).toISOString().slice(0,10);const today=document.getElementById("d-today-date")?.value;const box=document.getElementById("duration-result");if(!box||!sub)return;const total=Number(sub.durationDays||0);const calc=refundCalc(0,total,pd?.value||p?.createdAt,today?new Date(`${today}T23:59:59`):new Date());box.innerHTML=`Total durasi: <b>${total||"Lifetime"} hari</b><br>Dipakai: <b>${calc.usedDays.toFixed(2)} hari</b><br>Sisa durasi: <b>${calc.remainingDays.toFixed(2)} hari</b><br>Service fee saat ini: <b>${calc.serviceFee}</b>`}
-async function enableBrowserNotifications(){try{if(!('Notification' in window)){iosAlert('Browser ini belum mendukung notifikasi web.');return}const p=await Notification.requestPermission();if(p!=='granted'){iosAlert('Izin notifikasi belum diberikan. Aktifkan dari pengaturan situs/browser.');return}if('serviceWorker' in navigator)await navigator.serviceWorker.register('/sw.js');showToast('Notifikasi browser aktif.')}catch(e){iosAlert('Gagal mengaktifkan notifikasi: '+e.message)}}
+async function enableBrowserNotifications(){try{if(!('Notification' in window)){iosAlert('Browser ini belum mendukung notifikasi web.');return}const p=await Notification.requestPermission();if(p!=='granted'){iosAlert('Izin notifikasi belum diberikan. Aktifkan dari pengaturan situs/browser.');return}showToast('Notifikasi browser aktif.')}catch(e){iosAlert('Gagal mengaktifkan notifikasi: '+e.message)}}
 async function notifyNewInbox(messages){if(!Array.isArray(messages)||!messages.length)return;const sig=messages.map(m=>m.id).join('|');if(!lastInboxSignature){lastInboxSignature=sig;return}const old=new Set(lastInboxSignature.split('|'));const fresh=messages.filter(m=>m.id&&!old.has(m.id)&&m.read!==true);lastInboxSignature=sig;if(!fresh.length)return;if(!('Notification' in window)||Notification.permission!=='granted')return;for(const m of fresh.slice(0,3)){try{if(navigator.serviceWorker?.controller){const reg=await navigator.serviceWorker.ready;await reg.showNotification(m.title||'RYY STORE',{body:m.body||'Ada pesan baru dari admin.',icon:'/favicon.ico',tag:'ryy-inbox-'+m.id});}else new Notification(m.title||'RYY STORE',{body:m.body||'Ada pesan baru dari admin.'})}catch(_){}}}
 async function pollInboxNotifications(){try{const d=await apiRequest('/inbox');const old=currentSessionUser();await notifyNewInbox(d.inbox||[]);if(old){localStorage.setItem('current_user',JSON.stringify({...old,inbox:d.inbox||old.inbox||[]}));updateInboxBadge()}}catch(_){}}
 async function openSupportChat(){document.getElementById('support-chat')?.classList.remove('hidden');await refreshSupportChat();clearInterval(supportChatTimer);supportChatTimer=setInterval(refreshSupportChat,3000);document.getElementById('support-chat-input')?.focus()}
@@ -5382,7 +5382,7 @@ function startSupportPolling(){
   setTimeout(pollInboxNotifications,2500);
   setInterval(pollInboxNotifications,15000);
 }
-(function initSupportFeatures(){if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});if(currentSessionUser())startSupportPolling();})();
+(function initSupportFeatures(){if(currentSessionUser())startSupportPolling();})();
 
 
 </script>
@@ -6190,21 +6190,23 @@ button:active,.btn:active,.admin-mini-btn:active,.support-btn:active{transform:s
 <script>
 (function(){
   if(!('serviceWorker' in navigator)) return;
-  let reloading=false;
-  let waitingForController=false;
-  navigator.serviceWorker.register('/sw.js?v=20260825-2').then(reg=>{
+  // Register exactly one stable script URL. Never reload the current page on
+  // controllerchange: a SW update is installed in the background and the
+  // current UI stays alive. This avoids an update/reload loop.
+  navigator.serviceWorker.register('/sw.js',{updateViaCache:'none'}).then(reg=>{
     const check=()=>reg.update().catch(()=>{});
-    check(); setInterval(check,60000);
+    check();
+    setInterval(check,60000);
     reg.addEventListener('updatefound',()=>{
-      const worker=reg.installing; if(!worker)return;
+      const worker=reg.installing;
+      if(!worker) return;
       worker.addEventListener('statechange',()=>{
-        if(worker.state==='installed' && navigator.serviceWorker.controller && !reloading){
-          waitingForController=true; worker.postMessage({type:'SKIP_WAITING'});
+        if(worker.state==='installed' && navigator.serviceWorker.controller){
+          worker.postMessage({type:'SKIP_WAITING'});
         }
       });
     });
   }).catch(()=>{});
-  navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(waitingForController && !reloading){reloading=true; location.reload();} });
 })();
 </script>
 
