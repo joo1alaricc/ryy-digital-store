@@ -35,8 +35,7 @@
     "Semua",
     "Design & Creative",
     "AI & Productivity",
-    "Pulsa",
-    "E-Money"
+    "Service"
   ],
   "products": [
     {
@@ -327,9 +326,9 @@
       "stock": 17
     },
     {
-      "id": "01",
+      "id": 24,
       "name": "Pulsa All Provider",
-      "category": "Pulsa",
+      "category": "Service",
       "description": "Pulsa All Provider dengan pilihan Telkomsel, Axis, XL, Smartfren, Indosat, By.U, dan Tri. Pilih provider saat checkout dan harga akan otomatis menyesuaikan tanpa menampilkan biaya tambahan pada opsi.",
       "image": "/assets/pulsa-all-provider.svg",
       "bestSeller": false,
@@ -586,9 +585,9 @@
       ]
     },
     {
-      "id": "02",
+      "id": 25,
       "name": "E-Money All Provider",
-      "category": "E-Money",
+      "category": "Service",
       "description": "Isi saldo E-Money dengan pilihan DANA, OVO, ShopeePay, GoPay, LinkAja, AstraPay, Maxim, SpeedCash, dan OCTO Pay. Nominal tersedia mulai Rp5.000 sampai Rp1.000.000 dan harga provider menyesuaikan otomatis.",
       "image": "/assets/emoney-all-provider.svg",
       "bestSeller": false,
