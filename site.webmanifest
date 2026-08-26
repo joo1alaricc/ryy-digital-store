@@ -1,0 +1,25 @@
+{
+  "name": "RYY STORE",
+  "short_name": "RYY STORE",
+  "description": "RYY STORE — Digital Store untuk berbagai kebutuhan layanan digital, subscription, dan produk digital.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0c",
+  "theme_color": "#0a0a0c",
+  "lang": "id-ID",
+  "icons": [
+    {
+      "src": "https://upload.shizukuuu.cloud/get/2582Mf.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://upload.shizukuuu.cloud/get/2582Mf.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
