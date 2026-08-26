@@ -1596,6 +1596,7 @@
 .downloader-media{width:100%;max-height:52vh;border-radius:20px;background:#000;display:block}.downloader-meta{padding:10px 2px}.downloader-meta strong{display:block}.downloader-meta small{display:block;color:var(--text-muted);margin-top:4px}.downloader-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.downloader-option{border:1px solid var(--glass-border);border-radius:17px;background:rgba(255,255,255,.07);padding:11px;text-align:left;color:inherit}.downloader-option strong{display:block;font-size:.7rem}.downloader-option small{display:block;color:var(--text-muted);margin-top:3px}.downloader-overlay{position:fixed;inset:0;z-index:22000;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;padding:14px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}.downloader-overlay.hidden{display:none!important}
 @media(max-width:600px){.downloader-options{grid-template-columns:1fr}.downloader-overlay{align-items:center;padding:14px}.downloader-sheet{border-radius:28px;max-height:88vh}}
         .product-option-checks{display:flex;flex-wrap:wrap;gap:7px}.product-option-checks label{display:flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--glass-border);border-radius:14px;background:rgba(255,255,255,.06);font-size:.68rem;color:var(--text-main);cursor:pointer}.product-option-checks input{accent-color:var(--accent)}.product-parameter-fields{display:grid;gap:8px}.product-parameter-fields label{font-size:.64rem;color:var(--text-muted)}.product-parameter-fields input{margin-top:4px}.admin-form-checks{display:flex;flex-wrap:wrap;gap:7px}.admin-form-check{display:flex!important;align-items:center;gap:6px;padding:7px 9px;border:1px solid var(--glass-border);border-radius:12px;background:rgba(255,255,255,.05);font-size:.64rem!important;cursor:pointer}.admin-form-check input{accent-color:var(--accent)}
+.turnstile-box{display:flex;justify-content:center;align-items:center;min-height:65px;margin:9px 0 4px;overflow:hidden}.turnstile-box iframe{max-width:100%}.checkout-turnstile{margin-top:10px;}
 </style>
 </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -1736,6 +1737,7 @@ body.modal-open { scroll-behavior: auto; }
                     <div id="user-login-panel" class="auth-step active">
                         <input type="text" id="user-login-input" data-i18n-placeholder="username_email" placeholder="Username / Email">
                         <input type="password" id="user-login-password" data-i18n-placeholder="password" placeholder="Password">
+                        <div id="turnstile-login" class="turnstile-box" aria-label="Verifikasi bukan robot"></div>
                         <button type="submit" class="btn-accent" data-i18n="login_user_btn">Masuk sebagai User</button>
 
                         <div style="display:flex;align-items:center;gap:10px;margin:10px 0;color:var(--text-muted);font-size:.72rem;">
@@ -1768,6 +1770,7 @@ body.modal-open { scroll-behavior: auto; }
                             <div id="strength-fill" class="password-strength-fill"></div>
                         </div>
                         <p id="strength-text" class="strength-text" data-i18n="password_low">Keamanan: Rendah</p>
+                        <div id="turnstile-register" class="turnstile-box" aria-label="Verifikasi bukan robot"></div>
                         <button type="button" onclick="registerAccount()" class="btn-accent" data-i18n="save_login">Simpan & Masuk</button>
                     </div>
                 </div>
@@ -2545,6 +2548,7 @@ body.modal-open { scroll-behavior: auto; }
                         <input id="payment-proof-input" type="file" accept="image/*" class="hidden" onchange="handlePaymentProofFile(event)">
                         <img id="payment-proof-preview" class="proof-upload-preview" alt="Pratinjau bukti pembayaran">
                         <div id="payment-proof-status" class="proof-upload-status">Belum ada bukti dipilih.</div>
+                        <div id="turnstile-checkout" class="turnstile-box checkout-turnstile" aria-label="Verifikasi bukan robot"></div>
                         <p style="font-size:.62rem;color:var(--text-muted);margin:9px 0 0;text-align:center;line-height:1.4;">Silakan cek inbox di web atau di gmail untuk menerima status pesanan.</p>
                     </div>
                     <button id="btn-standard-checkout" onclick="submitPaymentProofCheckout()" class="btn-accent">Kirim bukti pembayaran</button>
@@ -2580,7 +2584,8 @@ body.modal-open { scroll-behavior: auto; }
 
     </div>
 
-    <script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+<script>
         let storeData = { storeInfo: {}, categories: [], products: [] };
         let generatedOTP = "";
         let profileOTP = "";
@@ -3339,7 +3344,7 @@ body.modal-open { scroll-behavior: auto; }
         }
 
         async function uploadImage(dataUrl,kind="image"){if(!dataUrl)throw new Error("Gambar belum dipilih.");const data=await apiRequest("/upload-image",{method:"POST",body:JSON.stringify({image:dataUrl,kind})});if(!data.success||!data.url)throw new Error(data.message||"Upload gambar gagal: URL tidak diterima.");return data.url;}
-        async function submitPaymentProofCheckout(){const targetPhone=document.getElementById("target-phone").value.trim();const paymentMethod=document.getElementById("payment-method").value;const selectedItems=cart.filter(i=>i.selected);if(!targetPhone||!paymentMethod||!selectedItems.length){iosAlert("Lengkapi nomor penerima, metode pembayaran, dan centang minimal 1 produk.");return;}if(!paymentProofDataUrl){iosAlert("Silakan upload bukti pembayaran terlebih dahulu.");return;}try{const status=document.getElementById("payment-proof-status");if(status)status.textContent="Mengupload bukti pembayaran...";const proofUrl=await uploadImage(paymentProofDataUrl,"payment-proof");await completeCheckout(targetPhone,paymentMethod,proofUrl);cart=cart.filter(i=>!i.selected);updateCartUI();paymentProofDataUrl="";const input=document.getElementById("payment-proof-input");if(input)input.value="";const preview=document.getElementById("payment-proof-preview");if(preview){preview.removeAttribute("src");preview.style.display="none";}document.getElementById("cart-modal").classList.add("hidden");await refreshCurrentUserSession();showToast("Bukti pembayaran dikirim. Menunggu pemeriksaan admin.");}catch(error){console.error(error);iosAlert(error.message||"Gagal mengirim bukti pembayaran.");}}
+        async function submitPaymentProofCheckout(){const targetPhone=document.getElementById("target-phone").value.trim();const paymentMethod=document.getElementById("payment-method").value;const selectedItems=cart.filter(i=>i.selected);if(!targetPhone||!paymentMethod||!selectedItems.length){iosAlert("Lengkapi nomor penerima, metode pembayaran, dan centang minimal 1 produk.");return;}if(!paymentProofDataUrl){iosAlert("Silakan upload bukti pembayaran terlebih dahulu.");return;}try{const status=document.getElementById("payment-proof-status");if(status)status.textContent="Mengupload bukti pembayaran...";const turnstileToken=await waitForTurnstile("checkout");const proofUrl=await uploadImage(paymentProofDataUrl,"payment-proof");await completeCheckout(targetPhone,paymentMethod,proofUrl,turnstileToken);cart=cart.filter(i=>!i.selected);updateCartUI();paymentProofDataUrl="";const input=document.getElementById("payment-proof-input");if(input)input.value="";const preview=document.getElementById("payment-proof-preview");if(preview){preview.removeAttribute("src");preview.style.display="none";}document.getElementById("cart-modal").classList.add("hidden");await refreshCurrentUserSession();showToast("Bukti pembayaran dikirim. Menunggu pemeriksaan admin.");}catch(error){console.error(error);iosAlert(error.message||"Gagal mengirim bukti pembayaran.");}}
 
         function launchUserApp() {
             // UI navigation is intentionally independent from optional widgets/data.
@@ -3950,6 +3955,56 @@ body.modal-open { scroll-behavior: auto; }
         let registrationOtpToken = "";
         let profileOtpToken = ""; // reserved for future verified-contact API
 
+        let turnstileSiteKey = "";
+        const turnstileWidgets = {};
+        const turnstileTokens = {};
+        const turnstileWaiters = {};
+
+        async function initTurnstile() {
+            try {
+                const response = await fetch(`${API_BASE}/turnstile-config?ts=${Date.now()}`, { cache: "no-store", credentials: "same-origin" });
+                const data = await response.json();
+                turnstileSiteKey = data?.enabled ? String(data.siteKey || "") : "";
+                if (turnstileSiteKey) renderTurnstileWidgets();
+            } catch (error) { console.warn("Turnstile config unavailable:", error); }
+        }
+
+        function renderTurnstileWidgets() {
+            if (!turnstileSiteKey || !window.turnstile) return;
+            ["login","register","checkout"].forEach(kind => {
+                const container = document.getElementById(`turnstile-${kind}`);
+                if (!container || turnstileWidgets[kind] != null) return;
+                turnstileWidgets[kind] = window.turnstile.render(container, {
+                    sitekey: turnstileSiteKey,
+                    theme: "auto",
+                    callback: token => {
+                        turnstileTokens[kind] = token;
+                        (turnstileWaiters[kind] || []).splice(0).forEach(resolve => resolve(token));
+                    },
+                    "expired-callback": () => { turnstileTokens[kind] = ""; },
+                    "error-callback": () => { turnstileTokens[kind] = ""; }
+                });
+            });
+        }
+
+        function waitForTurnstile(kind) {
+            if (!turnstileSiteKey) return Promise.reject(new Error("Cloudflare Turnstile belum dikonfigurasi. Tambahkan TURNSTILE_SITE_KEY dan TURNSTILE_SECRET_KEY di Cloudflare.") );
+            if (turnstileTokens[kind]) return Promise.resolve(turnstileTokens[kind]);
+            renderTurnstileWidgets();
+            return new Promise((resolve, reject) => {
+                turnstileWaiters[kind] ||= [];
+                turnstileWaiters[kind].push(resolve);
+                setTimeout(() => reject(new Error("Silakan selesaikan verifikasi Cloudflare terlebih dahulu.")), 120000);
+            });
+        }
+
+        function resetTurnstile(kind) {
+            turnstileTokens[kind] = "";
+            if (window.turnstile && turnstileWidgets[kind] != null) {
+                try { window.turnstile.reset(turnstileWidgets[kind]); } catch (_) {}
+            }
+        }
+
         async function apiRequest(path, options = {}) {
             const { skipAuth = false, timeout = 20000, ...requestOptions } = options;
             const headers = { Accept: "application/json", "Content-Type": "application/json", ...(requestOptions.headers || {}) };
@@ -4120,10 +4175,11 @@ body.modal-open { scroll-behavior: auto; }
             }
 
             try {
+                const turnstileToken = await waitForTurnstile("register");
                 const data = await apiRequest("/register", {
                     skipAuth: true,
                     method: "POST",
-                    body: JSON.stringify({ email, otp, otpToken: registrationOtpToken, username, password })
+                    body: JSON.stringify({ email, otp, otpToken: registrationOtpToken, username, password, turnstileToken })
                 });
                 saveUserSession(data.user, data.token);
                 localStorage.removeItem("has_seen_landing");
@@ -4213,7 +4269,7 @@ body.modal-open { scroll-behavior: auto; }
                     const response = await fetch(`${API_BASE}/admin-login`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json", Accept: "application/json" },
-                        body: JSON.stringify({ login, password, tokenDeveloper, pin }),
+                        body: JSON.stringify({ login, password, tokenDeveloper, pin, turnstileToken: await waitForTurnstile("login") }),
                         cache: "no-store",
                         credentials: "same-origin"
                     });
@@ -4252,9 +4308,11 @@ body.modal-open { scroll-behavior: auto; }
                     throw new Error("Username/email dan password wajib diisi.");
                 }
 
+                const turnstileToken = await waitForTurnstile("login");
+
                 const data = await apiRequest("/login", {
                     method: "POST",
-                    body: JSON.stringify({ login, password }),
+                    body: JSON.stringify({ login, password, turnstileToken }),
                     skipAuth: true,
                     timeout: 20000
                 });
@@ -5794,10 +5852,10 @@ function startSupportPolling(){
     if(existing){if(existing.quantity>=typeStock(selectedProductType)){iosAlert('Jumlah melebihi stok.');return;}existing.quantity+=1;existing.selected=true;} else cart.push({cartItemId:`cart_${Date.now()}_${Math.random().toString(36).slice(2,7)}`,key,id:String(currentActiveProduct.id),name:productText(currentActiveProduct,'name'),typeName:selectedProductType.typeName,quantity:1,price,basePrice:Number(selectedProductType.price||0),durationDays:selectedProductType.durationDays??null,options,parameters,selected:true});
     updateCartUI(); toggleProductDetail(); if(buyNow)toggleCart(); else showToast('Produk ditambahkan ke keranjang.');
   };
-  window.completeCheckout = async function(targetPhone,paymentMethod,proofUrl){
+  window.completeCheckout = async function(targetPhone,paymentMethod,proofUrl,turnstileToken){
     const selected=cart.filter(i=>i.selected).map(i=>({id:i.id,typeName:i.typeName,quantity:i.quantity,options:Array.isArray(i.options)?i.options:[],parameters:i.parameters&&typeof i.parameters==='object'?i.parameters:{}}));
     if(!selected.length) throw new Error('Tidak ada produk yang dipilih.');
-    const d=await apiRequest('/checkout',{method:'POST',body:JSON.stringify({items:selected,targetPhone,paymentMethod,proofUrl})}); if(d?.user)saveUserSession(d.user,localStorage.getItem('auth_token')); return d;
+    const d=await apiRequest('/checkout',{method:'POST',body:JSON.stringify({turnstileToken,items:selected,targetPhone,paymentMethod,proofUrl})}); if(d?.user)saveUserSession(d.user,localStorage.getItem('auth_token')); return d;
   };
 
   window.openCart = window.toggleCart;
@@ -6276,6 +6334,9 @@ button:active,.btn:active,.admin-mini-btn:active,.support-btn:active{transform:s
   }
   document.addEventListener('DOMContentLoaded',()=>{checkCatalogLive();setInterval(checkCatalogLive,20000);});
 })();
+</script>
+<script>
+window.addEventListener("load", () => { const boot = () => initTurnstile(); if (window.turnstile) boot(); else setTimeout(boot, 800); });
 </script>
 </body>
 </html>
