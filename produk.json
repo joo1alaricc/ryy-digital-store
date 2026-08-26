@@ -33,9 +33,10 @@
   },
   "categories": [
     "Semua",
-    "Aplikasi Premium",
     "Design & Creative",
-    "AI & Productivity"
+    "AI & Productivity",
+    "Pulsa",
+    "E-Money"
   ],
   "products": [
     {
@@ -324,6 +325,528 @@
         }
       },
       "stock": 17
+    },
+    {
+      "id": "01",
+      "name": "Pulsa All Provider",
+      "category": "Pulsa",
+      "description": "Pulsa All Provider dengan pilihan Telkomsel, Axis, XL, Smartfren, Indosat, By.U, dan Tri. Pilih provider saat checkout dan harga akan otomatis menyesuaikan tanpa menampilkan biaya tambahan pada opsi.",
+      "image": "/assets/pulsa-all-provider.svg",
+      "bestSeller": false,
+      "options": [
+        "Telkomsel",
+        "Axis",
+        "XL",
+        "Smartfren",
+        "Indosat",
+        "By.U",
+        "Tri"
+      ],
+      "optionPrices": {
+        "Telkomsel": 2750,
+        "Smartfren": 2500,
+        "Axis": 2440,
+        "Indosat": 2750,
+        "By.U": 2650,
+        "XL": 2800,
+        "Tri": 0
+      },
+      "parameters": [
+        "phone"
+      ],
+      "types": [
+        {
+          "typeName": "Rp5.000",
+          "price": 5000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp10.000",
+          "price": 10000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp15.000",
+          "price": 15000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp20.000",
+          "price": 20000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp25.000",
+          "price": 25000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp30.000",
+          "price": 30000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp35.000",
+          "price": 35000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp40.000",
+          "price": 40000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp45.000",
+          "price": 45000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp50.000",
+          "price": 50000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp55.000",
+          "price": 55000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp60.000",
+          "price": 60000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp65.000",
+          "price": 65000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp70.000",
+          "price": 70000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp75.000",
+          "price": 75000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp80.000",
+          "price": 80000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp85.000",
+          "price": 85000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp90.000",
+          "price": 90000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp95.000",
+          "price": 95000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp100.000",
+          "price": 100000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp150.000",
+          "price": 150000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp200.000",
+          "price": 200000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp250.000",
+          "price": 250000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp300.000",
+          "price": 300000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp350.000",
+          "price": 350000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp400.000",
+          "price": 400000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp450.000",
+          "price": 450000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp500.000",
+          "price": 500000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp550.000",
+          "price": 550000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp600.000",
+          "price": 600000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp650.000",
+          "price": 650000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp700.000",
+          "price": 700000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp750.000",
+          "price": 750000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp800.000",
+          "price": 800000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp850.000",
+          "price": 850000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp900.000",
+          "price": 900000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp950.000",
+          "price": 950000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp1.000.000",
+          "price": 1000000,
+          "stock": 999,
+          "durationDays": null
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "name": "E-Money All Provider",
+      "category": "E-Money",
+      "description": "Isi saldo E-Money dengan pilihan DANA, OVO, ShopeePay, GoPay, LinkAja, AstraPay, Maxim, SpeedCash, dan OCTO Pay. Nominal tersedia mulai Rp5.000 sampai Rp1.000.000 dan harga provider menyesuaikan otomatis.",
+      "image": "/assets/emoney-all-provider.svg",
+      "bestSeller": false,
+      "options": [
+        "DANA",
+        "OVO",
+        "ShopeePay",
+        "GoPay",
+        "LinkAja",
+        "AstraPay",
+        "Maxim",
+        "SpeedCash",
+        "OCTO Pay"
+      ],
+      "optionPrices": {
+        "DANA": 2432,
+        "OVO": 2430,
+        "ShopeePay": 2434,
+        "GoPay": 2435,
+        "LinkAja": 2438,
+        "AstraPay": 2482,
+        "Maxim": 2500,
+        "SpeedCash": 2490,
+        "OCTO Pay": 2450
+      },
+      "parameters": [
+        "ewalletNumber"
+      ],
+      "types": [
+        {
+          "typeName": "Rp5.000",
+          "price": 5000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp10.000",
+          "price": 10000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp15.000",
+          "price": 15000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp20.000",
+          "price": 20000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp25.000",
+          "price": 25000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp30.000",
+          "price": 30000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp35.000",
+          "price": 35000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp40.000",
+          "price": 40000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp45.000",
+          "price": 45000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp50.000",
+          "price": 50000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp55.000",
+          "price": 55000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp60.000",
+          "price": 60000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp65.000",
+          "price": 65000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp70.000",
+          "price": 70000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp75.000",
+          "price": 75000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp80.000",
+          "price": 80000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp85.000",
+          "price": 85000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp90.000",
+          "price": 90000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp95.000",
+          "price": 95000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp100.000",
+          "price": 100000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp150.000",
+          "price": 150000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp200.000",
+          "price": 200000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp250.000",
+          "price": 250000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp300.000",
+          "price": 300000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp350.000",
+          "price": 350000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp400.000",
+          "price": 400000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp450.000",
+          "price": 450000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp500.000",
+          "price": 500000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp550.000",
+          "price": 550000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp600.000",
+          "price": 600000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp650.000",
+          "price": 650000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp700.000",
+          "price": 700000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp750.000",
+          "price": 750000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp800.000",
+          "price": 800000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp850.000",
+          "price": 850000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp900.000",
+          "price": 900000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp950.000",
+          "price": 950000,
+          "stock": 999,
+          "durationDays": null
+        },
+        {
+          "typeName": "Rp1.000.000",
+          "price": 1000000,
+          "stock": 999,
+          "durationDays": null
+        }
+      ]
     }
   ]
 }
