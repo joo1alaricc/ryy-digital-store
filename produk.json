@@ -1,4 +1,4 @@
-{
+w{
   "storeInfo": {
     "name": "RYY STORE",
     "slogan": "Murah, cepat, dan terpercaya.",
@@ -348,7 +348,7 @@
         "Indosat": 2750,
         "By.U": 2650,
         "XL": 2800,
-        "Tri": 0
+        "Tri": 2750
       },
       "parameters": [
         "phone"
