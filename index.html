@@ -1628,7 +1628,7 @@ body.modal-open { scroll-behavior: auto; }
 
 
 <style id="ryy-whatsapp-admin-style">
-.wa-admin-grid{display:grid;gap:12px}.wa-admin-card{padding:16px;border-radius:22px;background:rgba(255,255,255,.055);border:1px solid var(--glass-border)}.wa-admin-status{display:flex;align-items:center;gap:8px;font-weight:800}.wa-admin-dot{width:9px;height:9px;border-radius:50%;background:#777;box-shadow:0 0 0 4px rgba(255,255,255,.05)}.wa-admin-dot.on{background:#32d583;box-shadow:0 0 0 4px rgba(50,213,131,.13)}.wa-admin-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.wa-admin-actions button{flex:1;min-width:120px}.wa-admin-code{font-size:1.2rem;letter-spacing:.18em;font-weight:900;text-align:center;padding:16px;border-radius:18px;background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px dashed color-mix(in srgb,var(--accent) 35%,transparent);margin-top:10px}.wa-admin-msg{display:flex;flex-direction:column;gap:5px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}.wa-admin-msg small{color:var(--text-muted);font-size:.6rem}.wa-admin-msg b{font-size:.7rem}.wa-admin-msg p{margin:0;font-size:.72rem;white-space:pre-wrap;word-break:break-word}.wa-send-row{display:flex;gap:7px;margin-top:10px}.wa-send-row input{margin:0}.wa-send-row button{flex:0 0 auto}
+.wa-admin-grid{display:grid;gap:12px}.wa-admin-card{padding:16px;border-radius:22px;background:rgba(255,255,255,.055);border:1px solid var(--glass-border)}.wa-admin-status{display:flex;align-items:center;gap:8px;font-weight:800}.wa-admin-dot{width:9px;height:9px;border-radius:50%;background:#777;box-shadow:0 0 0 4px rgba(255,255,255,.05)}.wa-admin-dot.on{background:#32d583;box-shadow:0 0 0 4px rgba(50,213,131,.13)}.wa-admin-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.wa-admin-actions button{flex:1;min-width:120px}.wa-admin-code{font-size:1.2rem;letter-spacing:.18em;font-weight:900;text-align:center;padding:16px;border-radius:18px;background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px dashed color-mix(in srgb,var(--accent) 35%,transparent);margin-top:10px}.ryy-wa-console{max-height:310px;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:8px;border-radius:18px;background:rgba(0,0,0,.12);border:1px solid var(--glass-border);scrollbar-width:thin}.wa-admin-msg{display:flex;flex-direction:column;gap:5px;padding:10px 12px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}.wa-admin-msg small{color:var(--text-muted);font-size:.6rem}.wa-admin-msg b{font-size:.7rem}.wa-admin-msg p{margin:0;font-size:.72rem;white-space:pre-wrap;word-break:break-word}.wa-send-row{display:flex;gap:7px;margin-top:10px}.wa-send-row input{margin:0}.wa-send-row button{flex:0 0 auto}
 .wa-admin-diagnostic{margin:10px 0 0;padding:12px;border-radius:16px;white-space:pre-wrap;word-break:break-word;font:600 .68rem/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--text-main);background:rgba(0,0,0,.12);border:1px solid var(--glass-border);max-height:260px;overflow:auto}
 .wa-gateway-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px}
 .wa-gateway-item{padding:12px 13px;border:1px solid var(--glass-border);border-radius:18px;background:rgba(255,255,255,.055);cursor:pointer;transition:transform .18s ease,border-color .18s ease,background .18s ease}
@@ -1815,7 +1815,7 @@ body.modal-open { scroll-behavior: auto; }
                 </section>
                 <section class="home-section">
                     <div class="section-heading"><div><span class="home-eyebrow">Komunitas</span><h2>Channel WhatsApp</h2></div></div>
-                    <a id="home-whatsapp-link" class="support-btn" href="#" target="_blank" rel="noopener" style="text-decoration:none;display:flex;justify-content:space-between;align-items:center;"><span><strong>Channel WhatsApp</strong><small>Ikuti informasi terbaru RYY STORE.</small></span><span>→</span></a>
+                    <a id="home-whatsapp-link" class="support-btn" href="https://whatsapp.com/channel/0029Vb76SfPDzgTBlh5Tn70I" target="_blank" rel="noopener" style="text-decoration:none;display:flex;justify-content:space-between;align-items:center;"><span><strong>Channel WhatsApp</strong><small>Ikuti informasi terbaru RYY STORE.</small></span><span>→</span></a>
                 </section>
                 <section class="home-section" id="home-testimonials-section">
                     <div class="section-heading"><div><span class="home-eyebrow">Pengalaman pembeli</span><h2>Testimoni</h2></div></div>
@@ -1963,7 +1963,7 @@ body.modal-open { scroll-behavior: auto; }
         <div class="wa-pairing-box">
           <div class="wa-phone-input-wrap"><span>+62</span><input id="wa-pair-phone" class="admin-form-input" placeholder="85862364581" inputmode="numeric"></div>
           <button type="button" class="admin-glass-btn accent" onclick="pairWhatsAppBot()">Generate Pairing Code</button>
-          <div id="wa-admin-pair-code" class="wa-admin-code hidden"></div>
+          <div id="wa-admin-pair-code" class="wa-admin-code hidden"></div><button id="wa-admin-copy-pair" type="button" class="admin-glass-btn" style="display:none" onclick="copyWaPairingCode()">Copy Pairing Code</button>
         </div>
       </div>
       <div id="wa-qr-panel" class="wa-connect-panel hidden">
@@ -1977,8 +1977,8 @@ body.modal-open { scroll-behavior: auto; }
     </div>
 
     <div class="wa-admin-card">
-      <div class="admin-toolbar"><div><h4>Pesan WhatsApp Terbaru</h4><p class="admin-config-note">Pesan masuk dari gateway yang dipilih.</p></div></div>
-      <div id="wa-admin-messages" style="display:grid;gap:8px;margin-top:10px"></div>
+      <div class="admin-toolbar"><div><h4>Console RYY-STORE</h4><p class="admin-config-note">Pesan terbaru, pairing code, dan QR gateway tampil di console ini.</p></div></div>
+      <div id="wa-admin-messages" class="ryy-wa-console" style="margin-top:10px"></div>
       <div class="wa-send-row"><input id="wa-send-to" class="admin-form-input" placeholder="Nomor WhatsApp, contoh 62812..." inputmode="numeric"><input id="wa-send-text" class="admin-form-input" placeholder="Pesan..."><button type="button" class="admin-glass-btn accent" onclick="sendWhatsAppFromAdmin()">Kirim</button></div>
     </div>
   </div>
@@ -1996,7 +1996,7 @@ body.modal-open { scroll-behavior: auto; }
                                         <label class="admin-form-label">Mulai Operasi<input id="cfg-store-since" class="admin-form-input"></label>
                                     </div>
                                     <label class="admin-form-label">Gambar Toko / Portfolio URL<input id="cfg-store-photo" class="admin-form-input" placeholder="https://..."></label>
-                                    <label class="admin-form-label">Channel WhatsApp URL<input id="cfg-whatsapp-link" class="admin-form-input" placeholder="https://chat.whatsapp.com/..."></label>
+                                    <label class="admin-form-label">Channel WhatsApp URL<input id="cfg-whatsapp-link" class="admin-form-input" placeholder="https://whatsapp.com/channel/..."></label>
                                     <button type="button" class="admin-glass-btn accent" onclick="saveAdminSiteConfig()">Simpan Konfigurasi Toko</button>
                                 </div>
                             </div>
@@ -2889,7 +2889,7 @@ body.modal-open { scroll-behavior: auto; }
                         <img src="${escapeHtml(imageDisplayUrl(product.image||""))}" alt="${escapeHtml(name)}" class="bs-img">
                         <div class="bs-content">
                             <h4>${escapeHtml(name)}</h4>
-                            <p class="home-description">${escapeHtml(description.text)}${description.truncated?` <span class="product-desc-more" onclick="event.stopPropagation();openProductDetail(${Number(product.id)})">...Selengkapnya</span>`:''}</p>
+                            <p class="home-description">${escapeHtml(description.text)}${description.truncated?` <span class="product-desc-more" onclick="event.stopPropagation();openProductDetail('${String(product.id)}')">...Selengkapnya</span>`:''}</p>
                         </div>
                     </div>
                 `;
@@ -3502,6 +3502,17 @@ body.modal-open { scroll-behavior: auto; }
             return Math.max(0, Math.floor(Number(type?.stock) || 0));
         }
 
+        function optionSurcharge(product, options=[]) {
+            const prices=product?.optionPrices&&typeof product.optionPrices==="object"?product.optionPrices:{};
+            return (Array.isArray(options)?options:[]).reduce((sum,o)=>sum+Math.max(0,Math.floor(Number(prices[String(o)]||0))),0);
+        }
+
+        function productOptionLabel(product, option) { return String(option||""); }
+
+        function productPriceWithOptions(product,type,options=[],user=sessionUser()) {
+            return resellerPrice(Number(type?.price||0)+optionSurcharge(product,options),user);
+        }
+
         function productStock(product) {
             return (Array.isArray(product?.types) ? product.types : []).reduce((sum, type) => sum + typeStock(type), 0);
         }
@@ -3694,8 +3705,8 @@ body.modal-open { scroll-behavior: auto; }
                 const isReady=product.stock>0;
                 const firstType=Array.isArray(product.types)&&product.types.length?product.types.find(type=>typeStock(type)>0)||product.types[0]:null;
                 const name=productText(product,"name"), desc=productDescriptionPreview(productText(product,"description"),250);
-                const descHtml=`${escapeHtml(desc.text)}${desc.truncated?` <span class="product-desc-more" role="button" tabindex="0" onclick="event.stopPropagation();openProductDetail(${Number(product.id)})" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();openProductDetail(${Number(product.id)})}">...Selengkapnya</span>`:''}`;
-                grid.innerHTML += `<div class="product-card" onclick="openProductDetail(${Number(product.id)})">
+                const descHtml=`${escapeHtml(desc.text)}${desc.truncated?` <span class="product-desc-more" role="button" tabindex="0" onclick="event.stopPropagation();openProductDetail('${String(product.id)}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();openProductDetail('${String(product.id)}')}">...Selengkapnya</span>`:''}`;
+                grid.innerHTML += `<div class="product-card" onclick="openProductDetail('${String(product.id)}')">
                     <div class="product-img-wrapper"><img src="${escapeHtml(imageDisplayUrl(product.image||""))}" alt="${escapeHtml(name)}" class="product-img"><span class="badge-stock ${isReady?'badge-ready':'badge-sold'}">${escapeHtml(isReady?t("ready"):t("sold"))}</span></div>
                     <div class="product-info"><h3 class="product-name">${escapeHtml(name)}</h3><p class="product-desc">${descHtml}</p><div class="product-price adaptive-price">${firstType?`<span class="adaptive-price-text">${escapeHtml(t("from_price"))} ${priceMarkup(firstType.price)}</span>`:escapeHtml(t("price_unavailable"))}</div>${currentUserIsReseller()?'<span class="reseller-badge">Reseller aktif</span>':''}</div>
                 </div>`;
@@ -3706,6 +3717,7 @@ body.modal-open { scroll-behavior: auto; }
             document.querySelectorAll("#modal-type-list .type-option").forEach(el=>el.classList.remove("selected"));
             element.classList.add("selected");
             selectedProductType=currentActiveProduct?.types?.[index]||null;
+            syncSelectedProductOptionPrice();
         }
 
         function toggleProductDetail(){
@@ -4651,9 +4663,9 @@ async function uploadInboxScreenshot(index,input){
             return '<svg viewBox="0 0 24 24" aria-hidden="true" style="width:16px;height:16px;fill:currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25Zm14.71-9.04c.39-.39.39-1.02 0-1.41l-1.51-1.51a.9959.9959 0 0 0-1.41 0l-.83.83 3.75 3.75.83-.83ZM20.71 4.04l-.78-.78a1.003 1.003 0 0 0-1.42 0l-.83.83 2.2 2.2.83-.83c.39-.39.39-1.03 0-1.42Z"/></svg>';
         }
 
-        function adminProductOptionRow(value="") {
+        function adminProductOptionRow(value="", surcharge=0) {
             const row=document.createElement("div"); row.className="admin-product-option-row"; row.style.cssText="display:flex;gap:7px;align-items:center;margin-bottom:7px;";
-            row.innerHTML=`<input class="admin-form-input ap-option-value" style="flex:1" value="${escapeHtml(value||"")}" placeholder="Contoh: Telkomsel"><button type="button" class="admin-type-remove" onclick="this.closest('.admin-product-option-row').remove()">×</button>`;
+            row.innerHTML=`<input class="admin-form-input ap-option-value" style="flex:1" value="${escapeHtml(value||"")}" placeholder="Contoh: Telkomsel"><input class="admin-form-input ap-option-price" style="width:130px" type="number" min="0" value="${Number(surcharge||0)}" placeholder="Tambahan"><button type="button" class="admin-type-remove" onclick="this.closest('.admin-product-option-row').remove()">×</button>`;
             return row;
         }
         function adminProductParameterOptionList(selected=[]) {
@@ -4683,22 +4695,22 @@ async function uploadInboxScreenshot(index,input){
         }
 
         function openAdminProductEditor(id=null) {
-            const product=id==null?null:__adminProducts.find(p=>Number(p.id)===Number(id));
-            __adminProductEditId=product?Number(product.id):null; document.getElementById("admin-product-title").textContent=product?"Edit Produk":"Tambah Produk";
-            const form=document.getElementById("admin-product-form"); const options=Array.isArray(product?.options)?product.options:[], parameters=Array.isArray(product?.parameters)?product.parameters:[];
+            const product=id==null?null:__adminProducts.find(p=>String(p.id)===String(id)||String(p.id).replace(/^0+(?=\d)/,"")===String(id).replace(/^0+(?=\d)/,""));
+            __adminProductEditId=product?String(product.id):null; document.getElementById("admin-product-title").textContent=product?"Edit Produk":"Tambah Produk";
+            const form=document.getElementById("admin-product-form"); const options=Array.isArray(product?.options)?product.options:[], optionPrices=product?.optionPrices&&typeof product.optionPrices==="object"?product.optionPrices:{}, parameters=Array.isArray(product?.parameters)?product.parameters:[];
             form.innerHTML=`<div class="admin-form-grid">
-                <div class="admin-form-grid two"><label class="admin-form-label">ID Produk (opsional untuk produk baru)<input id="ap-id" class="admin-form-input" type="number" min="1" value="${product?Number(product.id):""}" ${product?"readonly":""}></label><label class="admin-form-label">Nama Produk<input id="ap-name" class="admin-form-input" value="${escapeHtml(product?.name||"")}"></label></div>
+                <div class="admin-form-grid two"><label class="admin-form-label">ID Produk (opsional untuk produk baru)<input id="ap-id" class="admin-form-input" type="text" inputmode="numeric" pattern="[0-9]+" value="${product?String(product.id):""}" ${product?"readonly":""}></label><label class="admin-form-label">Nama Produk<input id="ap-name" class="admin-form-input" value="${escapeHtml(product?.name||"")}"></label></div>
                 <div class="category-picker-wrap"><label class="admin-form-label">Kategori<input id="ap-category" class="admin-form-input" autocomplete="off" value="${escapeHtml(product?.category||"")}" oninput="showAdminCategorySuggestions(this.value)" onfocus="showAdminCategorySuggestions(this.value)"></label><div id="ap-category-suggest" class="category-suggest hidden"></div></div>
                 <label class="admin-form-label">Deskripsi Bahasa Indonesia<textarea id="ap-description" class="admin-form-textarea" placeholder="Tulis deskripsi Indonesia saja. EN/KO dibuat otomatis.">${escapeHtml(product?.description||"")}</textarea></label>
                 <div><label class="admin-form-label">Foto Produk</label><div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;"><input id="ap-image-file" class="admin-form-input" type="file" accept="image/*" onchange="uploadAdminImageFromInput(this)" style="flex:1;min-width:190px;"><span id="ap-image-status" style="font-size:.62rem;color:var(--text-muted);">Upload langsung dari web</span></div><input id="ap-image" class="admin-form-input" value="${escapeHtml(product?.image||"")}" readonly placeholder="URL hasil upload akan muncul di sini" style="margin-top:7px;"><img id="ap-image-preview" src="${escapeHtml(product?.image||"")}" alt="Preview foto produk" class="${product?.image?'':'hidden'}" style="display:block;width:86px;height:86px;object-fit:cover;border-radius:18px;margin-top:8px;border:1px solid var(--glass-border);"></div>
-                <div><div class="admin-toolbar" style="margin:0 0 7px;"><strong style="font-size:.72rem;">Tambahkan Opsi</strong><button type="button" class="admin-glass-btn" onclick="document.getElementById('ap-options').appendChild(adminProductOptionRow())">＋ Opsi</button></div><div id="ap-options" class="admin-types-wrap"></div><p class="admin-config-note" style="margin-top:5px;">Contoh: Telkomsel, Axis. User dapat memilih opsi ini saat membeli produk.</p></div>
+                <div><div class="admin-toolbar" style="margin:0 0 7px;"><strong style="font-size:.72rem;">Tambahkan Opsi</strong><button type="button" class="admin-glass-btn" onclick="document.getElementById('ap-options').appendChild(adminProductOptionRow())">＋ Opsi</button></div><div id="ap-options" class="admin-types-wrap"></div><p class="admin-config-note" style="margin-top:5px;">Isi nama opsi dan penyesuaian harga. Angka tambahan hanya diterapkan ke harga saat opsi dipilih; nominal tambahan tidak ditampilkan ke user.</p></div>
                 <div><div class="admin-toolbar" style="margin:0 0 7px;"><strong style="font-size:.72rem;">Tambahkan Parameter</strong></div><div id="ap-parameters" class="admin-form-checks">${adminProductParameterOptionList(parameters)}</div><p class="admin-config-note" style="margin-top:5px;">Parameter yang dipilih wajib diisi user saat checkout.</p></div>
                 <label style="display:flex;align-items:center;gap:9px;font-size:.7rem;color:var(--text-main);"><input id="ap-best" type="checkbox" ${product?.bestSeller?"checked":""}> Best Seller</label>
                 <div><div class="admin-toolbar" style="margin:0 0 7px;"><strong style="font-size:.72rem;">Tipe Produk</strong><button type="button" class="admin-glass-btn" onclick="document.getElementById('ap-types').appendChild(adminProductTypeRow())">＋ Tipe</button></div><div id="ap-types" class="admin-types-wrap"></div></div>
                 <p class="admin-config-note">Stok total produk dihitung otomatis dari seluruh stok tipe. Terjemahan Inggris dan Korea dibuat server-side menggunakan endpoint NexRay.</p>
             </div>`;
             const types=document.getElementById("ap-types"); (product?.types?.length?product.types:[{}]).forEach(t=>types.appendChild(adminProductTypeRow(t)));
-            const optionBox=document.getElementById("ap-options"); options.forEach(v=>optionBox.appendChild(adminProductOptionRow(v)));
+            const optionBox=document.getElementById("ap-options"); options.forEach(v=>optionBox.appendChild(adminProductOptionRow(v,optionPrices[v]||0)));
             document.getElementById("admin-product-overlay").classList.remove("hidden");
         }
 
@@ -4732,9 +4744,10 @@ async function uploadInboxScreenshot(index,input){
                 stock:Number(row.querySelector(".pt-stock")?.value||0),
                 durationDays:row.querySelector(".pt-duration")?.value===""?null:Number(row.querySelector(".pt-duration")?.value||0)
             }));
-            const options=[...document.querySelectorAll("#ap-options .ap-option-value")].map(i=>i.value.trim()).filter(Boolean).filter((v,i,a)=>a.indexOf(v)===i);
+            const optionRows=[...document.querySelectorAll("#ap-options .admin-product-option-row")];
+            const options=[]; const optionPrices={}; optionRows.forEach(row=>{const name=row.querySelector(".ap-option-value")?.value.trim(); if(!name||options.includes(name))return; options.push(name); optionPrices[name]=Math.max(0,Number(row.querySelector(".ap-option-price")?.value||0));});
             const parameters=[...document.querySelectorAll("#ap-parameters .ap-parameter:checked")].map(i=>i.value);
-            const body={id:Number(document.getElementById("ap-id")?.value||0)||undefined,name:document.getElementById("ap-name")?.value.trim(),category:document.getElementById("ap-category")?.value.trim(),description:document.getElementById("ap-description")?.value.trim(),image:document.getElementById("ap-image")?.value.trim(),bestSeller:document.getElementById("ap-best")?.checked===true,options,parameters,types};
+            const body={id:String(document.getElementById("ap-id")?.value||"").trim()||undefined,name:document.getElementById("ap-name")?.value.trim(),category:document.getElementById("ap-category")?.value.trim(),description:document.getElementById("ap-description")?.value.trim(),image:document.getElementById("ap-image")?.value.trim(),bestSeller:document.getElementById("ap-best")?.checked===true,options,optionPrices,parameters,types};
             if(__adminProductEditId!=null) body.id=__adminProductEditId;
             if(!body.name||!body.category||!body.description||!types.length||types.some(t=>!t.typeName)){iosAlert("Lengkapi nama, kategori, deskripsi, dan semua tipe produk.");return;}
             try{
@@ -4768,15 +4781,15 @@ async function uploadInboxScreenshot(index,input){
                 return `<div class="admin-product-card">
                     <div class="admin-product-head">
                         <img class="admin-product-thumb" src="${escapeHtml(imageDisplayUrl(p.image||""))}" alt="">
-                        <div class="admin-product-copy"><strong>${escapeHtml(p.name||"Produk")}</strong><small>${escapeHtml(p.category||"-")} · ID ${Number(p.id)}</small></div>
-                        <button type="button" class="admin-edit-btn" onclick="openAdminProductEditor(${Number(p.id)})" title="Edit">${adminEditIcon()}</button>
+                        <div class="admin-product-copy"><strong>${escapeHtml(p.name||"Produk")}</strong><small>${escapeHtml(p.category||"-")} · ID ${escapeHtml(String(p.id))}</small></div>
+                        <button type="button" class="admin-edit-btn" onclick="openAdminProductEditor('${String(p.id)}')" title="Edit">${adminEditIcon()}</button>
                     </div>
                     <div class="admin-product-meta">
                         <span class="admin-chip">Stok total ${stock}</span>
                         <span class="admin-chip">${(p.types||[]).length} tipe</span>
                         ${p.bestSeller?'<span class="admin-chip" style="color:var(--accent);">Best Seller</span>':""}
                     </div>
-                    <div style="display:flex;justify-content:flex-end;margin-top:9px;"><button type="button" class="admin-mini-btn danger" onclick="deleteAdminProduct(${Number(p.id)})">Hapus Produk</button></div>
+                    <div style="display:flex;justify-content:flex-end;margin-top:9px;"><button type="button" class="admin-mini-btn danger" onclick="deleteAdminProduct('${String(p.id)}')">Hapus Produk</button></div>
                 </div>`;
             }).join("");
         }
@@ -4903,6 +4916,8 @@ Simpan data ini. Kredensial rahasia tidak ditampilkan lagi setelah ini.`;
 
         function applySiteConfig(config) {
             window.__siteMaintenance=config?.maintenance===true;
+            const channelUrl=String(config?.whatsappLink||config?.storeInfo?.whatsappLink||"https://whatsapp.com/channel/0029Vb76SfPDzgTBlh5Tn70I").trim();
+            const channelEl=document.getElementById("home-whatsapp-link"); if(channelEl)channelEl.href=channelUrl;
             applyAdminAppearance(config);
             const overlay=document.getElementById("maintenance-overlay");
             const isAdmin=!!localStorage.getItem("admin_token");
@@ -5296,10 +5311,10 @@ async function loadWhatsAppBotPanel(){
     renderWaGatewayList({...statusMap,[g?.id]:d});
     const code=d.pairingCode||'';
     const box=document.getElementById('wa-admin-pair-code');
-    if(box){box.textContent=code?`Kode Pairing: ${code}`:'';box.classList.toggle('hidden',!code)}
+    if(box){box.textContent=code?`Kode Pairing: ${code}`:"";box.dataset.code=String(code||"");box.classList.toggle("hidden",!code);document.getElementById("wa-admin-copy-pair")?.style.setProperty("display",code?"inline-flex":"none");}
     await drawWaQr(d.qr||'');
     const listBox=document.getElementById('wa-admin-messages');
-    if(listBox)listBox.innerHTML=(d.messages||[]).slice(-12).reverse().map(m=>`<div class="wa-admin-msg"><b>${escapeHtml(m.sender||m.chat||'-')}</b><p>${escapeHtml(m.text||'')}</p><small>${m.timestamp?new Date(m.timestamp).toLocaleString('id-ID'):''}</small></div>`).join('')||'<div class="admin-config-note">Belum ada pesan.</div>';
+    if(listBox){const messages=(d.messages||[]).filter(m=>!String(m.sender||m.chat||m.from||"").includes("@newsletter")).slice(-3); listBox.innerHTML=messages.map(m=>`<div class="wa-admin-msg"><b>${escapeHtml(m.sender||m.chat||m.from||"-")}</b><p>${escapeHtml(m.text||m.message||"")}</p><small>${m.timestamp?new Date(m.timestamp).toLocaleString("id-ID"):""}</small></div>`).join("")||'<div class="admin-config-note">Belum ada pesan.</div>';}
     if(__waConnectTimer)clearTimeout(__waConnectTimer);
     if(d.status==='pairing'||d.qr){__waConnectTimer=setTimeout(loadWhatsAppBotPanel,2500);}
   }catch(e){
@@ -5344,10 +5359,11 @@ async function testSelectedWhatsAppGateway(){
   const box=document.getElementById('wa-admin-diagnostic');if(box)box.textContent='Menguji koneksi bridge...';
   try{const d=await adminApi('whatsapp-bot',{method:'POST',body:{action:'diagnose',...waGatewayQuery()}});const h=d.health||{},a=d.authenticatedRequest||{},r=a.response||{};const lines=[`Gateway: ${d.gateway?.botName||'-'}`,`Bridge URL: ${d.bridgeUrl||'-'}`,`BOT ID terkirim: ${d.botIdSent||'-'}`,`Secret terkonfigurasi: ${d.secretConfigured?'YA':'TIDAK'}`,`Authorization terkirim: ${d.authorizationSent?'YA':'TIDAK'}`,`X-Bot-ID terkirim: ${d.botIdHeaderSent?'YA':'TIDAK'}`,`Health: ${h.ok?'OK':'GAGAL'}${h.status?` (HTTP ${h.status})`:''}`,`Health bot: ${h.response?.connected===true?'Connected':(h.response?.status||'-')}`,`Authenticated /status: ${a.ok?'OK':'GAGAL'}${a.status?` (HTTP ${a.status})`:''}`,`Pesan bridge: ${r.message||d.message||'-'}`,r.reason?`Reason: ${r.reason}`:''].filter(Boolean);if(box)box.textContent=lines.join('\\n');}catch(e){if(box)box.textContent=e.message||'Tes koneksi gagal.'}
 }
+async function copyWaPairingCode(){const box=document.getElementById("wa-admin-pair-code");const text=String(box?.dataset?.code||"");if(!text)return;try{await navigator.clipboard.writeText(text);showToast("Pairing code berhasil disalin.");}catch{iosAlert("Gagal menyalin pairing code.");}}
 async function pairWhatsAppBot(){
   const input=document.getElementById('wa-pair-phone'),raw=(input?.value||'').replace(/\D/g,'');
   if(!raw)return iosAlert('Masukkan nomor WhatsApp terlebih dahulu.');
-  try{const d=await adminApi('whatsapp-bot',{method:'POST',body:{action:'pair',phone:raw,...waGatewayQuery()}});const box=document.getElementById('wa-admin-pair-code');if(d.pairingCode&&box){box.textContent=`Kode Pairing: ${d.pairingCode}`;box.classList.remove('hidden');}else showToast('Pairing dimulai. Tunggu status gateway.');await loadWhatsAppBotPanel();}catch(e){iosAlert(e.message||'Gagal memulai pairing.')}
+  try{const d=await adminApi('whatsapp-bot',{method:'POST',body:{action:'pair',phone:raw,...waGatewayQuery()}});const box=document.getElementById('wa-admin-pair-code');if(d.pairingCode&&box){box.textContent=`Kode Pairing: ${d.pairingCode}`;box.dataset.code=String(d.pairingCode);box.classList.remove('hidden');document.getElementById("wa-admin-copy-pair")?.style.setProperty("display","inline-flex");}else showToast('Pairing dimulai. Tunggu status gateway.');await loadWhatsAppBotPanel();}catch(e){iosAlert(e.message||'Gagal memulai pairing.')}
 }
 async function disconnectWhatsAppBot(){try{await adminApi('whatsapp-bot',{method:'POST',body:{action:'disconnect',...waGatewayQuery()}});showToast('Bot diputuskan.');await loadWhatsAppBotPanel();}catch(e){iosAlert(e.message||'Gagal memutuskan bot.')}}
 async function restartWhatsAppBot(){try{await adminApi('whatsapp-bot',{method:'POST',body:{action:'restart',...waGatewayQuery()}});showToast('Bot sedang direstart.');setTimeout(loadWhatsAppBotPanel,2500)}catch(e){iosAlert(e.message||'Gagal restart bot.')}}
@@ -5677,7 +5693,7 @@ function startSupportPolling(){
   };
 
   window.openProductDetail = function(productId){
-    const product=(storeData.products||[]).find(p=>Number(p.id)===Number(productId));
+    const product=(storeData.products||[]).find(p=>String(p.id)===String(productId)||String(p.id).replace(/^0+(?=\d)/,"")===String(productId).replace(/^0+(?=\d)/,""));
     if(!product){iosAlert('Produk tidak ditemukan.');return;}
     currentActiveProduct=product;
     product.stock=productStock(product);
@@ -5690,7 +5706,8 @@ function startSupportPolling(){
     selectedProductType=types.find(t=>typeStock(t)>0)||types[0]||null;
     if(list) list.innerHTML=types.length?types.map((t,i)=>`<button type="button" class="type-option ${t===selectedProductType?'selected':''}" onclick="selectProductType(this,${i})"><span><strong>${esc(t.typeName||'Varian')}</strong><small>${t.durationDays?`${t.durationDays} hari`:'Lifetime'} · ${typeStock(t)} stok</small></span><b class="adaptive-price-value">Rp${Number(resellerPrice(t.price,sessionUser())||0).toLocaleString('id-ID')}</b></button>`).join(''):'<div style="color:var(--text-muted);font-size:.7rem">Varian belum tersedia.</div>';
     const optionsBox=$('modal-product-options'), options=Array.isArray(product.options)?product.options:[];
-    if(optionsBox) optionsBox.innerHTML=options.length?`<h4 style="font-size:.78rem;margin:12px 0 6px;font-weight:600;">Pilih Opsi:</h4><div class="product-option-checks">${options.map(o=>`<label><input type="checkbox" class="modal-product-option" value="${esc(o)}"><span>${esc(o)}</span></label>`).join('')}</div>`:'';
+    if(optionsBox) optionsBox.innerHTML=options.length?`<h4 style="font-size:.78rem;margin:12px 0 6px;font-weight:600;">Pilih Opsi:</h4><div class="product-option-checks">${options.map(o=>`<label><input type="checkbox" class="modal-product-option" value="${esc(o)}" onchange="syncSelectedProductOptionPrice()"><span>${esc(productOptionLabel(product,o))}</span></label>`).join('')}</div>`:'';
+    syncSelectedProductOptionPrice();
     const paramsBox=$('modal-product-parameters'), fieldLabels={email:"Email",emailPassword:"Password Email",mlId:"ID ML",ffId:"ID FF",meterNumber:"Nomor meter",phone:"Nomor telepon",ewalletNumber:"Nomor e-wallet"}, params=Array.isArray(product.parameters)?product.parameters:[];
     if(paramsBox) paramsBox.innerHTML=params.length?`<h4 style="font-size:.78rem;margin:12px 0 6px;font-weight:600;">Data yang harus diisi:</h4><div class="product-parameter-fields">${params.map(key=>`<label>${esc(fieldLabels[key]||key)}<input type="text" class="modal-product-parameter" data-key="${esc(key)}" placeholder="Masukkan ${esc((fieldLabels[key]||key).toLowerCase())}" autocomplete="off"></label>`).join('')}</div>`:'';
     const modal=$('product-detail-modal'); if(modal){modal.classList.remove('hidden');document.body.classList.add('modal-open');}
@@ -5698,13 +5715,25 @@ function startSupportPolling(){
 
   window.toggleProductDetail = function(){const m=$('product-detail-modal');if(!m)return;m.classList.toggle('hidden');if(m.classList.contains('hidden'))document.body.classList.remove('modal-open');else document.body.classList.add('modal-open');};
 
+  window.syncSelectedProductOptionPrice = function(){
+    if(!currentActiveProduct||!selectedProductType)return;
+    const options=[...document.querySelectorAll(".modal-product-option:checked")].map(i=>i.value);
+    const price=productPriceWithOptions(currentActiveProduct,selectedProductType,options,sessionUser());
+    document.querySelectorAll("#modal-type-list .type-option").forEach((el,i)=>{
+      const t=currentActiveProduct?.types?.[i]; if(!t)return;
+      const base=Number(resellerPrice(t.price,sessionUser())||0);
+      const isSelected=t===selectedProductType;
+      const value=el.querySelector(".adaptive-price-value"); if(value)value.textContent=`Rp${Number(isSelected?price:base).toLocaleString("id-ID")}`;
+    });
+  };
+
   window.addSelectedProductToCart = function(buyNow=false){
     if(!currentActiveProduct||!selectedProductType){iosAlert('Pilih varian produk terlebih dahulu.');return;} if(typeStock(selectedProductType)<1){iosAlert('Varian ini sedang habis.');return;}
     const options=[...document.querySelectorAll('.modal-product-option:checked')].map(i=>i.value), parameters={}; let invalid=false;
     document.querySelectorAll('.modal-product-parameter').forEach(input=>{const key=input.dataset.key,value=input.value.trim();if(!value)invalid=true;else parameters[key]=value;});
     if((Array.isArray(currentActiveProduct.parameters)?currentActiveProduct.parameters:[]).length&&invalid){iosAlert('Lengkapi semua parameter produk terlebih dahulu.');return;}
-    const u=sessionUser(),price=Number(resellerPrice(selectedProductType.price,u)||0),key=`${currentActiveProduct.id}::${selectedProductType.typeName}::${JSON.stringify(options)}::${JSON.stringify(parameters)}`,existing=cart.find(i=>i.key===key);
-    if(existing){if(existing.quantity>=typeStock(selectedProductType)){iosAlert('Jumlah melebihi stok.');return;}existing.quantity+=1;existing.selected=true;} else cart.push({cartItemId:`cart_${Date.now()}_${Math.random().toString(36).slice(2,7)}`,key,id:Number(currentActiveProduct.id),name:productText(currentActiveProduct,'name'),typeName:selectedProductType.typeName,quantity:1,price,basePrice:Number(selectedProductType.price||0),durationDays:selectedProductType.durationDays??null,options,parameters,selected:true});
+    const u=sessionUser(),price=Number(productPriceWithOptions(currentActiveProduct,selectedProductType,options,u)||0),key=`${currentActiveProduct.id}::${selectedProductType.typeName}::${JSON.stringify(options)}::${JSON.stringify(parameters)}`,existing=cart.find(i=>i.key===key);
+    if(existing){if(existing.quantity>=typeStock(selectedProductType)){iosAlert('Jumlah melebihi stok.');return;}existing.quantity+=1;existing.selected=true;} else cart.push({cartItemId:`cart_${Date.now()}_${Math.random().toString(36).slice(2,7)}`,key,id:String(currentActiveProduct.id),name:productText(currentActiveProduct,'name'),typeName:selectedProductType.typeName,quantity:1,price,basePrice:Number(selectedProductType.price||0),durationDays:selectedProductType.durationDays??null,options,parameters,selected:true});
     updateCartUI(); toggleProductDetail(); if(buyNow)toggleCart(); else showToast('Produk ditambahkan ke keranjang.');
   };
   window.completeCheckout = async function(targetPhone,paymentMethod,proofUrl){
@@ -6155,6 +6184,37 @@ button:active,.btn:active,.admin-mini-btn:active,.support-btn:active{transform:s
   });
   const oldStore=window.loadStoreData;
   if(oldStore) window.loadStoreData=async function(...args){const r=await oldStore(...args);await loadOtherToolsConfig();return r;};
+})();
+</script>
+
+<script>
+(function(){
+  if(!('serviceWorker' in navigator)) return;
+  let reloading=false;
+  let waitingForController=false;
+  navigator.serviceWorker.register('/sw.js?v=20260825-2').then(reg=>{
+    const check=()=>reg.update().catch(()=>{});
+    check(); setInterval(check,60000);
+    reg.addEventListener('updatefound',()=>{
+      const worker=reg.installing; if(!worker)return;
+      worker.addEventListener('statechange',()=>{
+        if(worker.state==='installed' && navigator.serviceWorker.controller && !reloading){
+          waitingForController=true; worker.postMessage({type:'SKIP_WAITING'});
+        }
+      });
+    });
+  }).catch(()=>{});
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(waitingForController && !reloading){reloading=true; location.reload();} });
+})();
+</script>
+
+<script>
+(function(){
+  let lastCatalogSignature='';
+  async function checkCatalogLive(){
+    try{const r=await fetch('/produk.json?ts='+Date.now(),{cache:'no-store'}); if(!r.ok)return; const d=await r.json(); const sig=JSON.stringify((d.products||[]).map(p=>[p.id,p.name,p.types,p.options,p.optionPrices])); if(!lastCatalogSignature){lastCatalogSignature=sig;return;} if(sig!==lastCatalogSignature){lastCatalogSignature=sig; await loadStoreData(); if(typeof showToast==='function')showToast('Katalog diperbarui otomatis.');}}catch(_){}
+  }
+  document.addEventListener('DOMContentLoaded',()=>{checkCatalogLive();setInterval(checkCatalogLive,20000);});
 })();
 </script>
 </body>
