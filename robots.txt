@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin
+Sitemap: https://ryy-store.pages.dev/sitemap.xml
