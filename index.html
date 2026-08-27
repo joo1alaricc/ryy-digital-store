@@ -300,25 +300,40 @@
             animation:iosFadeIn .18s ease;
         }
         .ios-dialog {
-            width:min(100%, 330px); overflow:hidden; border-radius:24px;
-            background:rgba(39,39,45,.88); color:var(--text-main);
-            border:1px solid rgba(255,255,255,.13);
-            backdrop-filter:blur(42px) saturate(165%); -webkit-backdrop-filter:blur(42px) saturate(165%);
-            box-shadow:0 28px 80px rgba(0,0,0,.52), inset 0 1px 0 rgba(255,255,255,.08);
-            animation:iosDialogIn .24s cubic-bezier(.22,1,.36,1);
+            width:min(100%, 350px); overflow:hidden; border-radius:28px; position:relative;
+            background:linear-gradient(145deg,
+                color-mix(in srgb, var(--accent) 13%, rgba(35,35,42,.78)),
+                rgba(30,30,36,.76) 48%,
+                color-mix(in srgb, var(--accent) 7%, rgba(18,18,23,.72)));
+            color:var(--text-main);
+            border:1px solid color-mix(in srgb, var(--accent) 30%, rgba(255,255,255,.18));
+            backdrop-filter:blur(46px) saturate(185%) contrast(1.03);
+            -webkit-backdrop-filter:blur(46px) saturate(185%) contrast(1.03);
+            box-shadow:0 28px 90px rgba(0,0,0,.48),
+                0 0 36px color-mix(in srgb, var(--accent) 12%, transparent),
+                inset 0 1px 0 rgba(255,255,255,.16);
+            animation:iosDialogIn .26s cubic-bezier(.22,1,.36,1);
         }
-        .ios-dialog-content { padding:23px 22px 19px; text-align:center; }
-        .ios-dialog-title { font-size:1rem; font-weight:700; letter-spacing:-.25px; margin-bottom:7px; }
-        .ios-dialog-message { font-size:.83rem; line-height:1.42; color:rgba(245,245,247,.82); }
-        .ios-dialog-actions { display:grid; grid-template-columns:1fr 1fr; border-top:1px solid rgba(255,255,255,.11); }
+        .ios-dialog::before {
+            content:""; position:absolute; inset:0; pointer-events:none;
+            background:radial-gradient(circle at 12% 0%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 42%),
+                       linear-gradient(135deg, rgba(255,255,255,.10), transparent 38%, color-mix(in srgb, var(--accent) 8%, transparent));
+        }
+        .ios-dialog-content { padding:25px 22px 20px; text-align:center; position:relative; z-index:1; }
+        .ios-dialog-title { font-size:1rem; font-weight:750; letter-spacing:-.25px; margin-bottom:8px; }
+        .ios-dialog-message { font-size:.83rem; line-height:1.48; color:color-mix(in srgb, var(--text-main) 82%, transparent); }
+        .ios-dialog-actions { display:grid; grid-template-columns:1fr 1fr; border-top:1px solid rgba(255,255,255,.12); position:relative; z-index:1; background:rgba(255,255,255,.025); }
         .ios-dialog-actions.single { grid-template-columns:1fr; }
         .ios-dialog-btn {
-            min-height:48px; border:0; border-radius:0; background:transparent; color:#b9a0ff;
-            font-size:.86rem; font-weight:600; padding:0 10px;
+            min-height:50px; border:0; border-radius:0; background:transparent;
+            color:var(--accent); font-size:.86rem; font-weight:650; padding:0 10px;
+            transition:background .18s ease, filter .18s ease;
         }
+        .ios-dialog-btn:hover { background:color-mix(in srgb, var(--accent) 9%, transparent); }
+        .ios-dialog-btn:active { filter:brightness(.88); }
         .ios-dialog-btn + .ios-dialog-btn { border-left:1px solid rgba(255,255,255,.11); }
         .ios-dialog-btn.danger { color:#ff6b6b; }
-        .ios-dialog-btn.primary { color:#b9a0ff; font-weight:700; }
+        .ios-dialog-btn.primary { color:var(--accent); font-weight:750; }
         @keyframes iosFadeIn { from {opacity:0} to {opacity:1} }
         @keyframes iosDialogIn { from {opacity:0; transform:scale(.92)} to {opacity:1; transform:scale(1)} }
         body.light-mode .ios-dialog-overlay { background:rgba(0,0,0,.18); backdrop-filter:blur(24px) saturate(130%); -webkit-backdrop-filter:blur(24px) saturate(130%); }
@@ -3119,7 +3134,10 @@ body.modal-open { scroll-behavior: auto; }
             }
             if (iosDialogResolver) closeIOSDialog(false);
             title.textContent = options.title || "RYY STORE";
-            body.textContent = String(message ?? "");
+            // User-facing dialogs should not expose transport/debug status codes.
+            // Keep the numeric status available on the Error object for developers/logs.
+            const cleanMessage = String(message ?? "").replace(/\s*\[HTTP\s+\d{3}\]\s*$/i, "").trim();
+            body.textContent = cleanMessage;
             ok.textContent = options.okText || "OK";
             ok.className = `ios-dialog-btn primary${options.danger ? " danger" : ""}`;
             cancel.className = "ios-dialog-btn";
