@@ -1611,7 +1611,7 @@
 .downloader-media{width:100%;max-height:52vh;border-radius:20px;background:#000;display:block}.downloader-meta{padding:10px 2px}.downloader-meta strong{display:block}.downloader-meta small{display:block;color:var(--text-muted);margin-top:4px}.downloader-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.downloader-option{border:1px solid var(--glass-border);border-radius:17px;background:rgba(255,255,255,.07);padding:11px;text-align:left;color:inherit}.downloader-option strong{display:block;font-size:.7rem}.downloader-option small{display:block;color:var(--text-muted);margin-top:3px}.downloader-overlay{position:fixed;inset:0;z-index:22000;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;padding:14px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}.downloader-overlay.hidden{display:none!important}
 @media(max-width:600px){.downloader-options{grid-template-columns:1fr}.downloader-overlay{align-items:center;padding:14px}.downloader-sheet{border-radius:28px;max-height:88vh}}
         .product-option-checks{display:flex;flex-wrap:wrap;gap:7px}.product-option-checks label{display:flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--glass-border);border-radius:14px;background:rgba(255,255,255,.06);font-size:.68rem;color:var(--text-main);cursor:pointer}.product-option-checks input{accent-color:var(--accent)}.product-parameter-fields{display:grid;gap:8px}.product-parameter-fields label{font-size:.64rem;color:var(--text-muted)}.product-parameter-fields input{margin-top:4px}.admin-form-checks{display:flex;flex-wrap:wrap;gap:7px}.admin-form-check{display:flex!important;align-items:center;gap:6px;padding:7px 9px;border:1px solid var(--glass-border);border-radius:12px;background:rgba(255,255,255,.05);font-size:.64rem!important;cursor:pointer}.admin-form-check input{accent-color:var(--accent)}
-.checkout-pending-inline{margin-top:10px;padding:13px 14px;border:1px solid var(--glass-border);border-radius:22px;background:linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.035));backdrop-filter:blur(24px) saturate(175%);-webkit-backdrop-filter:blur(24px) saturate(175%);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 12px 30px rgba(0,0,0,.16)}.checkout-pending-title{font-size:.78rem;font-weight:800;color:var(--text-main)}.checkout-pending-text{margin-top:4px;font-size:.66rem;line-height:1.45;color:var(--text-muted)}.checkout-pending-countdown{margin-top:8px;font-size:.72rem;font-weight:800;text-align:center;color:var(--accent)}.checkout-pending-inline button{width:100%;margin-top:9px}.
+.turnstile-box{display:flex;justify-content:center;align-items:center;min-height:65px;margin:9px 0 4px;overflow:hidden}.turnstile-box iframe{max-width:100%}.checkout-turnstile{margin-top:10px;}
 </style>
 </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -1736,14 +1736,6 @@ body.modal-open { scroll-behavior: auto; }
 .product-preview-square{display:block;width:100%;max-height:360px;object-fit:contain;border-radius:20px;background:rgba(255,255,255,.05)}
 .admin-product-thumb,.product-img{object-position:center;background:rgba(255,255,255,.04)}
 @media(max-width:600px){.user-balance-pill{top:76px;margin-right:10px}.wallet-actions-grid{grid-template-columns:1fr 1fr}.wallet-modal-content{width:calc(100vw - 20px)}}
-</style>
-
-<style id="ryy-pending-payment-liquidglass">
-#pending-payment-overlay{background:color-mix(in srgb,var(--accent) 7%,rgba(6,7,10,.60));backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%)}
-#pending-payment-overlay .maintenance-box{width:min(94vw,470px);max-height:90vh;overflow:auto;padding:20px;border-radius:30px;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--glass-border));background:linear-gradient(145deg,color-mix(in srgb,var(--accent) 10%,rgba(255,255,255,.10)),rgba(255,255,255,.035));box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 28px 90px color-mix(in srgb,var(--accent) 18%,rgba(0,0,0,.55));backdrop-filter:blur(30px) saturate(185%);-webkit-backdrop-filter:blur(30px) saturate(185%)}
-#pending-payment-title{color:var(--text-main)}
-#pending-payment-countdown{color:var(--accent);font-weight:800}
-#pending-payment-qr img{border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);box-shadow:0 12px 35px color-mix(in srgb,var(--accent) 14%,transparent)}
 </style>
 </head>
 <body>
@@ -2611,12 +2603,12 @@ body.modal-open { scroll-behavior: auto; }
                         <p id="qris-instruction" class="qris-instruction">QRIS dibuat otomatis oleh gateway. Setelah pembayaran berhasil, status akan terdeteksi otomatis.</p>
                         <button type="button" id="checkout-qris-download" class="btn-accent hidden" onclick="downloadCheckoutQris()" style="display:block;width:100%;margin-top:7px;">Download QRIS</button>
                         <div id="checkout-qris-status" class="admin-config-note" style="margin-top:7px;text-align:center;"></div>
-                        <div id="checkout-pending-inline" class="checkout-pending-inline hidden">
-                            <div class="checkout-pending-title">Pembayaran QRIS sedang diproses</div>
-                            <div id="checkout-pending-inline-text" class="checkout-pending-text"></div>
-                            <div id="checkout-pending-inline-countdown" class="checkout-pending-countdown">Sisa Waktu: —</div>
-                            <button type="button" id="checkout-pending-inline-cancel" class="support-btn">Batalkan Pembelian</button>
-                        </div><button type="button" id="checkout-qris-cancel" class="support-btn" style="display:none;width:100%;margin-top:7px;">Batalkan Pembelian</button>
+                        <div id="checkout-pending-inline" class="hidden" style="margin-top:9px;padding:11px 12px;border:1px solid var(--glass-border);border-radius:18px;background:rgba(255,255,255,.055);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);">
+                            <div id="checkout-pending-inline-text" style="font-size:.68rem;line-height:1.45;color:var(--text-muted);"></div>
+                            <div id="checkout-pending-inline-countdown" style="margin-top:6px;font-size:.7rem;font-weight:800;text-align:center;color:var(--accent);">Sisa Waktu: —</div>
+                            <button type="button" id="checkout-pending-inline-cancel" class="support-btn" style="width:100%;margin-top:8px;">Batalkan Pembelian</button>
+                        </div>
+                        <button type="button" id="checkout-qris-cancel" class="support-btn" style="display:none;width:100%;margin-top:7px;">Batalkan Pembelian</button>
                     </div>
                     <div class="proof-upload-box">
                         <strong style="font-size:.76rem;display:block;">Kirim bukti pembayaran</strong>
@@ -2625,7 +2617,6 @@ body.modal-open { scroll-behavior: auto; }
                         <input id="payment-proof-input" type="file" accept="image/*" class="hidden" onchange="handlePaymentProofFile(event)">
                         <img id="payment-proof-preview" class="proof-upload-preview" alt="Pratinjau bukti pembayaran">
                         <div id="payment-proof-status" class="proof-upload-status">Belum ada bukti dipilih.</div>
-                        
                         <p style="font-size:.62rem;color:var(--text-muted);margin:9px 0 0;text-align:center;line-height:1.4;">Silakan cek inbox di web atau di gmail untuk menerima status pesanan.</p>
                     </div>
                     <button id="btn-standard-checkout" onclick="submitPaymentProofCheckout()" class="btn-accent">Kirim Pesanan</button>
@@ -3431,79 +3422,543 @@ body.modal-open { scroll-behavior: auto; }
         }
 
         async function uploadImage(dataUrl,kind="image"){if(!dataUrl)throw new Error("Gambar belum dipilih.");const data=await apiRequest("/upload-image",{method:"POST",body:JSON.stringify({image:dataUrl,kind})});if(!data.success||!data.url)throw new Error(data.message||"Upload gambar gagal: URL tidak diterima.");return data.url;}
-        async function submitPaymentProofCheckout(){if(blockCheckoutForPendingPayment())return;const paymentMethod=document.getElementById("payment-method")?.value||"";const selectedItems=cart.filter(i=>i.selected);if(!paymentMethod||!selectedItems.length){iosAlert("Pilih metode pembayaran dan centang minimal 1 produk.");return;}const coinPayment=paymentMethod==="RYY_COIN", qrisPayment=paymentMethod==='QRIS';if(!coinPayment&&!qrisPayment&&!paymentProofDataUrl){iosAlert("Silakan upload bukti pembayaran terlebih dahulu.");return;}try{const status=document.getElementById("payment-proof-status");if(status)status.textContent=coinPayment?"Memproses pembayaran dengan koin...":(qrisPayment?"Membuat transaksi QRIS...":"Mengupload bukti pembayaran...");const proofUrl=coinPayment||qrisPayment?"":await uploadImage(paymentProofDataUrl,"payment-proof");const d=await completeCheckout("",paymentMethod,proofUrl);if(qrisPayment&&d?.payment){showCheckoutPendingInline(d);startCheckoutQrisPolling(d.purchaseId||d.orderId);}cart=cart.filter(i=>!i.selected);updateCartUI();paymentProofDataUrl="";const input=document.getElementById("payment-proof-input");if(input)input.value="";const preview=document.getElementById("payment-proof-preview");if(preview){preview.removeAttribute("src");preview.style.display="none";}appliedCheckoutVoucher=null;const voucherInput=document.getElementById("checkout-voucher");if(voucherInput)voucherInput.value="";if(!qrisPayment)document.getElementById("cart-modal")?.classList.add("hidden");await refreshCurrentUserSession();await refreshWalletUI();showToast(qrisPayment?"QRIS dibuat. Selesaikan pembayaran untuk melanjutkan pesanan.":(coinPayment?"Pembayaran koin berhasil dicatat.":"Bukti pembayaran dikirim. Menunggu pemeriksaan admin."));}catch(error){console.error(error);iosAlert(error.message||"Gagal mengirim checkout.");}}
-        let checkoutQrisTimer=null,checkoutQrisCountdownTimer=null,checkoutQrisExpiry='';
-        function getActivePendingCheckout(){
-            const u=typeof sessionUser==='function'?sessionUser():null;
-            const list=Array.isArray(u?.pendingPurchases)?u.pendingPurchases:[];
-            return list.find(p=>p?.status==='pending'&&p?.gatewayPayment&&String(p.paymentStatus||'')==='pending'&&p.gatewayPayment.transactionId)||null;
+        async function submitPaymentProofCheckout(){const paymentMethod=document.getElementById("payment-method")?.value||"";const selectedItems=cart.filter(i=>i.selected);if(!paymentMethod||!selectedItems.length){iosAlert("Pilih metode pembayaran dan centang minimal 1 produk.");return;}const coinPayment=paymentMethod==="RYY_COIN", qrisPayment=paymentMethod==='QRIS';if(!coinPayment&&!qrisPayment&&!paymentProofDataUrl){iosAlert("Silakan upload bukti pembayaran terlebih dahulu.");return;}try{const status=document.getElementById("payment-proof-status");if(status)status.textContent=coinPayment?"Memproses pembayaran dengan koin...":(qrisPayment?"Membuat transaksi QRIS...":"Mengupload bukti pembayaran...");const turnstileToken=await waitForTurnstile("checkout");const proofUrl=coinPayment||qrisPayment?"":await uploadImage(paymentProofDataUrl,"payment-proof");const d=await completeCheckout("",paymentMethod,proofUrl,turnstileToken);if(qrisPayment&&d?.payment){renderCheckoutQris(d.payment);if(document.getElementById('checkout-qris-status'))document.getElementById('checkout-qris-status').textContent=`Bayar ${rupiah(Number(d.payment.totalPayment||0))}. Menunggu konfirmasi otomatis...`;startCheckoutQrisPolling(d.purchaseId||d.orderId);}cart=cart.filter(i=>!i.selected);updateCartUI();paymentProofDataUrl="";const input=document.getElementById("payment-proof-input");if(input)input.value="";const preview=document.getElementById("payment-proof-preview");if(preview){preview.removeAttribute("src");preview.style.display="none";}appliedCheckoutVoucher=null;const voucherInput=document.getElementById("checkout-voucher");if(voucherInput)voucherInput.value="";if(!qrisPayment)document.getElementById("cart-modal")?.classList.add("hidden");await refreshCurrentUserSession();await refreshWalletUI();showToast(qrisPayment?"QRIS dibuat. Selesaikan pembayaran untuk melanjutkan pesanan.":(coinPayment?"Pembayaran koin berhasil dicatat.":"Bukti pembayaran dikirim. Menunggu pemeriksaan admin."));}catch(error){console.error(error);iosAlert(error.message||"Gagal mengirim checkout.");}}
+        let checkoutQrisTimer=null; function setCheckoutCancelButton(show,purchaseId){const b=document.getElementById('checkout-qris-cancel');if(!b)return;b.style.display=show?'block':'none';b.disabled=false;b.onclick=show?async()=>{if(!purchaseId)return;if(!confirm('Batalkan pembelian ini? Jika kamu sudah membayar QRIS, pembatalan di RYY STORE tidak akan membatalkan pembayaran di gateway.'))return;b.disabled=true;try{const turnstileToken=await waitForTurnstile('checkout');const d=await apiRequest('/checkout',{method:'POST',body:JSON.stringify({action:'cancelPurchase',purchaseId,turnstileToken})});clearInterval(checkoutQrisTimer);document.getElementById('checkout-qris-status').textContent='Pembelian berhasil dibatalkan. Jika belum membayar, transaksi tidak akan diproses.';setCheckoutCancelButton(false);await refreshCurrentUserSession();showToast(d.message||'Pembelian dibatalkan.');}catch(e){b.disabled=false;iosAlert(e.message||'Gagal membatalkan pembelian.');}}:null;} function startCheckoutQrisPolling(purchaseId){if(!purchaseId)return;setCheckoutCancelButton(true,purchaseId);clearInterval(checkoutQrisTimer);checkoutQrisTimer=setInterval(async()=>{try{const d=await apiRequest('/me');const u=d.user||d;const p=(u.pendingPurchases||[]).find(x=>x.id===purchaseId);if(p?.paymentStatus==='paid'){clearInterval(checkoutQrisTimer);setCheckoutCancelButton(false);if(document.getElementById('checkout-qris-status'))document.getElementById('checkout-qris-status').textContent='✓ Pembayaran diterima otomatis. Pesanan menunggu pemeriksaan admin.';showToast('Pembayaran QRIS berhasil diterima.');}else if(['expired','gagal','cancel'].includes(String(p?.paymentStatus||''))){clearInterval(checkoutQrisTimer);setCheckoutCancelButton(false);if(document.getElementById('checkout-qris-status'))document.getElementById('checkout-qris-status').textContent='Pembayaran QRIS tidak berhasil atau sudah kedaluwarsa.';}}catch{}} ,5000);setTimeout(()=>clearInterval(checkoutQrisTimer),30*60*1000);}
+
+        function launchUserApp() {
+            refreshWalletUI?.();
+            // UI navigation is intentionally independent from optional widgets/data.
+            // A failure in a secondary component must never cancel a successful login.
+            const ids = ["userNavActions", "adminNavActions", "view-catalog", "view-admin", "view-profile"];
+            ids.forEach(id => { if (!document.getElementById(id)) console.warn("Missing UI element:", id); });
+            document.getElementById("userNavActions")?.classList.remove("hidden");
+            document.getElementById("adminNavActions")?.classList.add("hidden");
+            document.getElementById("view-home")?.classList.remove("hidden");
+            document.getElementById("view-catalog")?.classList.add("hidden");
+            document.getElementById("view-admin")?.classList.add("hidden");
+            document.getElementById("view-profile")?.classList.add("hidden");
+            document.getElementById("view-settings")?.classList.add("hidden");
+            document.getElementById("floating-user-nav")?.classList.remove("hidden");
+            document.getElementById("ai-fab")?.classList.remove("hidden");
+            const name = document.getElementById("store-name-display");
+            const slogan = document.getElementById("store-slogan-display");
+            if (name) name.innerText = storeText("name") || "RYY STORE";
+            if (slogan) slogan.innerText = storeText("slogan") || "";
+            try { initCatalogSearch?.(); } catch (e) { console.warn("Catalog search init skipped:", e); }
+            try { updateCatalogHeaderControls?.("home"); } catch (e) { console.warn("Catalog controls skipped:", e); }
+            try { renderHomeView?.(); renderCategories?.(); renderProducts?.("Semua"); } catch (e) { console.warn("Home/catalog render skipped:", e); }
+            try { setDynamicGreeting?.(); } catch (e) { console.warn("Greeting skipped:", e); }
+            try { updateProfileDashboard?.(); } catch (e) { console.warn("Profile dashboard skipped:", e); }
         }
-        function showCheckoutPendingInline(data){
-            clearInterval(checkoutQrisCountdownTimer);
-            const box=document.getElementById('checkout-pending-inline');
-            const qris=document.getElementById('qris-section');
-            const text=document.getElementById('checkout-pending-inline-text');
-            if(!box)return;
-            qris?.classList.remove('hidden');
-            if(data?.payment)renderCheckoutQris(data.payment);
-            else if(data?.gatewayPayment)renderCheckoutQris(data.gatewayPayment);
-            const amount=Number(data?.payment?.totalPayment||data?.gatewayPayment?.totalPayment||0);
-            const name=(data?.items||[]).map(i=>i.productName).join(', ')||'Produk';
-            if(text)text.textContent=`Pembelian ${name} sebesar ${rupiah(amount)} sedang menunggu pembayaran QRIS.`;
-            checkoutQrisExpiry=data?.payment?.expiredAt||data?.gatewayPayment?.expiredAt||'';
-            box.classList.remove('hidden');
-            tickCheckoutPendingInline();
-            checkoutQrisCountdownTimer=setInterval(tickCheckoutPendingInline,1000);
-            setCheckoutCancelButton(true,data?.purchaseId||data?.id||'');
+
+        function launchAdminApp(adminData) {
+            document.getElementById("userNavActions")?.classList.add("hidden");
+            document.getElementById("adminNavActions")?.classList.remove("hidden");
+            document.getElementById("view-home")?.classList.add("hidden");
+            document.getElementById("view-catalog")?.classList.add("hidden");
+            document.getElementById("view-profile")?.classList.add("hidden");
+            document.getElementById("view-settings")?.classList.add("hidden");
+            document.getElementById("view-admin")?.classList.remove("hidden");
+            document.getElementById("floating-user-nav")?.classList.add("hidden");
+            document.getElementById("ai-fab")?.classList.add("hidden");
+            const name = document.getElementById("store-name-display");
+            const slogan = document.getElementById("store-slogan-display");
+            const identity = document.getElementById("admin-identity");
+            if (name) name.innerText = "RYY STORE [ADMIN PANEL]";
+            if (slogan) slogan.innerText = `Logged in as @${adminData?.username || "admin"}`;
+            if (identity) identity.innerText = `@${adminData?.username || "admin"}`;
+            const privileged = String(adminData?.username || "").trim().toLowerCase() === "admin_utama" ||
+              String(adminData?.email || "").trim().toLowerCase() === "admin1@store.com";
+            const restrictedTabs = new Set(["users","products","config"]);
+            document.querySelectorAll("#admin-tabbar .admin-tab").forEach(tab => {
+                const name = tab.dataset.adminTab;
+                const hidden = !privileged && restrictedTabs.has(name);
+                tab.classList.toggle("hidden", hidden);
+                tab.setAttribute("aria-hidden", hidden ? "true" : "false");
+            });
+            const firstTab = privileged ? "users" : "whatsapp";
+            switchAdminTab(firstTab);
+            // The panel is already visible. Data loading is optional and cannot block navigation.
+            setTimeout(() => {
+              if (privileged) Promise.resolve(loadUserTableForAdmin()).catch(e => console.error("Admin user list:", e));
+              else Promise.resolve(loadWhatsAppBotPanel()).catch(e => console.error("Admin WhatsApp:", e));
+            }, 0);
         }
-        function showCheckoutPendingInlineFromPurchase(purchase){
-            if(purchase)showCheckoutPendingInline({items:purchase.items||[],gatewayPayment:purchase.gatewayPayment||{},purchaseId:purchase.id});
+
+        function updatePageScrollMode() {
+            const main=document.querySelector(".main-container");
+            if(!main || document.getElementById("app-section")?.classList.contains("hidden")) return;
+            main.classList.add("compact-scroll");
+            requestAnimationFrame(() => {
+                const needsScroll=document.documentElement.scrollHeight > window.innerHeight + 2;
+                main.classList.toggle("compact-scroll", !needsScroll);
+                document.body.classList.toggle("page-no-scroll", !needsScroll);
+            });
         }
-        function tickCheckoutPendingInline(){
-            const el=document.getElementById('checkout-pending-inline-countdown');
-            const expiry=Date.parse(checkoutQrisExpiry||'');
-            if(!el)return;
-            if(!expiry){el.textContent='Sisa Waktu: —';return;}
-            const remain=Math.max(0,expiry-Date.now()),sec=Math.floor(remain/1000),h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;
-            el.textContent=`Sisa Waktu: ${h?String(h).padStart(2,'0')+':':''}${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-            if(remain<=0){clearInterval(checkoutQrisTimer);clearInterval(checkoutQrisCountdownTimer);el.textContent='Sisa Waktu: 00:00';boxHideCheckoutPending();}
+
+        window.addEventListener("resize", updatePageScrollMode, {passive:true});
+
+        function switchView(viewName, category=null) {
+            const views={home:"view-home",catalog:"view-catalog",profile:"view-profile",settings:"view-settings"};
+            Object.values(views).forEach(id=>document.getElementById(id)?.classList.add("hidden"));
+            document.querySelectorAll(".floating-nav-item").forEach((el,i)=>el.classList.toggle("active",
+                (viewName==="home"&&i===0)||(viewName==="catalog"&&i===1)||(viewName==="profile"&&i===2)||(viewName==="settings"&&i===3)
+            ));
+            if(views[viewName]) document.getElementById(views[viewName])?.classList.remove("hidden");
+            updateCatalogHeaderControls(viewName);
+            if(viewName==="home") renderHomeView();
+            if(viewName==="catalog"){
+                const target=category || document.querySelector(".cat-tab.active")?.dataset?.category || "Semua";
+                renderCategories(target);
+                renderProducts(target);
+            }
+            if(viewName==="profile"||viewName==="settings") updateProfileDashboard();
+            if(viewName==="profile") refreshCurrentUserSession();
+            window.scrollTo({top:0,behavior:"smooth"});
+            updatePageScrollMode();
         }
-        function boxHideCheckoutPending(){document.getElementById('checkout-pending-inline')?.classList.add('hidden');document.getElementById('qris-section')?.classList.add('hidden');}
-        function setCheckoutCancelButton(show,purchaseId){
-            const b=document.getElementById('checkout-qris-cancel');if(b){b.style.display='none';b.onclick=null;}
-            const inline=document.getElementById('checkout-pending-inline-cancel');if(!inline)return;
-            inline.style.display=show?'block':'none';inline.disabled=false;
-            inline.onclick=show?async()=>{
-                if(!purchaseId)return;
-                if(!confirm('Batalkan pembelian ini? Jika kamu sudah membayar QRIS, pembatalan di RYY STORE tidak akan membatalkan pembayaran di gateway.'))return;
-                inline.disabled=true;
-                try{
-                    const d=await apiRequest('/checkout',{method:'POST',body:JSON.stringify({action:'cancelPurchase',purchaseId})});
-                    clearInterval(checkoutQrisTimer);clearInterval(checkoutQrisCountdownTimer);boxHideCheckoutPending();
-                    await refreshCurrentUserSession();
-                    showToast(d.message||'Pembelian dibatalkan.');
-                }catch(e){inline.disabled=false;iosAlert(e.message||'Gagal membatalkan pembelian.');}
-            }:null;
+
+        function calculateStrength(password) {
+            let score = 0;
+            if (password.length >= 8) score++;
+            if (/[a-zA-Z]/.test(password) && /[0-9]/.test(password)) score++;
+            if (/[^a-zA-Z0-9]/.test(password)) score++;
+            return score;
         }
-        function startCheckoutQrisPolling(purchaseId){
-            if(!purchaseId)return;
-            setCheckoutCancelButton(true,purchaseId);clearInterval(checkoutQrisTimer);
-            checkoutQrisTimer=setInterval(async()=>{
-                tickCheckoutPendingInline();
-                try{
-                    const d=await apiRequest('/me');const u=d.user||d;saveUserSession(u,localStorage.getItem('auth_token'));
-                    const p=(u.pendingPurchases||[]).find(x=>x.id===purchaseId);
-                    if(p?.paymentStatus==='paid'){clearInterval(checkoutQrisTimer);clearInterval(checkoutQrisCountdownTimer);setCheckoutCancelButton(false);document.getElementById('checkout-pending-inline-text').textContent='✓ Pembayaran diterima otomatis. Pesanan menunggu pemeriksaan admin.';document.getElementById('checkout-pending-inline-countdown').textContent='Pembayaran berhasil';}
-                    else if(['expired','gagal','cancel'].includes(String(p?.paymentStatus||''))){clearInterval(checkoutQrisTimer);clearInterval(checkoutQrisCountdownTimer);setCheckoutCancelButton(false);boxHideCheckoutPending();}
-                }catch{}
-            },5000);
-            setTimeout(()=>clearInterval(checkoutQrisTimer),30*60*1000);
+
+        function checkPasswordStrength(password) {
+            const fill = document.getElementById("strength-fill");
+            const text = document.getElementById("strength-text");
+            const score = calculateStrength(password);
+
+            if (score === 1) {
+                fill.style.width = "33%"; fill.style.background = "#ff3b30"; text.innerText = "Keamanan: Rendah";
+            } else if (score === 2) {
+                fill.style.width = "66%"; fill.style.background = "#ffcc00"; text.innerText = "Keamanan: Medium";
+            } else if (score >= 3) {
+                fill.style.width = "100%"; fill.style.background = "#28a745"; text.innerText = "Keamanan: Safety (Aman)";
+            } else {
+                fill.style.width = "0%"; text.innerText = "Keamanan: Rendah";
+            }
         }
-        function blockCheckoutForPendingPayment(){
-            const p=getActivePendingCheckout();
-            if(!p)return false;
-            showPending('purchase',p);
-            return true;
+
+        function checkNewPasswordStrength(password) {
+            const fill = document.getElementById("new-strength-fill");
+            const text = document.getElementById("new-strength-text");
+            const score = calculateStrength(password);
+
+            if (score === 1) {
+                fill.style.width = "33%"; fill.style.background = "#ff3b30"; text.innerText = "Keamanan: Rendah";
+            } else if (score === 2) {
+                fill.style.width = "66%"; fill.style.background = "#ffcc00"; text.innerText = "Keamanan: Medium";
+            } else if (score >= 3) {
+                fill.style.width = "100%"; fill.style.background = "#28a745"; text.innerText = "Keamanan: Safety";
+            } else {
+                fill.style.width = "0%"; text.innerText = "Keamanan: Rendah";
+            }
+        }
+
+
+        function sendProfileOTP() {
+            const newContact=document.getElementById("profile-new-contact-input")?.value.trim();
+            if(!newContact){ iosAlert("Masukkan kontak baru!"); return; }
+            const currentUser=JSON.parse(localStorage.getItem("current_user")||"null");
+            const primary=currentUser?.email||currentUser?.phone||currentUser?.contact||"";
+            const isEmailInitial=primary.includes("@");
+            if(isEmailInitial && newContact.includes("@")){ iosAlert("Anda sudah menggunakan email sebagai kontak utama. Masukkan nomor telepon!"); return; }
+            if(!isEmailInitial && !newContact.includes("@")){ iosAlert("Anda sudah menggunakan nomor telepon sebagai kontak utama. Masukkan alamat email!"); return; }
+            profileOTP=Math.floor(1000+Math.random()*9000).toString();
+            document.getElementById("profile-step-input")?.classList.add("hidden");
+            document.getElementById("profile-step-otp")?.classList.remove("hidden");
+            showToast(t("send"));
+            console.info("RYY STORE profile OTP:",profileOTP);
+        }
+
+        function verifyAndSaveProfileContact() {
+            const userOTP = document.getElementById("profile-otp-input").value.trim();
+            const newContact = document.getElementById("profile-new-contact-input").value.trim();
+
+            if (userOTP === profileOTP) {
+                let currentUser = JSON.parse(localStorage.getItem("current_user"));
+                currentUser.secondaryContact = newContact;
+                localStorage.setItem("current_user", JSON.stringify(currentUser));
+
+                let registeredUsers = JSON.parse(localStorage.getItem("registered_users")) || [];
+                registeredUsers = registeredUsers.map(u => u.username === currentUser.username ? currentUser : u);
+                localStorage.setItem("registered_users", JSON.stringify(registeredUsers));
+
+                document.getElementById("profile-step-otp").classList.add("hidden");
+                document.getElementById("profile-step-input").classList.remove("hidden");
+                document.getElementById("profile-new-contact-input").value = "";
+                updateProfileDashboard();
+                showToast("Kontak alternatif berhasil ditambahkan!");
+            } else {
+                iosAlert("Kode OTP salah!");
+            }
+        }
+
+        function setDynamicGreeting() {
+            const currentUser = JSON.parse(localStorage.getItem("current_user"));
+            if (!currentUser) return;
+            const greetingEl = document.getElementById("greeting-banner");
+            // The newer home layout no longer renders the old greeting banner.
+            // Do not let a missing optional element crash the whole app.
+            if (!greetingEl) return;
+            const hour = new Date().getHours();
+            const timeGreet = hour < 11 ? t("morning") : hour < 15 ? t("afternoon") : hour < 18 ? t("evening") : t("night");
+            greetingEl.innerText = `${currentLanguage === "ko" ? timeGreet : currentLanguage === "en" ? `${timeGreet},` : `Selamat ${timeGreet}`} @${currentUser.username}`;
+        }
+
+        const CATEGORY_TRANSLATIONS = {
+            id: {"Semua":"Semua","Aplikasi Premium":"Aplikasi Premium"},
+            en: {"Semua":"All","Aplikasi Premium":"Premium Apps"},
+            ko: {"Semua":"전체","Aplikasi Premium":"프리미엄 앱"}
+        };
+
+        function categoryLabel(category) {
+            return CATEGORY_TRANSLATIONS[currentLanguage]?.[category] || category;
+        }
+
+        function productText(product, field) {
+            return product?.i18n?.[currentLanguage]?.[field] || product?.[field] || "";
+        }
+
+        function normalizeDescription(value) {
+            return String(value ?? "").replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+        }
+
+        function productDescriptionPreview(value, limit=250) {
+            const text = normalizeDescription(value);
+            if (text.length <= limit) return { text, truncated:false };
+            return { text:text.slice(0, limit).trimEnd(), truncated:true };
+        }
+
+        function storeText(field) {
+            return storeData?.storeInfo?.i18n?.[currentLanguage]?.[field] || storeData?.storeInfo?.[field] || "";
+        }
+
+        function typeText(type, field="typeName") {
+            return type?.i18n?.[currentLanguage]?.[field] || type?.[field] || "";
+        }
+
+        function typeStock(type) {
+            return Math.max(0, Math.floor(Number(type?.stock) || 0));
+        }
+
+        function optionSurcharge(product, options=[]) {
+            const prices=product?.optionPrices&&typeof product.optionPrices==="object"?product.optionPrices:{};
+            return (Array.isArray(options)?options:[]).reduce((sum,o)=>sum+Math.max(0,Math.floor(Number(prices[String(o)]||0))),0);
+        }
+
+        function productOptionLabel(product, option) { return String(option||""); }
+
+        function productPriceWithOptions(product,type,options=[],user=sessionUser()) {
+            return resellerPrice(Number(type?.price||0)+optionSurcharge(product,options),user);
+        }
+
+        function productStock(product) {
+            return (Array.isArray(product?.types) ? product.types : []).reduce((sum, type) => sum + typeStock(type), 0);
+        }
+
+        function currentUserIsReseller() {
+            try { return JSON.parse(localStorage.getItem("current_user") || "null")?.reseller === true; } catch (_) { return false; }
+        }
+
+        function resellerPrice(price) {
+            const original = Math.max(0, Number(price) || 0);
+            return currentUserIsReseller() && original >= 8000 ? Math.max(0, original - 2000) : original;
+        }
+
+        function priceMarkup(originalPrice) {
+            const original = Math.max(0, Number(originalPrice) || 0);
+            const finalPrice = resellerPrice(original);
+            if (currentUserIsReseller() && original >= 8000) {
+                return `<span class="reseller-price"><span class="reseller-original">Rp${original.toLocaleString("id-ID")}</span><span class="reseller-arrow">→</span><span class="reseller-final">Rp${finalPrice.toLocaleString("id-ID")}</span></span>`;
+            }
+            return `Rp${finalPrice.toLocaleString("id-ID")}`;
+        }
+
+        function formatRemaining(expiresAt, durationDays) {
+            if (!expiresAt) return t("lifetime");
+            const diff = new Date(expiresAt).getTime() - Date.now();
+            if (diff <= 0) return "0 " + t("remaining");
+            const totalMinutes = Math.floor(diff / 60000);
+            const days = Math.floor(totalMinutes / 1440);
+            const hours = Math.floor((totalMinutes % 1440) / 60);
+            const minutes = totalMinutes % 60;
+            const dayLabel = currentLanguage === "en" ? "Days" : currentLanguage === "ko" ? "일" : "Hari";
+            const hourLabel = currentLanguage === "en" ? "Hours" : currentLanguage === "ko" ? "시간" : "Jam";
+            const minuteLabel = currentLanguage === "en" ? "Minutes" : currentLanguage === "ko" ? "분" : "Menit";
+            const parts = [];
+            if (days) parts.push(`${days} ${dayLabel}`);
+            if (hours || days) parts.push(`${hours} ${hourLabel}`);
+            parts.push(`${minutes} ${minuteLabel}`);
+            return `${parts.join(", ")} ${t("remaining")}`;
+        }
+
+        function subscriptionStatus(sub) {
+            if (!sub || sub.status === "inactive") return false;
+            if (!sub.expiresAt) return true;
+            return new Date(sub.expiresAt).getTime() > Date.now();
+        }
+
+        async function loadDistributorData() {
+            try {
+                const response = await fetch(`${API_BASE}/distributor?ts=${Date.now()}`, {
+                    cache: "no-store",
+                    headers: { "Accept": "application/json" }
+                });
+                if (!response.ok) throw new Error(`Distributor API ${response.status}`);
+                const payload = await response.json();
+                storeData.distributor = payload?.distributor || {};
+            } catch (error) {
+                // Developer/admin data is still available statically if the API is
+                // temporarily unavailable. Resellers are intentionally not loaded
+                // from database.json in the browser because it contains sensitive data.
+                try {
+                    const response = await fetch(`/distributor.json?ts=${Date.now()}`, { cache: "no-store" });
+                    storeData.distributor = response.ok ? await response.json() : {};
+                } catch (_) {
+                    storeData.distributor = {};
+                }
+                console.warn("Gagal memuat distributor dinamis:", error);
+            }
+            renderDistributor();
+        }
+
+        function normalizeDistributorEntries(value, fallbackRole) {
+            const list = Array.isArray(value) ? value : (value ? [value] : []);
+            return list.filter(Boolean).map(item => ({
+                role: item.role || fallbackRole,
+                name: item.name || item.username || item.displayName || "-",
+                photo: item.photo || item.avatar || "",
+                socials: item.socials || {}
+            }));
+        }
+
+        function renderDistributor() {
+            const container=document.getElementById("distributor-list");
+            if(!container) return;
+            const d=storeData.distributor || {};
+            const entries=[
+                ...normalizeDistributorEntries(d.developerOwner, "Developer & Owner"),
+                ...normalizeDistributorEntries(d.admin, "Admin"),
+                ...normalizeDistributorEntries(d.reseller, "Reseller")
+            ];
+            container.innerHTML=entries.map(item=>{
+                const instagram=item?.socials?.instagram;
+                const social=instagram ? `<a class="distributor-social" href="${escapeHtml(instagram)}" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1.1" class="instagram-dot"></circle></svg></a>` : "";
+                const photo=item.photo ? `<img class="distributor-avatar" src="${escapeHtml(imageDisplayUrl(item.photo))}" alt="" loading="lazy">` : `<div class="distributor-avatar" aria-hidden="true"></div>`;
+                return `<div class="distributor-card">
+                    ${photo}
+                    <div class="distributor-info"><div class="distributor-role">${escapeHtml(item.role||"")}</div><strong>${escapeHtml(item.name||"-")}</strong></div>
+                    ${social}
+                </div>`;
+            }).join("") || `<div class="empty-state">${escapeHtml(t("pending_empty"))}</div>`;
+        }
+        function renderHomeTestimonials(){
+            const box=document.getElementById("home-testimonials"); if(!box)return;
+            const items=[]; for(const u of (window.__testimonialUsers||[])){ for(const p of (u.pendingPurchases||[])){ if(p.status==="confirmed" && p.proofUrl) items.push({username:u.username||"user",proofUrl:p.proofUrl,createdAt:p.processedAt||p.createdAt,items:p.items||[]}); }}
+            items.sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
+            box.innerHTML=items.slice(0,12).map(x=>`<div class="home-category-card testimonial-card"><div class="testimonial-proof"><img src="${escapeHtml(imageDisplayUrl(x.proofUrl))}" loading="lazy" alt="Bukti transaksi"><span>RYY STORE</span></div><div class="home-category-copy"><strong>@${escapeHtml(x.username)}</strong><small>${escapeHtml((x.items||[]).map(i=>i.productName).join(", ")||"Transaksi berhasil")} · ${escapeHtml(new Date(x.createdAt).toLocaleDateString("id-ID"))}</small></div></div>`).join("")||'<div class="empty-state">Belum ada testimoni.</div>';
+        }
+        async function loadHomeTestimonials(){try{const r=await fetch(`${API_BASE}/products/testimonials?ts=${Date.now()}`,{cache:"no-store"});if(r.ok){const d=await r.json();window.__testimonialUsers=d.users||[];renderHomeTestimonials();}}catch{}}
+
+        function openHomeCategory(category){
+            const target=String(category||"Semua");
+            switchView("catalog",target);
+            requestAnimationFrame(() => {
+                document.getElementById("view-catalog")?.scrollIntoView({behavior:"smooth", block:"start"});
+                window.scrollTo({top:0, behavior:"smooth"});
+            });
+        }
+
+        function renderHomeView() {
+            const info=storeData?.storeInfo || {};
+            const img=document.getElementById("home-portfolio-image");
+            if (img) { img.src=info.urlPhoto || ""; img.alt=info.name || "RYY STORE"; }
+            const setText=(id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=val ?? ""; };
+            setText("home-store-name",storeText("name") || "RYY STORE");
+            setText("home-store-slogan",storeText("slogan"));
+            setText("home-store-description",storeText("description"));
+            setText("home-owner",storeText("owner"));
+            setText("home-since",storeText("operatingSince"));
+            setText("home-buyers",String(info.totalBuyers ?? 0));
+            const total=Array.isArray(storeData.products)?storeData.products.length:0;
+            setText("home-total-products",`${total} ${t("products_count")}`);
+            setText("catalog-total-products",`${total} ${t("products_count")}`);
+            const grid=document.getElementById("home-category-grid");
+            if (!grid) return;
+            const listed=(Array.isArray(storeData.categories)?storeData.categories:[]).filter(c=>c!=="Semua");
+            const fallback=[...new Set((storeData.products||[]).map(p=>p.category).filter(Boolean))];
+            const hasBest=Array.isArray(storeData.products)&&storeData.products.some(p=>p.bestSeller===true);
+            const cats=[...(hasBest?["Best Seller"]:[]),...(listed.length?listed:fallback)].filter((c,i,a)=>a.indexOf(c)===i && (c==="Best Seller" || (storeData.products||[]).some(p=>p.category===c))).sort((a,b)=>a==="Best Seller"?-1:b==="Best Seller"?1:String(a).localeCompare(String(b),"id",{sensitivity:"base"}));
+            grid.innerHTML=cats.map(cat=>{
+                const count=cat==="Best Seller"?(storeData.products||[]).filter(p=>p.bestSeller===true).length:(storeData.products||[]).filter(p=>p.category===cat).length;
+                return `<button type="button" class="home-category-card" data-category="${escapeHtml(cat)}" onclick="openHomeCategory(this.dataset.category)">
+                    <span class="home-category-icon"><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4zm10 0h6v6h-6z"/></svg></span>
+                    <span class="home-category-copy"><strong>${escapeHtml(categoryLabel(cat))}</strong><small>${count} ${escapeHtml(t("products_count"))}</small></span>
+                    <span class="home-category-arrow">→</span>
+                </button>`;
+            }).join("") || `<div class="empty-state" style="grid-column:1/-1;text-align:center;padding:30px 20px;color:var(--text-muted)">${escapeHtml(t("product_unavailable"))}</div>`;
+        }
+
+        function updateCatalogHeaderControls(viewName) {
+            const search=document.getElementById("catalog-search");
+            search?.classList.toggle("hidden",viewName!=="catalog");
+        }
+        function initCatalogSearch() {
+            const input=document.getElementById("catalog-search-input");
+            if(!input || input.dataset.bound) return;
+            input.dataset.bound="1";
+            input.addEventListener("input",()=>{ catalogSearchQuery=input.value||""; renderProducts(document.querySelector(".cat-tab.active")?.dataset?.category||"Semua"); });
+        }
+
+        function renderCategories(activeCategory="Semua") {
+            const container=document.getElementById("category-tabs");
+            if(!container) return;
+            const products=Array.isArray(storeData.products)?storeData.products:[];
+            const raw=Array.isArray(storeData.categories)?storeData.categories:["Semua"];
+            const used=new Set(products.map(p=>String(p.category||"").trim()).filter(Boolean));
+            const bestSellerUsed=products.some(p=>p.bestSeller===true);
+            const categories=["Semua",...(bestSellerUsed?["Best Seller"]:[]),...raw.filter(c=>String(c)!=="Semua" && String(c)!=="Best Seller" && used.has(String(c))),...Array.from(used).filter(c=>!raw.includes(c) && String(c)!=="Best Seller")].sort((a,b)=>a==="Semua"?-1:b==="Semua"?1:a==="Best Seller"?-1:b==="Best Seller"?1:String(a).localeCompare(String(b),"id",{sensitivity:"base"}));
+            const visible=categories.filter(cat=>cat==="Semua" || cat==="Best Seller" || products.some(p=>String(p.category||"")===String(cat)));
+            const safeActive=visible.includes(activeCategory)?activeCategory:"Semua";
+            container.innerHTML=visible.map(cat=>`<button type="button" data-category="${escapeHtml(cat)}" onclick="renderProducts(this.dataset.category)" class="cat-tab ${cat===safeActive?'active':''}">${escapeHtml(categoryLabel(cat))}</button>`).join("");
+        }
+
+        function renderProducts(category) {
+            const activeCategory=category || "Semua";
+            const search=(catalogSearchQuery||"").trim().toLowerCase();
+            document.querySelectorAll(".cat-tab").forEach(tab=>tab.classList.toggle("active",tab.dataset.category===activeCategory));
+            const grid=document.getElementById("product-grid");
+            if(!grid) return;
+            const products=Array.isArray(storeData.products)?storeData.products:[];
+            const categoryFiltered=activeCategory==="Semua"?products:activeCategory==="Best Seller"?products.filter(p=>p.bestSeller===true):products.filter(p=>p.category===activeCategory);
+            const filtered=search?categoryFiltered.filter(p=>{ const hay=[p.name,p.description,p.category,...(Array.isArray(p.types)?p.types.map(x=>x.typeName):[])].filter(Boolean).join(" ").toLowerCase(); return hay.includes(search); }):categoryFiltered;
+            const total=document.getElementById("catalog-total-products");
+            if(total) total.textContent=`${filtered.length} ${t("products_count")}`;
+            grid.innerHTML="";
+            if(!filtered.length){
+                grid.innerHTML=`<div class="empty-state" style="grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--text-muted)">${escapeHtml(t("no_products"))}</div>`;
+                return;
+            }
+            filtered.sort((a,b)=>String(productText(a,"name")).localeCompare(String(productText(b,"name")),"id",{sensitivity:"base"})).forEach(product=>{
+                product.stock=productStock(product);
+                const isReady=product.stock>0;
+                const firstType=Array.isArray(product.types)&&product.types.length?product.types.find(type=>typeStock(type)>0)||product.types[0]:null;
+                const name=productText(product,"name"), desc=productDescriptionPreview(productText(product,"description"),250);
+                const descHtml=`${escapeHtml(desc.text)}${desc.truncated?` <span class="product-desc-more" role="button" tabindex="0" onclick="event.stopPropagation();openProductDetail('${String(product.id)}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();openProductDetail('${String(product.id)}')}">...Selengkapnya</span>`:''}`;
+                grid.innerHTML += `<div class="product-card" onclick="openProductDetail('${String(product.id)}')">
+                    <div class="product-img-wrapper"><img src="${escapeHtml(imageDisplayUrl(product.image||""))}" alt="${escapeHtml(name)}" class="product-img"><span class="badge-stock ${isReady?'badge-ready':'badge-sold'}">${escapeHtml(isReady?t("ready"):t("sold"))}</span></div>
+                    <div class="product-info"><h3 class="product-name">${escapeHtml(name)}</h3><p class="product-desc">${descHtml}</p><div class="product-price adaptive-price">${firstType?`<span class="adaptive-price-text">${escapeHtml(t("from_price"))} ${priceMarkup(firstType.price)}</span>`:escapeHtml(t("price_unavailable"))}</div>${currentUserIsReseller()?'<span class="reseller-badge">Reseller aktif</span>':''}</div>
+                </div>`;
+            });
+        }
+
+        function selectProductType(element,index){
+            document.querySelectorAll("#modal-type-list .type-option").forEach(el=>el.classList.remove("selected"));
+            element.classList.add("selected");
+            selectedProductType=currentActiveProduct?.types?.[index]||null;
+            syncSelectedProductOptionPrice();
+        }
+
+        function toggleProductDetail(){
+            const modal=document.getElementById("product-detail-modal");
+            if(!modal) return;
+            modal.classList.toggle("hidden");
+            if(modal.classList.contains("hidden")){
+                document.getElementById("floating-user-nav")?.classList.remove("modal-hidden-ui");
+                document.getElementById("ai-fab")?.classList.remove("modal-hidden-ui");
+            }else{
+                document.getElementById("floating-user-nav")?.classList.add("modal-hidden-ui");
+                document.getElementById("ai-fab")?.classList.add("modal-hidden-ui");
+            }
+        }
+
+        function toggleItemSelection(cartItemId) {
+            const item = cart.find(i => i.cartItemId === cartItemId);
+            if (item) {
+                item.selected = !item.selected;
+                updateCartUI();
+            }
+        }
+
+        function removeFromCart(cartItemId) {
+            cart = cart.filter(item => item.cartItemId !== cartItemId);
+            updateCartUI();
+            showToast(t("product_removed"));
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById("cart-items");
+            if(!container) return;
+            container.innerHTML = "";
+            let total = 0;
+            cart.forEach(item => {
+                const subtotal = Number(item.price||0) * Number(item.quantity||0);
+                if (item.selected) total += subtotal;
+                const coinMode=document.getElementById('payment-method')?.value==='RYY_COIN'; const unitPrice = coinMode ? `<span style="color:var(--accent);font-weight:800">${Math.ceil(Number(item.price||0)/10).toLocaleString('id-ID')} koin</span>` : (currentUserIsReseller() && Number(item.basePrice||0)>=8000
+                    ? `<span class="reseller-price"><span class="reseller-original">Rp${Number(item.basePrice).toLocaleString("id-ID")}</span><span class="reseller-arrow">→</span><span class="reseller-final">Rp${Number(item.price).toLocaleString("id-ID")}</span></span>`
+                    : `Rp${Number(item.price||0).toLocaleString("id-ID")}`);
+                const extra=[]; if(Array.isArray(item.options)&&item.options.length)extra.push(`Opsi: ${item.options.map(escapeHtml).join(', ')}`); if(item.parameters&&typeof item.parameters==='object')Object.entries(item.parameters).forEach(([k,v])=>extra.push(`${escapeHtml(k)}: ${escapeHtml(v)}`));
+                container.innerHTML += `<div class="cart-row">
+                    <div class="cart-row-left"><input type="checkbox" ${item.selected?'checked':''} onchange="toggleItemSelection('${item.cartItemId}')" style="width:16px;height:16px;margin:0;cursor:pointer;">
+                    <div class="cart-row-info"><h4>${escapeHtml(item.name)} (${item.quantity}x)</h4><p>${unitPrice}</p>${extra.length?`<small style="display:block;margin-top:4px;color:var(--text-muted);line-height:1.35">${extra.join('<br>')}</small>`:''}</div></div>
+                    <button onclick="removeFromCart('${item.cartItemId}')" class="btn-del">Hapus</button>
+                </div>`;
+            });
+            const cartCount=cart.reduce((acc,i)=>acc+i.quantity,0);
+            const countEl=document.getElementById("cart-count"); if(countEl) countEl.innerText=cartCount;
+            const floatingCount=document.getElementById("floating-cart-count"); if(floatingCount) floatingCount.innerText=cartCount;
+            const voucherDiscount=appliedCheckoutVoucher?.type==='discount'?(appliedCheckoutVoucher.mode==='percent'?Math.floor(total*Math.min(100,Number(appliedCheckoutVoucher.value)||0)/100):Math.min(total,Math.floor(Number(appliedCheckoutVoucher.value)||0))):0; const shownTotal=Math.max(0,total-voucherDiscount); const coinModeTotal=document.getElementById('payment-method')?.value==='RYY_COIN'; const totalEl=document.getElementById("cart-total"); if(totalEl) totalEl.innerHTML=coinModeTotal?`${Math.ceil(shownTotal/10).toLocaleString('id-ID')} koin`:voucherDiscount?`<span style="text-decoration:line-through;opacity:.55;font-size:.7rem">Rp${total.toLocaleString("id-ID")}</span> → Rp${shownTotal.toLocaleString("id-ID")}`:`Rp${total.toLocaleString("id-ID")}`;
+        }
+
+        function toggleCart() {
+            document.getElementById("cart-modal").classList.toggle("hidden");
+        }
+
+        function openPaymentSheet(){
+            const sheet=document.getElementById('payment-sheet-overlay');
+            if(!sheet) return;
+            sheet.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+            syncPaymentSheet();
+        }
+        function closePaymentSheet(event){
+            if(event && event.target !== event.currentTarget) return;
+            document.getElementById('payment-sheet-overlay')?.classList.add('hidden');
+            if(!document.querySelector('.modal-overlay:not(.hidden)')) document.body.classList.remove('modal-open');
+        }
+        function syncPaymentSheet(){
+            const value=document.getElementById('payment-method')?.value || '';
+            document.querySelectorAll('.payment-option').forEach(el=>el.classList.toggle('selected',el.dataset.payment===value));
+            const label=document.getElementById('payment-trigger-label');
+            if(label) label.textContent=value || t('choose_payment');
+            const title=document.getElementById('payment-sheet-title');
+            if(title) title.textContent=t('choose_payment');
+        }
+        function selectPaymentMethod(method){
+            const select=document.getElementById('payment-method');
+            if(!select) return;
+            select.value=method;
+            handlePaymentChange();
+            syncPaymentSheet();
+            document.getElementById('payment-sheet-overlay')?.classList.add('hidden');
+            if(!document.querySelector('.modal-overlay:not(.hidden)')) document.body.classList.remove('modal-open');
+        }
+
+        function handlePaymentChange() {
+            const method = document.getElementById("payment-method").value;
+            const isQris=method==='QRIS', isCoin=method==='RYY_COIN';
+            document.getElementById("qris-section").classList.toggle("hidden", !isQris);
+            const proof=document.querySelector('.proof-upload-box'); if(proof){proof.classList.toggle('hidden',isQris);proof.querySelectorAll('.proof-upload-label,#payment-proof-input,#payment-proof-preview,#payment-proof-status').forEach(el=>el.classList.toggle('hidden',isCoin||isQris));const title=proof.querySelector('strong'),desc=proof.querySelector('p');if(title)title.textContent=isCoin?'Verifikasi Checkout':'Kirim bukti pembayaran';if(desc)desc.textContent=isCoin?'Pembayaran menggunakan koin RYY-STORE.':'Upload foto/screenshot bukti transaksi. Setelah dikirim, pesanan masuk ke sesi menunggu admin.';}
+            const manualInfo=document.getElementById('manual-payment-info');const manualTitle=document.getElementById('manual-payment-title');const manualNumber=document.getElementById('manual-payment-number');const manualOwner=document.getElementById('manual-payment-owner');const paymentDetails={DANA:{number:'082245682288',owner:'A/N: SU**\*\*TI'},GOPAY:{number:'085862364581',owner:'A/N: AB**LY'},SHOPEEPAY:{number:'085862364581',owner:'A/N: AB**LY'},OVO:{number:'085862364581',owner:'A/N: AB**LY'}};if(paymentDetails[method]){const d=paymentDetails[method];manualInfo?.classList.remove('hidden');if(manualTitle)manualTitle.textContent=`Pembayaran ${method}`;if(manualNumber)manualNumber.innerHTML=`<strong style="font-size:.86rem;letter-spacing:.02em;flex:1;">${d.number}</strong><button type="button" class="btn-icon-minimal" onclick="copyPaymentNumber('${d.number}',this)">Copy</button>`;if(manualOwner)manualOwner.textContent=d.owner;}else manualInfo?.classList.add('hidden');
+            const btn=document.getElementById("btn-standard-checkout");
+            if(btn)btn.textContent=isQris?'Buat Pembayaran QRIS':(isCoin?'Bayar dengan Saldo RYY-STORE':'Kirim bukti pembayaran');
+            syncPaymentSheet();
+            if(isQris)resetCheckoutQris();
+            if(btn)btn.classList.remove("hidden");
         }
         function resetCheckoutQris(){const c=document.getElementById('checkout-qris-code');if(c)c.innerHTML='<div class="admin-config-note">QRIS akan dibuat setelah kamu menekan tombol pembayaran.</div>';const a=document.getElementById('checkout-qris-download');if(a)a.classList.add('hidden');window.__checkoutQrisSrc='';const st=document.getElementById('checkout-qris-status');if(st)st.textContent='';}
         function renderCheckoutQris(payment){const holder=document.getElementById('checkout-qris-code');if(!holder)return;holder.innerHTML='';const src=payment?.qrisImage||((payment?.qrisString)?`https://web.btzpay.my.id/api/qris/create-qr-code?data=${encodeURIComponent(payment.qrisString)}&size=500x500&style=2&format=png&pngMode=native&viewer=0`:'');window.__checkoutQrisSrc=src||'';if(src){const img=document.createElement('img');img.src=src;img.alt='QRIS Pembayaran';img.className='qris-image';img.style='display:block;width:min(280px,100%);height:auto;margin:0 auto;background:#fff;padding:8px;border-radius:16px;cursor:zoom-in';img.onclick=()=>openDynamicQrisZoom(src);holder.appendChild(img);}else holder.innerHTML='<div class="admin-config-note">QRIS tidak tersedia. Silakan coba buat pembayaran lagi.</div>';const a=document.getElementById('checkout-qris-download');if(a)a.classList.toggle('hidden',!src);const st=document.getElementById('checkout-qris-status');if(st)st.textContent=`Bayar ${rupiah(Number(payment?.totalPayment||0))}. Status akan dicek otomatis.`;}
@@ -3671,7 +4126,7 @@ body.modal-open { scroll-behavior: auto; }
                     const message = data?.message || data?.error || (response.status === 404
                         ? "API tidak ditemukan. Pastikan deployment memakai _worker.js / Advanced Mode Cloudflare Pages."
                         : `Request gagal (${response.status})`);
-                    const error = new Error(String(message).replace(/\s*\[HTTP\s+\d{3}\]\s*$/i,'').trim());
+                    const error = new Error(`${message} [HTTP ${response.status}]`);
                     error.status = response.status;
                     error.data = data;
                     throw error;
@@ -5487,10 +5942,10 @@ function startSupportPolling(){
     if(existing){if(existing.quantity>=typeStock(selectedProductType)){iosAlert('Jumlah melebihi stok.');return;}existing.quantity+=1;existing.selected=true;} else cart.push({cartItemId:`cart_${Date.now()}_${Math.random().toString(36).slice(2,7)}`,key,id:String(currentActiveProduct.id),name:productText(currentActiveProduct,'name'),typeName:selectedProductType.typeName,quantity:1,price,basePrice:Number(selectedProductType.price||0),durationDays:selectedProductType.durationDays??null,options,parameters,selected:true});
     updateCartUI(); toggleProductDetail(); if(buyNow)toggleCart(); else showToast('Produk ditambahkan ke keranjang.');
   };
-  window.completeCheckout = async function(targetPhone,paymentMethod,proofUrl){
+  window.completeCheckout = async function(targetPhone,paymentMethod,proofUrl,turnstileToken){
     const selected=cart.filter(i=>i.selected).map(i=>({id:i.id,typeName:i.typeName,quantity:i.quantity,options:Array.isArray(i.options)?i.options:[],parameters:i.parameters&&typeof i.parameters==='object'?i.parameters:{}}));
     if(!selected.length) throw new Error('Tidak ada produk yang dipilih.');
-    const d=await apiRequest('/checkout',{method:'POST',body:JSON.stringify({items:selected,targetPhone,paymentMethod,proofUrl,voucherCode:(document.getElementById('checkout-voucher')?.value||'').trim().toUpperCase()})}); if(d?.user)saveUserSession(d.user,localStorage.getItem('auth_token')); return d;
+    const d=await apiRequest('/checkout',{method:'POST',body:JSON.stringify({turnstileToken,items:selected,targetPhone,paymentMethod,proofUrl,voucherCode:(document.getElementById('checkout-voucher')?.value||'').trim().toUpperCase()})}); if(d?.user)saveUserSession(d.user,localStorage.getItem('auth_token')); return d;
   };
 
   window.openCart = window.toggleCart;
@@ -6065,5 +6520,168 @@ window.addEventListener("load", () => { const boot = () => initTurnstile(); if (
   function rupiah(n){return `Rp${Number(n||0).toLocaleString('id-ID')}`;}
 })();
 </script>
-</body>
+\n<script id="ryy-preserve-ui-pending-checkout-fix">
+(function(){
+  const $=id=>document.getElementById(id);
+  const esc=v=>typeof escapeHtml==='function'?escapeHtml(v):String(v??'');
+  const rup=n=>`Rp${Number(n||0).toLocaleString('id-ID')}`;
+  let inlineTimer=null;
+  let activePending=null;
+
+  function isActivePurchase(p){
+    if(!p || p.status!=='pending' || p.paymentStatus!=='pending' || !p.gatewayPayment) return false;
+    const exp=Date.parse(p.gatewayPayment?.expiredAt||p.expiredAt||'');
+    return !exp || exp>Date.now();
+  }
+  function qrisSrc(p){
+    const pay=p?.gatewayPayment||p||{};
+    return pay.qrisImage || (pay.qrisString ? `https://web.btzpay.my.id/api/qris/create-qr-code?data=${encodeURIComponent(pay.qrisString)}&size=500x500&style=2&format=png&pngMode=native&viewer=0` : '');
+  }
+  function remainingText(p){
+    const exp=Date.parse(p?.gatewayPayment?.expiredAt||p?.expiredAt||'');
+    if(!exp) return 'Sisa Waktu: —';
+    const ms=Math.max(0,exp-Date.now()), sec=Math.floor(ms/1000), h=Math.floor(sec/3600), m=Math.floor((sec%3600)/60), s=sec%60;
+    return `Sisa Waktu: ${h?String(h).padStart(2,'0')+':':''}${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }
+  function purchaseName(p){return (p?.items||[]).map(i=>i.productName||i.name||'Produk').join(', ')||'Produk';}
+
+  function setInline(p){
+    activePending=p||null;
+    const panel=$('qris-section'), code=$('checkout-qris-code'), dl=$('checkout-qris-download'), status=$('checkout-qris-status');
+    const box=$('checkout-pending-inline'), text=$('checkout-pending-inline-text'), cd=$('checkout-pending-inline-countdown');
+    if(!box) return;
+    clearInterval(inlineTimer);
+    if(!p){
+      box.classList.add('hidden');
+      if(code) code.innerHTML='<div class="admin-config-note">QRIS akan dibuat setelah kamu menekan tombol pembayaran.</div>';
+      if(dl) dl.classList.add('hidden');
+      if(status) status.textContent='';
+      return;
+    }
+    if(panel) panel.classList.remove('hidden');
+    // QRIS is deliberately removed from the current checkout tab after creation.
+    if(code) code.innerHTML='';
+    if(dl) dl.classList.add('hidden');
+    if(status) status.textContent='';
+    const amount=Number(p.gatewayPayment?.totalPayment||p.totalSpent||0);
+    if(text) text.innerHTML=`Pembayaran <b>${esc(purchaseName(p))}</b> sebesar <b>${rup(amount)}</b> sedang menunggu pembayaran.`;
+    box.classList.remove('hidden');
+    const tick=()=>{
+      if(cd) cd.textContent=remainingText(p);
+      const exp=Date.parse(p?.gatewayPayment?.expiredAt||p?.expiredAt||'');
+      if(exp && exp<=Date.now()){clearInterval(inlineTimer);setInline(null);activePending=null;}
+    };
+    tick(); inlineTimer=setInterval(tick,1000);
+    const cancel=$('checkout-pending-inline-cancel');
+    if(cancel) cancel.onclick=()=>cancelPurchase(p,true);
+  }
+
+  async function cancelPurchase(p,fromInline){
+    const ok=typeof iosConfirm==='function' ? await iosConfirm('Batalkan pembelian ini? Jika QRIS sudah dibayar, pembatalan di RYY STORE tidak membatalkan pembayaran di gateway.',{title:'RYY STORE',cancelText:'Tidak',okText:'Batalkan',danger:true}) : window.confirm('Batalkan pembelian ini?');
+    if(!ok)return;
+    try{
+      const d=await apiRequest('/checkout',{method:'POST',body:JSON.stringify({action:'cancelPurchase',purchaseId:p.id})});
+      clearInterval(inlineTimer); activePending=null; setInline(null);
+      await refreshCurrentUserSession();
+      await refreshWalletUI?.();
+      showToast(d.message||'Pembelian dibatalkan.');
+    }catch(e){iosAlert(e.message||'Gagal membatalkan pembelian.');}
+  }
+
+  function showPendingOverlay(p){
+    // Reuse the existing Liquid Glass pending-payment overlay. No new visual shell is introduced.
+    const overlay=$('pending-payment-overlay');
+    if(!overlay)return;
+    const title=$('pending-payment-title'), text=$('pending-payment-text'), cd=$('pending-payment-countdown'), q=$('pending-payment-qr'), dl=$('pending-payment-download'), cancel=$('pending-payment-cancel');
+    const amount=Number(p?.gatewayPayment?.totalPayment||p?.totalSpent||0);
+    if(title) title.textContent='Selesaikan pembayaran';
+    if(text) text.innerHTML=`Selesaikan pembayaran <b>Pembelian ${esc(purchaseName(p))}</b> Anda sebesar <b>${rup(amount)}</b> dengan memindai QRIS dibawah.`;
+    const src=qrisSrc(p);
+    if(q){q.innerHTML='';if(src){const img=document.createElement('img');img.src=src;img.alt='QRIS Pembayaran';img.style='display:block;width:min(300px,100%);height:auto;margin:0 auto;background:#fff;padding:8px;border-radius:18px';q.appendChild(img);}}
+    if(dl){if(src){dl.classList.remove('hidden');dl.onclick=()=>downloadQris(src,'QRIS-RYYSTORE-Pembelian.png');}else dl.classList.add('hidden');}
+    if(cancel){cancel.textContent='Batalkan Pembelian';cancel.onclick=()=>cancelPurchase(p,false);}
+    overlay.classList.remove('hidden');document.body.classList.add('modal-open');
+    clearInterval(window.__ryyPendingOverlayTimer);
+    const tick=()=>{if(cd)cd.textContent=remainingText(p);const exp=Date.parse(p?.gatewayPayment?.expiredAt||p?.expiredAt||'');if(exp&&exp<=Date.now()){clearInterval(window.__ryyPendingOverlayTimer);hidePendingOverlay();}};
+    tick();window.__ryyPendingOverlayTimer=setInterval(tick,1000);
+  }
+  function hidePendingOverlay(){clearInterval(window.__ryyPendingOverlayTimer);$('pending-payment-overlay')?.classList.add('hidden');if(!document.querySelector('.modal-overlay:not(.hidden)'))document.body.classList.remove('modal-open');}
+  async function downloadQris(src,name){try{const r=await fetch(src,{mode:'cors'});if(!r.ok)throw new Error();const b=await r.blob(),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500);}catch(_){window.open(src,'_blank','noopener');}}
+
+  async function getPending(){
+    if(activePending && isActivePurchase(activePending)) return activePending;
+    if(!localStorage.getItem('auth_token')) return null;
+    try{const d=await apiRequest('/me');const u=d.user||d;const p=(u.pendingPurchases||[]).find(isActivePurchase)||null;activePending=p;return p;}catch(_){return null;}
+  }
+
+  async function blockIfPending(){
+    const p=await getPending();
+    if(p){showPendingOverlay(p);return true;}
+    return false;
+  }
+
+  // Product B cannot enter the cart while Product A's QRIS purchase is unfinished.
+  const originalOpenProductDetail=window.openProductDetail;
+  if(typeof originalOpenProductDetail==='function'){
+    window.openProductDetail=async function(productId){
+      if(await blockIfPending()) return;
+      return originalOpenProductDetail.apply(this,arguments);
+    };
+  }
+  const originalAdd=window.addSelectedProductToCart;
+  if(typeof originalAdd==='function'){
+    window.addSelectedProductToCart=async function(buyNow){
+      if(await blockIfPending()) return;
+      return originalAdd.apply(this,arguments);
+    };
+  }
+  const originalSubmit=window.submitPaymentProofCheckout;
+  window.submitPaymentProofCheckout=async function(){
+    const p=await getPending();
+    if(p){showPendingOverlay(p);return;}
+    const method=$('payment-method')?.value||'';
+    const selected=Array.isArray(cart)?cart.filter(i=>i.selected):[];
+    if(!method||!selected.length){iosAlert('Pilih metode pembayaran dan centang minimal 1 produk.');return;}
+    const coin=method==='RYY_COIN', qris=method==='QRIS';
+    if(!coin&&!qris&&!paymentProofDataUrl){iosAlert('Silakan upload bukti pembayaran terlebih dahulu.');return;}
+    try{
+      const status=$('payment-proof-status'); if(status) status.textContent=coin?'Memproses pembayaran dengan koin...':(qris?'Membuat transaksi QRIS...':'Mengupload bukti pembayaran...');
+      const proofUrl=coin||qris?'':await uploadImage(paymentProofDataUrl,'payment-proof');
+      const d=await window.completeCheckout('',method,proofUrl,undefined);
+      if(qris && d?.payment){
+        const purchase=d.pendingPurchase||{...d.payment,id:d.purchaseId||d.orderId,items:selected.map(i=>({productName:i.name||'',quantity:i.quantity})),gatewayPayment:d.payment,status:'pending',paymentStatus:'pending'};
+        purchase.gatewayPayment=d.payment;
+        purchase.id=d.purchaseId||d.orderId||purchase.id;
+        purchase.items=purchase.items?.length?purchase.items:selected.map(i=>({productName:i.name||'',quantity:i.quantity}));
+        activePending=purchase;
+        setInline(purchase);
+        clearCartAfterCheckout();
+        showToast('QRIS dibuat. Selesaikan pembayaran untuk melanjutkan pesanan.');
+      }else{
+        clearCartAfterCheckout();
+        if(!qris)$('cart-modal')?.classList.add('hidden');
+        showToast(coin?'Pembayaran koin berhasil dicatat.':'Bukti pembayaran dikirim. Menunggu pemeriksaan admin.');
+      }
+      await refreshCurrentUserSession(); await refreshWalletUI?.();
+    }catch(e){console.error(e);if(e?.code==='PENDING_PURCHASE'||/Selesaikan dulu pembayaran/i.test(e?.message||'')){const p=e?.pendingPurchase||await getPending();if(p)showPendingOverlay(p);else iosAlert('Selesaikan dulu pembayaran kamu.');}else iosAlert(String(e?.message||'Gagal mengirim checkout.').replace(/\s*\[HTTP\s+\d{3}\]\s*$/i,''));}
+  };
+  function clearCartAfterCheckout(){
+    if(Array.isArray(cart)) cart=cart.filter(i=>!i.selected);
+    try{updateCartUI();}catch(_){}
+    paymentProofDataUrl='';
+    const input=$('payment-proof-input');if(input)input.value='';
+    const preview=$('payment-proof-preview');if(preview){preview.removeAttribute('src');preview.style.display='none';}
+    appliedCheckoutVoucher=null; const vi=$('checkout-voucher');if(vi)vi.value='';
+  }
+
+  // Remove Turnstile from checkout even if an older script already initialized it.
+  document.addEventListener('DOMContentLoaded',()=>{
+    $('turnstile-checkout')?.remove();
+    getPending().then(p=>{if(p) activePending=p;});
+  });
+
+  // If a pending QRIS exists after a refresh, use the existing Liquid Glass full-screen reminder.
+  setTimeout(async()=>{const p=await getPending();if(p)showPendingOverlay(p);},1300);
+})();
+</script>\n</body>
 </html>
