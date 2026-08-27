@@ -80,13 +80,15 @@ export default {
       try { target = new URL(raw); } catch {
         return Response.json({ success: false, message: "URL gambar tidak valid." }, { status: 400 });
       }
-      if (target.protocol !== "https:" || target.hostname !== "cloud.yardansh.com") {
+      const allowedImageHosts = new Set(["cloud.yardansh.com","cdn.phototourl.com","upload.shizukuuu.cloud","qu.ax"]);
+      if (target.protocol !== "https:" || !allowedImageHosts.has(target.hostname.toLowerCase())) {
         return Response.json({ success: false, message: "Host gambar tidak diizinkan." }, { status: 403 });
       }
       // Force the CDN's raw representation; preserve no user-supplied query params
       // so the proxy cannot be abused to request unrelated resources.
+      const originalHost = target.hostname.toLowerCase();
       target.search = "";
-      target.searchParams.set("raw", "");
+      if (originalHost === "cloud.yardansh.com") target.searchParams.set("raw", "");
       try {
         const upstream = await fetch(target.toString(), {
           method: request.method,
