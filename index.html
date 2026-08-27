@@ -1708,6 +1708,20 @@ body.modal-open { scroll-behavior: auto; }
 .inbox-image-upload{margin-top:11px;display:grid;gap:7px}.inbox-image-drop{min-height:115px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:1px dashed color-mix(in srgb,var(--accent) 38%,var(--glass-border));border-radius:19px;background:rgba(255,255,255,.045);cursor:pointer;text-align:center}.inbox-image-drop input{display:none}.inbox-image-drop span{font-size:1.35rem;color:var(--accent)}.inbox-image-drop b{font-size:.68rem}.inbox-image-drop small{font-size:.56rem;color:var(--text-muted)}
 
 </style>
+
+<style id="ryy-v16-upgrade-style">
+/* RYY STORE v16: adaptive glass, wallet, touch feedback, stable image surfaces */
+.brand-area,.brand-area *{color:#fff!important;mix-blend-mode:difference;text-shadow:none!important}
+.store-header .header-status-pill,.store-header .catalog-search,.store-header .cart-header-button{mix-blend-mode:normal}
+.user-balance-pill{position:sticky;top:84px;z-index:110;display:flex;align-items:center;gap:8px;width:max-content;max-width:calc(100vw - 28px);margin:7px 14px 8px auto;padding:4px 10px 4px 5px;border:1px solid var(--glass-border);border-radius:999px;background:rgba(255,255,255,.13);backdrop-filter:blur(28px) saturate(190%);-webkit-backdrop-filter:blur(28px) saturate(190%);box-shadow:0 12px 35px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.28);color:var(--text-main)}
+.user-balance-pill button{width:35px;height:35px;border:0;border-radius:50%;background:var(--accent);color:#fff;font-size:1.25rem;font-weight:800;line-height:1;box-shadow:0 6px 18px var(--accent-glow);cursor:pointer}.user-balance-pill div{display:flex;flex-direction:column;line-height:1.05}.user-balance-pill span{font-size:.55rem;color:var(--text-muted)}.user-balance-pill strong{font-size:.78rem;white-space:nowrap}
+.voucher-checkout-box{margin:7px 0 10px;padding:9px 10px;border:1px solid var(--glass-border);border-radius:18px;background:rgba(255,255,255,.055)}
+.wallet-modal-content{max-width:560px}.wallet-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.wallet-summary-grid>div{padding:12px;border:1px solid var(--glass-border);border-radius:18px;background:rgba(255,255,255,.06)}.wallet-summary-grid span{display:block;color:var(--text-muted);font-size:.6rem}.wallet-summary-grid strong{display:block;margin-top:4px;font-size:1rem;color:var(--accent)}.wallet-actions-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.wallet-deposit-area{margin-top:10px;padding:12px;border:1px solid var(--glass-border);border-radius:20px;background:rgba(255,255,255,.05)}.wallet-deposit-area label{font-size:.68rem;color:var(--text-muted)}.wallet-deposit-area input{margin-top:5px}.wallet-qris-area{margin-top:10px;padding:10px;border-radius:18px;border:1px dashed var(--glass-border);background:rgba(255,255,255,.05)}.wallet-qris-area canvas{display:block;width:min(280px,100%);height:auto;margin:0 auto;background:#fff;border-radius:16px;padding:8px}.wallet-history-head{display:flex;justify-content:space-between;gap:8px;margin-top:13px;padding-top:11px;border-top:1px solid var(--glass-border);font-size:.68rem}.wallet-history-head span{color:var(--text-muted)}.wallet-history{max-height:210px;overflow:auto;margin-top:7px}.wallet-history-row{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:.63rem;line-height:1.4}.wallet-history-row:last-child{border-bottom:0}.wallet-history-row .credit{color:#6ee7b7}.wallet-history-row .debit{color:#ff8f8f}.wallet-cashback-card{margin-top:9px;padding:10px;border-radius:17px;background:color-mix(in srgb,var(--accent) 10%,transparent);border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);font-size:.65rem}.wallet-cashback-card button{margin-top:7px;width:100%}
+.ryy-tap-ripple{position:fixed;z-index:30000;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;pointer-events:none;border:1px solid rgba(255,255,255,.75);background:rgba(255,255,255,.16);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 0 0 1px rgba(255,255,255,.12),0 6px 22px rgba(0,0,0,.16);animation:ryyTap .34s ease-out forwards}@keyframes ryyTap{0%{opacity:.9;transform:scale(.55)}60%{opacity:.55;transform:scale(1)}100%{opacity:0;transform:scale(1.45)}}
+.product-preview-square{display:block;width:100%;max-height:360px;object-fit:contain;border-radius:20px;background:rgba(255,255,255,.05)}
+.admin-product-thumb,.product-img{object-position:center;background:rgba(255,255,255,.04)}
+@media(max-width:600px){.user-balance-pill{top:76px;margin-right:10px}.wallet-actions-grid{grid-template-columns:1fr 1fr}.wallet-modal-content{width:calc(100vw - 20px)}}
+</style>
 </head>
 <body>
 
@@ -1754,13 +1768,31 @@ body.modal-open { scroll-behavior: auto; }
                     <div id="step-contact" class="auth-step">
                         <input type="email" id="contact-input" data-i18n-placeholder="email_verify" placeholder="Masukkan Email untuk verifikasi">
                         <button type="button" onclick="sendOTP()" class="btn-accent" data-i18n="send_otp">Kirim OTP</button>
+                        <button type="button" onclick="startWhatsAppRegister()" class="btn-icon-minimal" style="width:100%;margin-top:7px;justify-content:center;">💬 Verifikasi via WhatsApp</button>
                         <button type="button" onclick="cancelRegister()" class="btn-icon-minimal" style="width:100%; margin-top:7px; justify-content:center;" data-i18n="back_login">Kembali ke Login</button>
+                    </div>
+
+                    <div id="step-whatsapp-register" class="auth-step">
+                        <p style="font-size:.75rem;color:var(--text-muted);line-height:1.45;margin-bottom:9px;">Kirim pesan otomatis ke WhatsApp bot <b>admin_utama</b>. Jangan ubah isi pesan.</p>
+                        <div id="register-wa-sn" class="wa-admin-code" style="font-size:.82rem;letter-spacing:.04em;word-break:break-word;"></div>
+                        <a id="register-wa-link" href="#" target="_blank" rel="noopener" class="btn-accent" style="display:flex;align-items:center;justify-content:center;text-decoration:none;margin-top:9px;">Buka WhatsApp & Kirim</a>
+                        <button type="button" onclick="checkWhatsAppRegister()" class="btn-icon-minimal" style="width:100%;margin-top:7px;justify-content:center;">↻ Cek Verifikasi</button>
+                        <button type="button" onclick="cancelRegister()" class="btn-icon-minimal" style="width:100%;margin-top:7px;justify-content:center;">Kembali</button>
+                        <div id="register-wa-status" class="admin-config-note" style="margin-top:8px;text-align:center;">Menunggu pesan WhatsApp...</div>
                     </div>
 
                     <div id="step-otp" class="auth-step">
                         <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom: 10px;" data-i18n="otp_sent">Masukkan OTP yang dikirim ke email kamu.</p>
                         <input type="text" id="otp-input" data-i18n-placeholder="otp_input" placeholder="Masukkan 4 digit OTP" inputmode="numeric" maxlength="4">
                         <button type="button" onclick="verifyOTP()" class="btn-accent" data-i18n="verify_otp">Verifikasi OTP</button>
+                    </div>
+
+                    <div id="step-google-verification" class="auth-step">
+                        <p style="font-size:.75rem;color:var(--text-muted);line-height:1.45;margin-bottom:9px;">Login Google berhasil. Demi keamanan, pilih satu verifikasi tambahan.</p>
+                        <button type="button" onclick="startGoogleOtpVerification()" class="btn-accent" style="width:100%;">✉️ Verifikasi OTP Email</button>
+                        <button type="button" onclick="startGoogleWhatsAppVerification()" class="btn-icon-minimal" style="width:100%;margin-top:7px;justify-content:center;">💬 Verifikasi via WhatsApp</button>
+                        <div id="google-verify-extra" class="hidden" style="margin-top:9px;"><input id="google-otp-input" type="text" inputmode="numeric" maxlength="4" placeholder="Masukkan 4 digit OTP"><button type="button" onclick="finishGoogleOtpVerification()" class="btn-accent" style="width:100%;margin-top:7px;">Verifikasi OTP</button></div>
+                        <div id="google-wa-extra" class="hidden" style="margin-top:9px;"><div id="google-wa-sn" class="wa-admin-code" style="font-size:.82rem;letter-spacing:.04em;word-break:break-word;"></div><a id="google-wa-link" href="#" target="_blank" rel="noopener" class="btn-accent" style="display:flex;align-items:center;justify-content:center;text-decoration:none;margin-top:8px;">Buka WhatsApp & Kirim</a><button type="button" onclick="checkGoogleWhatsAppVerification()" class="btn-icon-minimal" style="width:100%;margin-top:7px;justify-content:center;">↻ Cek Verifikasi</button><div id="google-wa-status" class="admin-config-note" style="margin-top:7px;text-align:center;">Menunggu pesan...</div></div>
                     </div>
 
                     <div id="step-credentials" class="auth-step">
@@ -1843,6 +1875,7 @@ body.modal-open { scroll-behavior: auto; }
                 <button onclick="logoutAccount()" class="btn-icon-minimal" style="color: #ff6b6b; border-color: rgba(220,53,69,0.3);">Logout Admin</button>
             </div>
         </header>
+        <div id="user-balance-pill" class="user-balance-pill hidden"><button type="button" onclick="openWalletDeposit()" aria-label="Deposit saldo">+</button><div><span>Sisa Saldo</span><strong id="user-balance-value">Rp0</strong></div></div>
 
         <main class="main-container">
             <!-- VIEW HOME / BERANDA -->
@@ -2039,7 +2072,7 @@ body.modal-open { scroll-behavior: auto; }
 
     <div class="wa-admin-card">
       <div class="admin-toolbar"><div><h4>Console RYY-STORE</h4><p class="admin-config-note">Pesan terbaru, pairing code, dan QR gateway tampil di console ini.</p></div></div>
-      <div id="wa-admin-messages" class="ryy-wa-console" style="margin-top:10px"></div>
+      <div id="wa-admin-messages" class="ryy-wa-console" style="margin-top:10px"><div id="wa-console-live" class="wa-admin-msg" style="display:none"><b>Gateway Console</b><div id="wa-console-pairing"></div><canvas id="wa-console-qr" width="220" height="220" style="display:none;max-width:220px;width:100%;background:#fff;border-radius:15px;padding:8px;box-sizing:border-box"></canvas></div></div>
       <div class="wa-send-row"><input id="wa-send-to" class="admin-form-input" placeholder="Nomor WhatsApp, contoh 62812..." inputmode="numeric"><input id="wa-send-text" class="admin-form-input" placeholder="Pesan..."><button type="button" class="admin-glass-btn accent" onclick="sendWhatsAppFromAdmin()">Kirim</button></div>
     </div>
   </div>
@@ -2090,6 +2123,11 @@ body.modal-open { scroll-behavior: auto; }
                             </div>
 
                             <div class="settings-panel">
+                                <div class="admin-toolbar"><div><h4>Keuangan & Voucher</h4><p class="admin-config-note">Admin utama dapat membuat voucher, melihat saldo user, dan melakukan penyesuaian koin.</p></div><button type="button" class="admin-glass-btn" onclick="loadAdminFinance()">↻</button></div>
+                                <div class="admin-form-grid two" style="margin-top:9px"><label class="admin-form-label">Jenis Voucher<select id="finance-voucher-type" class="admin-form-select"><option value="discount">Pengurangan harga</option><option value="cashback">Cashback</option></select></label><label class="admin-form-label">Mode<select id="finance-voucher-mode" class="admin-form-select"><option value="percent">Persentase (%)</option><option value="fixed">Nominal (Rp)</option></select></label><label class="admin-form-label">Nilai<input id="finance-voucher-value" class="admin-form-input" type="number" min="1" value="20"></label><label class="admin-form-label">Maks. Penggunaan<input id="finance-voucher-max" class="admin-form-input" type="number" min="1" value="1"></label><label class="admin-form-label">User ID (opsional)<input id="finance-voucher-user" class="admin-form-input" placeholder="Kosong = semua user"></label><label class="admin-form-label">Kedaluwarsa (opsional)<input id="finance-voucher-expiry" class="admin-form-input" type="datetime-local"></label><label class="admin-form-label">Simulasi Harga Beli<input id="finance-voucher-example" class="admin-form-input" type="number" min="0" value="10000" oninput="previewFinanceVoucher()"></label></div><div id="finance-voucher-preview" class="admin-response-box" style="margin-top:8px">Cashback 20% dari Rp10.000 = Rp2.000 = 200 koin.</div><button type="button" class="admin-glass-btn accent" style="width:100%;margin-top:8px" onclick="generateFinanceVoucher()">＋ Generate Voucher</button><div id="finance-generated-voucher" class="admin-response-box" style="display:none"></div><div id="finance-voucher-list" style="margin-top:10px"></div><div class="admin-toolbar" style="margin-top:13px"><div><h4>Saldo User</h4><p class="admin-config-note">Penyesuaian koin hanya untuk admin_utama.</p></div></div><div id="finance-user-list"></div>
+                            </div>
+
+                            <div class="settings-panel">
                                 <div class="admin-toolbar"><div><h4>Other Tools</h4><p class="admin-config-note">Aktif/nonaktifkan tool yang muncul di pengaturan user.</p></div></div>
                                 <div id="admin-other-tools-list"></div>
                             </div>
@@ -2136,6 +2174,7 @@ body.modal-open { scroll-behavior: auto; }
                         <div class="dash-card"><span data-i18n="battery">Sisa Baterai</span><strong id="dash-battery" class="device-card-value"><span class="device-icon">🔋</span><span>Memeriksa...</span></strong></div>
                         <div class="dash-card"><span data-i18n="jakarta_time">Jam Jakarta (Asia/Jakarta)</span><strong id="dash-clock" class="device-card-value"><span class="device-icon">🕒</span><span>--:--:--</span></strong></div>
                     </div>
+                    <div class="settings-panel wallet-profile-block" style="margin-top:12px;"><div class="admin-toolbar"><div><h4>Saldo & Keuangan</h4><p class="admin-config-note">Kelola deposit, refund, saldo koin, cashback, dan riwayat transaksi.</p></div><button type="button" class="admin-glass-btn accent" onclick="openWalletModal()">Kelola</button></div><div class="wallet-summary-grid" style="margin-top:9px;"><div><span>Sisa Koin</span><strong id="profile-wallet-coins">0</strong></div><div><span>Nilai Saldo</span><strong id="profile-wallet-idr">Rp0</strong></div><div><span>Saldo Dipakai</span><strong id="profile-wallet-spent">Rp0</strong></div><div><span>Total Deposit</span><strong id="profile-wallet-deposited">Rp0</strong></div></div><div style="display:flex;gap:7px;margin-top:8px;"><button type="button" class="support-btn accent" onclick="openWalletDeposit()">＋ Deposit</button></div></div>
                     <div id="profile-reseller-card" class="dash-card" style="margin-top:12px;">
                         <span data-i18n="reseller_status">Reseller: Tidak Aktif</span>
                         <strong id="dash-reseller-status">Tidak Aktif</strong>
@@ -2412,6 +2451,9 @@ body.modal-open { scroll-behavior: auto; }
             </div>
         </div>
 
+        <!-- WALLET / DEPOSIT MODAL -->
+        <div id="wallet-modal" class="modal-overlay hidden" onclick="closeWalletModal(event)"><div class="modal-content wallet-modal-content" onclick="event.stopPropagation()"><div class="modal-top"><h3>Saldo RYY-STORE</h3><button onclick="closeWalletModal()" class="btn-close">&times;</button></div><div class="wallet-summary-grid"><div><span>Koin</span><strong id="wallet-modal-coins">0</strong></div><div><span>Nilai</span><strong id="wallet-modal-idr">Rp0</strong></div></div><div class="wallet-actions-grid"><button type="button" class="support-btn accent" onclick="openWalletDeposit()">＋ Deposit</button><button type="button" class="support-btn" onclick="openRefundTool()">💸 Refund</button><button type="button" class="support-btn" onclick="claimDailyCoins()">🎁 Claim Harian</button><button type="button" class="support-btn" onclick="spinWalletGacha()">🎰 Gacha</button></div><div class="wallet-deposit-area hidden" id="wallet-deposit-area"><label>Nominal Deposit<input id="wallet-deposit-amount" type="number" min="1000" step="1000" placeholder="10000"></label><div id="wallet-deposit-preview" class="support-result">Rp10.000 = 1.000 koin</div><button type="button" class="btn-accent" onclick="createWalletDeposit()">Buat QRIS Deposit</button><div id="wallet-qris-area" class="wallet-qris-area hidden"><div id="wallet-qris-code"></div><div id="wallet-deposit-status" class="admin-config-note" style="text-align:center;"></div></div></div><div class="wallet-history-head"><strong>Riwayat Transaksi</strong><span id="wallet-spent-summary">Terpakai Rp0</span></div><div id="wallet-history" class="wallet-history"></div><div id="wallet-cashback-list"></div></div></div>
+
         <!-- PRODUCT IMAGE PREVIEW MODAL -->
         <div id="product-image-modal" class="modal-overlay hidden" onclick="closeProductImagePreview(event)">
             <div class="modal-content" onclick="event.stopPropagation()" style="max-width:520px;">
@@ -2524,10 +2566,12 @@ body.modal-open { scroll-behavior: auto; }
                     <label id="checkout-target-label" data-i18n="checkout_target" style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:2px;">Nomor WhatsApp Target (Penerima):</label>
                     <input type="text" id="target-phone" placeholder="Contoh: 08123456789">
 
+                    <div class="voucher-checkout-box"><div style="display:flex;gap:7px;align-items:center;"><input id="checkout-voucher" type="text" placeholder="Masukkan voucher RYY-STORE-..." style="margin:0;flex:1;text-transform:uppercase"><button type="button" class="btn-icon-minimal" onclick="applyCheckoutVoucher()" style="white-space:nowrap;padding:9px 12px;">Pakai</button></div><div id="checkout-voucher-status" class="admin-config-note" style="margin-top:5px;">Voucher opsional · diskon/cashback diterapkan otomatis.</div></div>
                     <label id="checkout-method-label" data-i18n="checkout_method" style="font-size:0.7rem; color:var(--text-muted); display:block; margin-bottom:2px;">Metode Pembayaran:</label>
                     <select id="payment-method" class="payment-native-select" onchange="handlePaymentChange()" aria-hidden="true" tabindex="-1">
                         <option value="" data-i18n="choose_payment">Pilih Metode Pembayaran</option>
                         <option value="QRIS">QRIS</option>
+                        <option value="RYY_COIN">Saldo RYY-STORE</option>
                         <option value="DANA">DANA</option>
                         <option value="GOPAY">GOPAY</option>
                         <option value="SHOPEEPAY">SHOPEEPAY</option>
@@ -2561,6 +2605,7 @@ body.modal-open { scroll-behavior: auto; }
             <div class="payment-sheet" role="dialog" aria-modal="true" aria-labelledby="payment-sheet-title">
                 <div class="payment-sheet-title"><span id="payment-sheet-title">Pilih Metode Pembayaran</span><span class="payment-selected-radio" aria-hidden="true"></span></div>
                 <button type="button" class="payment-option" data-payment="QRIS" onclick="selectPaymentMethod('QRIS')"><span>QRIS</span><span class="payment-radio"></span></button>
+                <button type="button" class="payment-option" data-payment="RYY_COIN" onclick="selectPaymentMethod('RYY_COIN')"><span>Saldo RYY-STORE</span><span class="payment-radio"></span></button>
                 <button type="button" class="payment-option" data-payment="DANA" onclick="selectPaymentMethod('DANA')"><span>DANA</span><span class="payment-radio"></span></button>
                 <button type="button" class="payment-option" data-payment="GOPAY" onclick="selectPaymentMethod('GOPAY')"><span>GOPAY</span><span class="payment-radio"></span></button>
                 <button type="button" class="payment-option" data-payment="SHOPEEPAY" onclick="selectPaymentMethod('SHOPEEPAY')"><span>SHOPEEPAY</span><span class="payment-radio"></span></button>
@@ -2590,6 +2635,12 @@ body.modal-open { scroll-behavior: auto; }
         let generatedOTP = "";
         let profileOTP = "";
         let cart = [];
+        let appliedCheckoutVoucher = null;
+        let registrationWhatsappId = "";
+        let registrationVerificationToken = "";
+        let googleVerificationToken = "";
+        let googleOtpToken = "";
+        let googleWhatsappStarted = false;
         let catalogSearchQuery = "";
         let currentActiveProduct = null;
         let selectedProductType = null;
@@ -2971,6 +3022,7 @@ body.modal-open { scroll-behavior: auto; }
             document.getElementById("landing-section").classList.add("hidden");
             document.getElementById("app-section").classList.remove("hidden");
             launchUserApp();
+            refreshWalletUI?.();
             openProductDetail(productId);
         }
 
@@ -3247,25 +3299,12 @@ body.modal-open { scroll-behavior: auto; }
         }
 
         async function handleGoogleCredential(response) {
-            if (!response?.credential) {
-                iosAlert("Login Google gagal. Silakan coba lagi.");
-                return;
-            }
+            if (!response?.credential) { iosAlert("Login Google gagal. Silakan coba lagi."); return; }
             try {
-                const data = await apiRequest("/google-login", {
-                    method: "POST",
-                    body: JSON.stringify({ credential: response.credential }),
-                    skipAuth: true
-                });
-                saveUserSession(data.user, data.token);
-                localStorage.removeItem("has_seen_landing");
-                showToast("Login dengan Google berhasil!");
-                forceUserScreen();
-                launchUserApp();
-            } catch (error) {
-                console.error(error);
-                iosAlert(error.message || "Login Google gagal.");
-            }
+                const data = await apiRequest("/google-login", { method:"POST", body:JSON.stringify({credential:response.credential,turnstileToken:await waitForTurnstile("login")}), skipAuth:true });
+                if(data?.verificationRequired){ googleVerificationToken=data.verificationToken||""; localStorage.setItem("google_pending",JSON.stringify({email:data.email||data.user?.email||""})); showAuthStep("step-google-verification"); showToast("Pilih metode verifikasi tambahan untuk Google."); return; }
+                saveUserSession(data.user, data.token); localStorage.removeItem("has_seen_landing"); showToast("Login dengan Google berhasil!"); forceUserScreen(); launchUserApp();
+            } catch(error){ console.error(error); iosAlert(error.message||"Login Google gagal."); }
         }
 
         function enterStoreCatalog() {
@@ -3338,15 +3377,16 @@ body.modal-open { scroll-behavior: auto; }
           if(!raw)return "";
           try{
             const u=new URL(raw,window.location.origin);
-            if(u.protocol==="https:" && u.hostname==="cloud.yardansh.com") return `/api/image-proxy?url=${encodeURIComponent(u.origin+u.pathname)}`;
+            if(u.protocol==="https:" && ["cloud.yardansh.com","cdn.phototourl.com","upload.shizukuuu.cloud","qu.ax"].includes(u.hostname.toLowerCase())) return `/api/image-proxy?url=${encodeURIComponent(u.origin+u.pathname)}`;
           }catch{}
           return raw;
         }
 
         async function uploadImage(dataUrl,kind="image"){if(!dataUrl)throw new Error("Gambar belum dipilih.");const data=await apiRequest("/upload-image",{method:"POST",body:JSON.stringify({image:dataUrl,kind})});if(!data.success||!data.url)throw new Error(data.message||"Upload gambar gagal: URL tidak diterima.");return data.url;}
-        async function submitPaymentProofCheckout(){const targetPhone=document.getElementById("target-phone").value.trim();const paymentMethod=document.getElementById("payment-method").value;const selectedItems=cart.filter(i=>i.selected);if(!targetPhone||!paymentMethod||!selectedItems.length){iosAlert("Lengkapi nomor penerima, metode pembayaran, dan centang minimal 1 produk.");return;}if(!paymentProofDataUrl){iosAlert("Silakan upload bukti pembayaran terlebih dahulu.");return;}try{const status=document.getElementById("payment-proof-status");if(status)status.textContent="Mengupload bukti pembayaran...";const turnstileToken=await waitForTurnstile("checkout");const proofUrl=await uploadImage(paymentProofDataUrl,"payment-proof");await completeCheckout(targetPhone,paymentMethod,proofUrl,turnstileToken);cart=cart.filter(i=>!i.selected);updateCartUI();paymentProofDataUrl="";const input=document.getElementById("payment-proof-input");if(input)input.value="";const preview=document.getElementById("payment-proof-preview");if(preview){preview.removeAttribute("src");preview.style.display="none";}document.getElementById("cart-modal").classList.add("hidden");await refreshCurrentUserSession();showToast("Bukti pembayaran dikirim. Menunggu pemeriksaan admin.");}catch(error){console.error(error);iosAlert(error.message||"Gagal mengirim bukti pembayaran.");}}
+        async function submitPaymentProofCheckout(){const targetPhone=document.getElementById("target-phone").value.trim();const paymentMethod=document.getElementById("payment-method").value;const selectedItems=cart.filter(i=>i.selected);if(!targetPhone||!paymentMethod||!selectedItems.length){iosAlert("Lengkapi nomor penerima, metode pembayaran, dan centang minimal 1 produk.");return;}const coinPayment=paymentMethod==="RYY_COIN";if(!coinPayment&&!paymentProofDataUrl){iosAlert("Silakan upload bukti pembayaran terlebih dahulu.");return;}try{const status=document.getElementById("payment-proof-status");if(status)status.textContent=coinPayment?"Memproses pembayaran dengan koin...":"Mengupload bukti pembayaran...";const turnstileToken=await waitForTurnstile("checkout");const proofUrl=coinPayment?"":await uploadImage(paymentProofDataUrl,"payment-proof");await completeCheckout(targetPhone,paymentMethod,proofUrl,turnstileToken);cart=cart.filter(i=>!i.selected);updateCartUI();paymentProofDataUrl="";const input=document.getElementById("payment-proof-input");if(input)input.value="";const preview=document.getElementById("payment-proof-preview");if(preview){preview.removeAttribute("src");preview.style.display="none";}appliedCheckoutVoucher=null;const voucherInput=document.getElementById("checkout-voucher");if(voucherInput)voucherInput.value="";document.getElementById("cart-modal").classList.add("hidden");await refreshCurrentUserSession();await refreshWalletUI();showToast(coinPayment?"Pembayaran koin berhasil dicatat.":"Bukti pembayaran dikirim. Menunggu pemeriksaan admin.");}catch(error){console.error(error);iosAlert(error.message||"Gagal mengirim checkout.");}}
 
         function launchUserApp() {
+            refreshWalletUI?.();
             // UI navigation is intentionally independent from optional widgets/data.
             // A failure in a secondary component must never cancel a successful login.
             const ids = ["userNavActions", "adminNavActions", "view-catalog", "view-admin", "view-profile"];
@@ -3818,9 +3858,9 @@ body.modal-open { scroll-behavior: auto; }
             cart.forEach(item => {
                 const subtotal = Number(item.price||0) * Number(item.quantity||0);
                 if (item.selected) total += subtotal;
-                const unitPrice = currentUserIsReseller() && Number(item.basePrice||0)>=8000
+                const coinMode=document.getElementById('payment-method')?.value==='RYY_COIN'; const unitPrice = coinMode ? `<span style="color:var(--accent);font-weight:800">${Math.ceil(Number(item.price||0)/10).toLocaleString('id-ID')} koin</span>` : (currentUserIsReseller() && Number(item.basePrice||0)>=8000
                     ? `<span class="reseller-price"><span class="reseller-original">Rp${Number(item.basePrice).toLocaleString("id-ID")}</span><span class="reseller-arrow">→</span><span class="reseller-final">Rp${Number(item.price).toLocaleString("id-ID")}</span></span>`
-                    : `Rp${Number(item.price||0).toLocaleString("id-ID")}`;
+                    : `Rp${Number(item.price||0).toLocaleString("id-ID")}`);
                 const extra=[]; if(Array.isArray(item.options)&&item.options.length)extra.push(`Opsi: ${item.options.map(escapeHtml).join(', ')}`); if(item.parameters&&typeof item.parameters==='object')Object.entries(item.parameters).forEach(([k,v])=>extra.push(`${escapeHtml(k)}: ${escapeHtml(v)}`));
                 container.innerHTML += `<div class="cart-row">
                     <div class="cart-row-left"><input type="checkbox" ${item.selected?'checked':''} onchange="toggleItemSelection('${item.cartItemId}')" style="width:16px;height:16px;margin:0;cursor:pointer;">
@@ -3831,7 +3871,7 @@ body.modal-open { scroll-behavior: auto; }
             const cartCount=cart.reduce((acc,i)=>acc+i.quantity,0);
             const countEl=document.getElementById("cart-count"); if(countEl) countEl.innerText=cartCount;
             const floatingCount=document.getElementById("floating-cart-count"); if(floatingCount) floatingCount.innerText=cartCount;
-            const totalEl=document.getElementById("cart-total"); if(totalEl) totalEl.innerText=`Rp${total.toLocaleString("id-ID")}`;
+            const voucherDiscount=appliedCheckoutVoucher?.type==='discount'?(appliedCheckoutVoucher.mode==='percent'?Math.floor(total*Math.min(100,Number(appliedCheckoutVoucher.value)||0)/100):Math.min(total,Math.floor(Number(appliedCheckoutVoucher.value)||0))):0; const shownTotal=Math.max(0,total-voucherDiscount); const coinModeTotal=document.getElementById('payment-method')?.value==='RYY_COIN'; const totalEl=document.getElementById("cart-total"); if(totalEl) totalEl.innerHTML=coinModeTotal?`${Math.ceil(shownTotal/10).toLocaleString('id-ID')} koin`:voucherDiscount?`<span style="text-decoration:line-through;opacity:.55;font-size:.7rem">Rp${total.toLocaleString("id-ID")}</span> → Rp${shownTotal.toLocaleString("id-ID")}`:`Rp${total.toLocaleString("id-ID")}`;
         }
 
         function toggleCart() {
@@ -3871,6 +3911,7 @@ body.modal-open { scroll-behavior: auto; }
         function handlePaymentChange() {
             const method = document.getElementById("payment-method").value;
             document.getElementById("qris-section").classList.toggle("hidden", method !== "QRIS");
+            const proof=document.querySelector('.proof-upload-box'); if(proof){proof.classList.remove('hidden');proof.querySelectorAll('.proof-upload-label,#payment-proof-input,#payment-proof-preview,#payment-proof-status').forEach(el=>el.classList.toggle('hidden',method==='RYY_COIN'));const title=proof.querySelector('strong'),desc=proof.querySelector('p');if(title)title.textContent=method==='RYY_COIN'?'Verifikasi Checkout':'Kirim bukti pembayaran';if(desc)desc.textContent=method==='RYY_COIN'?'Pembayaran menggunakan koin RYY-STORE.':'Upload foto/screenshot bukti transaksi. Setelah dikirim, pesanan masuk ke sesi menunggu admin.';}
             syncPaymentSheet();
             document.getElementById("btn-standard-checkout").classList.remove("hidden");
         }
@@ -4103,7 +4144,7 @@ body.modal-open { scroll-behavior: auto; }
         }
 
         function showAuthStep(id) {
-            ["user-login-panel", "step-contact", "step-otp", "step-credentials"].forEach(x => {
+            ["user-login-panel", "step-contact", "step-whatsapp-register", "step-otp", "step-google-verification", "step-credentials"].forEach(x => {
                 const el = document.getElementById(x);
                 if (el) el.classList.toggle("active", x === id);
             });
@@ -4112,7 +4153,7 @@ body.modal-open { scroll-behavior: auto; }
         function startRegister() {
             showAuthStep("step-contact");
             document.getElementById("contact-input").value = "";
-            registrationOtpToken = "";
+            registrationOtpToken = ""; registrationWhatsappId=""; registrationVerificationToken="";
         }
 
         function cancelRegister() {
@@ -4164,8 +4205,8 @@ body.modal-open { scroll-behavior: auto; }
             const username = document.getElementById("username-input").value.trim();
             const password = document.getElementById("password-input").value;
 
-            if (!email || !registrationOtpToken || !/^\d{4}$/.test(otp)) {
-                iosAlert("Selesaikan verifikasi OTP terlebih dahulu."); return;
+            if (!email || (!registrationVerificationToken && (!registrationOtpToken || !/^\d{4}$/.test(otp)))) {
+                iosAlert("Selesaikan verifikasi OTP atau WhatsApp terlebih dahulu."); return;
             }
             if (username.length < 5 || !/[a-zA-Z]/.test(username)) {
                 iosAlert("Username minimal 5 karakter dan harus mengandung huruf."); return;
@@ -4179,7 +4220,7 @@ body.modal-open { scroll-behavior: auto; }
                 const data = await apiRequest("/register", {
                     skipAuth: true,
                     method: "POST",
-                    body: JSON.stringify({ email, otp, otpToken: registrationOtpToken, username, password, turnstileToken })
+                    body: JSON.stringify({ email, otp, otpToken: registrationOtpToken, verificationToken: registrationVerificationToken, username, password, turnstileToken })
                 });
                 saveUserSession(data.user, data.token);
                 localStorage.removeItem("has_seen_landing");
@@ -4818,7 +4859,7 @@ async function uploadInboxScreenshot(index,input){
                 <div class="admin-form-grid two"><label class="admin-form-label">ID Produk (opsional untuk produk baru)<input id="ap-id" class="admin-form-input" type="text" inputmode="numeric" pattern="[0-9]+" value="${product?String(product.id):""}" ${product?"readonly":""}></label><label class="admin-form-label">Nama Produk<input id="ap-name" class="admin-form-input" value="${escapeHtml(product?.name||"")}"></label></div>
                 <div class="category-picker-wrap"><label class="admin-form-label">Kategori<input id="ap-category" class="admin-form-input" autocomplete="off" value="${escapeHtml(product?.category||"")}" oninput="showAdminCategorySuggestions(this.value)" onfocus="showAdminCategorySuggestions(this.value)"></label><div id="ap-category-suggest" class="category-suggest hidden"></div></div>
                 <label class="admin-form-label">Deskripsi Bahasa Indonesia<textarea id="ap-description" class="admin-form-textarea" placeholder="Tulis deskripsi Indonesia saja. EN/KO dibuat otomatis.">${escapeHtml(product?.description||"")}</textarea></label>
-                <div><label class="admin-form-label">Foto Produk</label><div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;"><input id="ap-image-file" class="admin-form-input" type="file" accept="image/*" onchange="uploadAdminImageFromInput(this)" style="flex:1;min-width:190px;"><span id="ap-image-status" style="font-size:.62rem;color:var(--text-muted);">Upload langsung dari web</span></div><input id="ap-image" class="admin-form-input" value="${escapeHtml(product?.image||"")}" readonly placeholder="URL hasil upload akan muncul di sini" style="margin-top:7px;"><img id="ap-image-preview" src="${escapeHtml(product?.image||"")}" alt="Preview foto produk" class="${product?.image?'':'hidden'}" style="display:block;width:86px;height:86px;object-fit:cover;border-radius:18px;margin-top:8px;border:1px solid var(--glass-border);"></div>
+                <div><label class="admin-form-label">Foto Produk</label><div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap;"><input id="ap-image-file" class="admin-form-input" type="file" accept="image/*" onchange="uploadAdminImageFromInput(this)" style="flex:1;min-width:190px;"><span id="ap-image-status" style="font-size:.62rem;color:var(--text-muted);">Upload langsung dari web</span></div><input id="ap-image" class="admin-form-input" value="${escapeHtml(product?.image||"")}" readonly placeholder="URL hasil upload akan muncul di sini" style="margin-top:7px;"><img id="ap-image-preview" src="${escapeHtml(imageDisplayUrl(product?.image||""))}" alt="Preview foto produk" class="${product?.image?'':'hidden'}" style="display:block;width:86px;height:86px;object-fit:cover;border-radius:18px;margin-top:8px;border:1px solid var(--glass-border);"></div>
                 <div><div class="admin-toolbar" style="margin:0 0 7px;"><strong style="font-size:.72rem;">Tambahkan Opsi</strong><button type="button" class="admin-glass-btn" onclick="document.getElementById('ap-options').appendChild(adminProductOptionRow())">＋ Opsi</button></div><div id="ap-options" class="admin-types-wrap"></div><p class="admin-config-note" style="margin-top:5px;">Isi nama opsi dan penyesuaian harga. Angka tambahan hanya diterapkan ke harga saat opsi dipilih; nominal tambahan tidak ditampilkan ke user.</p></div>
                 <div><div class="admin-toolbar" style="margin:0 0 7px;"><strong style="font-size:.72rem;">Tambahkan Parameter</strong></div><div id="ap-parameters" class="admin-form-checks">${adminProductParameterOptionList(parameters)}</div><p class="admin-config-note" style="margin-top:5px;">Parameter yang dipilih wajib diisi user saat checkout.</p></div>
                 <label style="display:flex;align-items:center;gap:9px;font-size:.7rem;color:var(--text-main);"><input id="ap-best" type="checkbox" ${product?.bestSeller?"checked":""}> Best Seller</label>
@@ -5430,7 +5471,7 @@ async function loadWhatsAppBotPanel(){
     if(box){box.textContent=code?`Kode Pairing: ${code}`:"";box.dataset.code=String(code||"");box.classList.toggle("hidden",!code);document.getElementById("wa-admin-copy-pair")?.style.setProperty("display",code?"inline-flex":"none");}
     await drawWaQr(d.qr||'');
     const listBox=document.getElementById('wa-admin-messages');
-    if(listBox){const messages=(d.messages||[]).filter(m=>!String(m.sender||m.chat||m.from||"").includes("@newsletter")).slice(-3); listBox.innerHTML=messages.map(m=>`<div class="wa-admin-msg"><b>${escapeHtml(m.sender||m.chat||m.from||"-")}</b><p>${escapeHtml(m.text||m.message||"")}</p><small>${m.timestamp?new Date(m.timestamp).toLocaleString("id-ID"):""}</small></div>`).join("")||'<div class="admin-config-note">Belum ada pesan.</div>';}
+    if(listBox){const messages=(d.messages||[]).filter(m=>!String(m.sender||m.chat||m.from||"").includes("@newsletter")).slice(-3); const live=document.getElementById('wa-console-live'); const pair=document.getElementById('wa-console-pairing'); const qr=document.getElementById('wa-console-qr'); if(pair)pair.innerHTML=d.pairingCode?`<span style="font-size:.65rem;color:var(--text-muted)">Pairing Code</span><br><strong style="letter-spacing:.14em">${escapeHtml(d.pairingCode)}</strong><button type="button" class="admin-glass-btn" style="margin-top:7px" onclick="copyWaPairingCode()">Copy Pairing Code</button>`:''; if(qr){qr.style.display=d.qr?'block':'none'; if(d.qr&&window.QRCode?.toCanvas){QRCode.toCanvas(qr,d.qr,{width:190,margin:1}).catch(()=>{});} } if(live)live.style.display=(d.pairingCode||d.qr)?'flex':'none'; const msgHtml=messages.map(m=>`<div class="wa-admin-msg"><b>${escapeHtml(m.sender||m.chat||m.from||"-")}</b><p>${escapeHtml(m.text||m.message||"")}</p><small>${m.timestamp?new Date(m.timestamp).toLocaleString("id-ID"):""}</small></div>`).join(''); const liveHtml=live?.outerHTML||''; listBox.innerHTML=liveHtml+msgHtml+(msgHtml?'':'<div class="admin-config-note">Belum ada pesan.</div>'); if(d.pairingCode||d.qr){const newLive=listBox.querySelector('#wa-console-live');const newPair=listBox.querySelector('#wa-console-pairing');const newQr=listBox.querySelector('#wa-console-qr');if(newPair)newPair.innerHTML=pair?.innerHTML||'';if(newQr&&d.qr&&window.QRCode?.toCanvas)QRCode.toCanvas(newQr,d.qr,{width:190,margin:1}).catch(()=>{});if(newLive)newLive.style.display='flex';} }
     if(__waConnectTimer)clearTimeout(__waConnectTimer);
     if(d.status==='pairing'||d.qr){__waConnectTimer=setTimeout(loadWhatsAppBotPanel,2500);}
   }catch(e){
@@ -5815,7 +5856,7 @@ function startSupportPolling(){
     product.stock=productStock(product);
     $('modal-prod-name') && ($('modal-prod-name').textContent=productText(product,'name'));
     $('modal-prod-desc') && ($('modal-prod-desc').textContent=normalizeDescription(productText(product,'description')));
-    const img=$('modal-prod-img'); if(img){img.src=product.image||'';img.alt=productText(product,'name');}
+    const img=$('modal-prod-img'); if(img){img.src=imageDisplayUrl(product.image||'');img.alt=productText(product,'name');img.onerror=function(){this.onerror=null;this.style.display='none';};img.onload=function(){this.style.display='block';};}
     $('modal-prod-stock') && ($('modal-prod-stock').textContent=`Stok Tersedia: ${product.stock} unit`);
     const list=$('modal-type-list');
     const types=Array.isArray(product.types)?product.types:[];
@@ -5855,7 +5896,7 @@ function startSupportPolling(){
   window.completeCheckout = async function(targetPhone,paymentMethod,proofUrl,turnstileToken){
     const selected=cart.filter(i=>i.selected).map(i=>({id:i.id,typeName:i.typeName,quantity:i.quantity,options:Array.isArray(i.options)?i.options:[],parameters:i.parameters&&typeof i.parameters==='object'?i.parameters:{}}));
     if(!selected.length) throw new Error('Tidak ada produk yang dipilih.');
-    const d=await apiRequest('/checkout',{method:'POST',body:JSON.stringify({turnstileToken,items:selected,targetPhone,paymentMethod,proofUrl})}); if(d?.user)saveUserSession(d.user,localStorage.getItem('auth_token')); return d;
+    const d=await apiRequest('/checkout',{method:'POST',body:JSON.stringify({turnstileToken,items:selected,targetPhone,paymentMethod,proofUrl,voucherCode:(document.getElementById('checkout-voucher')?.value||'').trim().toUpperCase()})}); if(d?.user)saveUserSession(d.user,localStorage.getItem('auth_token')); return d;
   };
 
   window.openCart = window.toggleCart;
@@ -5892,7 +5933,7 @@ function startSupportPolling(){
     const u=sessionUser(),list=$('inbox-list');if(!list)return;
     const ms=Array.isArray(u?.inbox)?u.inbox:[];
     if(!ms.length){list.innerHTML='<div style="padding:28px;text-align:center;color:var(--text-muted);font-size:.72rem;">Belum ada pesan.</div>';updateInboxBadge();return;}
-    list.innerHTML=ms.map((m,i)=>{const fields=Array.isArray(m.fields)?m.fields:[];const done=m.responded===true;return `<div class="inbox-message ${m.read?'':'unread'}"><div class="inbox-message-top"><strong>${esc(m.title||'Pesan RYY STORE')}</strong><time>${esc(typeof formatInboxTime==='function'?formatInboxTime(m.createdAt):'')}</time></div><div class="inbox-message-body">${esc(m.body||'')}</div>${m.note?`<div class="inbox-response-box"><b>Catatan admin:</b><br>${esc(m.note)}</div>`:''}${fields.length&&!done?`<button class="inbox-form-button" onclick="openInboxForm(${i})">Lengkapi Form</button>`:fields.length?'<div style="margin-top:9px;color:#6ee7b7;font-size:.64rem;font-weight:700;">Form sudah dikirim ke admin.</div>':''}</div>`}).join('');
+    list.innerHTML=ms.map((m,i)=>{const fields=Array.isArray(m.fields)?m.fields:[];const done=m.responded===true;const imageRequest=m.type==='image';return `<div class="inbox-message ${m.read?'':'unread'}"><div class="inbox-message-top"><strong>${esc(m.title||'Pesan RYY STORE')}</strong><time>${esc(typeof formatInboxTime==='function'?formatInboxTime(m.createdAt):'')}</time></div><div class="inbox-message-body">${esc(m.body||'')}</div>${m.note?`<div class="inbox-response-box"><b>Catatan admin:</b><br>${esc(m.note)}</div>`:''}${fields.length&&!done?`<button class="inbox-form-button" onclick="openInboxForm(${i})">Lengkapi Form</button>`:fields.length?'<div style="margin-top:9px;color:#6ee7b7;font-size:.64rem;font-weight:700;">Form sudah dikirim ke admin.</div>':''}${imageRequest&&!done?`<div class="inbox-image-upload"><label class="inbox-image-drop"><input id="inbox-image-${i}" type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadInboxScreenshot(${i},this)"><span>＋</span><b>Upload Screenshot Login</b><small>JPG • PNG • WEBP · maksimal 4 MB</small></label><div id="inbox-image-status-${i}" class="inbox-form-note">Pilih screenshot halaman login kamu.</div></div>`:imageRequest&&done?'<div style="margin-top:9px;color:#6ee7b7;font-size:.64rem;font-weight:700;">✓ Screenshot sudah dikirim ke WhatsApp admin.</div>':''}</div>`}).join('');
     ms.forEach(m=>m.read=true);localStorage.setItem('current_user',JSON.stringify(u));updateInboxBadge();apiRequest('/inbox',{method:'POST',body:JSON.stringify({action:'readAll'})}).catch(()=>{});
   };
   window.openInboxForm=function(i){
@@ -6337,6 +6378,81 @@ button:active,.btn:active,.admin-mini-btn:active,.support-btn:active{transform:s
 </script>
 <script>
 window.addEventListener("load", () => { const boot = () => initTurnstile(); if (window.turnstile) boot(); else setTimeout(boot, 800); });
+</script>
+<script>
+(function(){
+  document.addEventListener('pointerdown',function(e){if(e.pointerType==='mouse'&&e.button!==0)return;if(e.target.closest('input,textarea,select,button,a,[contenteditable="true"]')){ /* still show feedback for buttons/links */ } const r=document.createElement('span');r.className='ryy-tap-ripple';r.style.left=e.clientX+'px';r.style.top=e.clientY+'px';document.body.appendChild(r);setTimeout(()=>r.remove(),380);},{passive:true});
+})();
+</script>
+
+<script id="ryy-v16-wallet-auth">
+(function(){
+  const $=id=>document.getElementById(id);
+  const esc=v=>typeof escapeHtml==='function'?escapeHtml(v):String(v??'');
+  window.__wallet=null;
+  window.refreshWalletUI=async function(){
+    if(!localStorage.getItem('auth_token')){ $('user-balance-pill')?.classList.add('hidden'); return null; }
+    try{
+      const d=await apiRequest('/wallet'); window.__wallet=d.wallet||null; const w=d.wallet||{};
+      const rup=n=>`Rp${Number(n||0).toLocaleString('id-ID')}`;
+      $('user-balance-pill')?.classList.remove('hidden'); if($('user-balance-value'))$('user-balance-value').textContent=rup(w.idrValue);
+      if($('profile-wallet-coins'))$('profile-wallet-coins').textContent=`${Number(w.coins||0).toLocaleString('id-ID')} koin`;
+      if($('profile-wallet-idr'))$('profile-wallet-idr').textContent=rup(w.idrValue);
+      if($('profile-wallet-spent'))$('profile-wallet-spent').textContent=rup(w.totalSpentIdr);
+      if($('profile-wallet-deposited'))$('profile-wallet-deposited').textContent=rup(w.totalDepositedIdr);
+      if($('wallet-modal-coins'))$('wallet-modal-coins').textContent=Number(w.coins||0).toLocaleString('id-ID');
+      if($('wallet-modal-idr'))$('wallet-modal-idr').textContent=rup(w.idrValue);
+      if($('wallet-spent-summary'))$('wallet-spent-summary').textContent=`Terpakai ${rup(w.totalSpentIdr)}`;
+      renderWalletHistory(w.transactions||[]); renderWalletCashback(w.cashbackPending||[]);
+      return d;
+    }catch(e){console.warn('Wallet refresh',e.message||e);return null;}
+  };
+  function renderWalletHistory(list){const box=$('wallet-history');if(!box)return;if(!list.length){box.innerHTML='<div class="admin-config-note">Belum ada transaksi saldo.</div>';return;}box.innerHTML=list.slice(0,60).map(x=>{const c=x.type==='credit'||x.type==='refund';return `<div class="wallet-history-row"><b class="${c?'credit':'debit'}">${c?'+':'−'} ${Number(x.coins||0).toLocaleString('id-ID')} koin</b> · ${rupiah(x.idr||0)}<br><span>${esc(x.reason||x.type||'Transaksi')} · ${esc(new Date(x.createdAt||Date.now()).toLocaleString('id-ID'))}</span></div>`}).join('');}
+  function rupiah(n){return `Rp${Number(n||0).toLocaleString('id-ID')}`;}
+  function renderWalletCashback(list){const box=$('wallet-cashback-list');if(!box)return;if(!list.length){box.innerHTML='';return;}box.innerHTML=list.map(x=>`<div class="wallet-cashback-card"><b>Cashback tersedia: ${rupiah(x.amountIdr)}</b><div>${Number(x.coins||0).toLocaleString('id-ID')} koin setelah diklaim.</div><button type="button" class="btn-accent" onclick="claimCashback('${esc(x.id)}')">Claim Cashback</button></div>`).join('');}
+  window.openWalletModal=function(){ $('wallet-modal')?.classList.remove('hidden');document.body.classList.add('modal-open');refreshWalletUI(); };
+  window.closeWalletModal=function(e){if(e&&e.target!==e.currentTarget)return;$('wallet-modal')?.classList.add('hidden');if(!document.querySelector('.modal-overlay:not(.hidden)'))document.body.classList.remove('modal-open');};
+  window.openWalletDeposit=function(){ $('wallet-modal')?.classList.remove('hidden');$('wallet-deposit-area')?.classList.remove('hidden');document.body.classList.add('modal-open');refreshWalletUI();const input=$('wallet-deposit-amount');if(input&&!input.value)input.value='10000';updateDepositPreview();};
+  window.updateDepositPreview=function(){const n=Math.max(0,Math.floor(Number($('wallet-deposit-amount')?.value)||0));if($('wallet-deposit-preview'))$('wallet-deposit-preview').textContent=`${rupiah(n)} = ${Math.floor(n/10).toLocaleString('id-ID')} koin`;};
+  document.addEventListener('input',e=>{if(e.target?.id==='wallet-deposit-amount')updateDepositPreview();});
+  window.createWalletDeposit=async function(){const amount=Math.floor(Number($('wallet-deposit-amount')?.value)||0);if(amount<1000)return iosAlert('Minimal deposit Rp1.000.');try{const d=await apiRequest('/wallet',{method:'POST',body:JSON.stringify({action:'createDeposit',amount})});const area=$('wallet-qris-area');area?.classList.remove('hidden');const holder=$('wallet-qris-code');if(holder){holder.innerHTML='';if(window.QRCode?.toCanvas&&d.deposit?.paymentNumber){const c=document.createElement('canvas');holder.appendChild(c);await QRCode.toCanvas(c,d.deposit.paymentNumber,{width:260,margin:1});}else holder.textContent='QR generator belum siap. Gunakan kode QRIS: '+d.deposit.paymentNumber;}if($('wallet-deposit-status'))$('wallet-deposit-status').textContent=`Bayar ${rupiah(d.deposit.totalPayment)}. Deposit ${rupiah(d.deposit.amount)} = ${Number(d.deposit.coins).toLocaleString('id-ID')} koin. Menunggu pembayaran...`;startDepositPolling(d.deposit.orderId);}catch(e){iosAlert(e.message||'Gagal membuat QRIS deposit.');}};
+  let depositTimer=null;function startDepositPolling(orderId){clearInterval(depositTimer);depositTimer=setInterval(async()=>{const d=await refreshWalletUI();const dep=(d?.wallet?.deposits||[]).find(x=>x.orderId===orderId);if(dep?.status==='completed'){clearInterval(depositTimer);if($('wallet-deposit-status'))$('wallet-deposit-status').textContent='✓ Pembayaran diterima. Koin sudah masuk ke saldo.';showToast(`Deposit berhasil: ${Number(dep.coins).toLocaleString('id-ID')} koin.`);}},5000);setTimeout(()=>clearInterval(depositTimer),30*60*1000);}
+  window.claimDailyCoins=async function(){try{const d=await apiRequest('/wallet',{method:'POST',body:JSON.stringify({action:'claimDaily'})});saveUserSession(d.user,localStorage.getItem('auth_token'));await refreshWalletUI();showToast(`🎁 Kamu mendapatkan ${d.coins} koin.`);}catch(e){iosAlert(e.message||'Claim harian gagal.');}};
+  window.spinWalletGacha=async function(){const btn=event?.currentTarget;if(btn)btn.disabled=true;try{const d=await apiRequest('/wallet',{method:'POST',body:JSON.stringify({action:'gacha'})});saveUserSession(d.user,localStorage.getItem('auth_token'));await refreshWalletUI();showToast(`🎰 Gacha mendapatkan ${d.coins} koin.`);}catch(e){iosAlert(e.message||'Gacha gagal.');}finally{if(btn)btn.disabled=false;}};
+  window.claimCashback=async function(id){try{const d=await apiRequest('/wallet',{method:'POST',body:JSON.stringify({action:'claimCashback',cashbackId:id})});saveUserSession(d.user,localStorage.getItem('auth_token'));await refreshWalletUI();showToast(d.message||'Cashback berhasil diklaim.');}catch(e){iosAlert(e.message||'Gagal claim cashback.');}};
+  window.applyCheckoutVoucher=async function(){const input=$('checkout-voucher'),code=(input?.value||'').trim().toUpperCase();if(!code){appliedCheckoutVoucher=null;updateCartUI();if($('checkout-voucher-status'))$('checkout-voucher-status').textContent='Voucher dikosongkan.';return;}try{const d=await apiRequest('/voucher',{method:'POST',body:JSON.stringify({code})});appliedCheckoutVoucher=d.voucher;const label=d.voucher.type==='cashback'?`Cashback ${d.voucher.mode==='percent'?d.voucher.value+'%':rupiah(d.voucher.value)} akan tersedia setelah pesanan dikonfirmasi.`:`Diskon ${d.voucher.mode==='percent'?d.voucher.value+'%':rupiah(d.voucher.value)} diterapkan.`;if($('checkout-voucher-status'))$('checkout-voucher-status').textContent='✓ '+label;updateCartUI();}catch(e){appliedCheckoutVoucher=null;updateCartUI();if($('checkout-voucher-status'))$('checkout-voucher-status').textContent=e.message||'Voucher tidak valid.';}};
+  // Keep the balance chip fresh without forcing a page refresh.
+  setInterval(()=>{if(localStorage.getItem('auth_token'))refreshWalletUI();},15000);
+})();
+</script>
+<script id="ryy-v16-auth-verification">
+(function(){
+  const $=id=>document.getElementById(id);
+  function show(id){showAuthStep(id);}
+  window.startWhatsAppRegister=async function(){const email=$('contact-input')?.value.trim().toLowerCase();if(!/^\S+@\S+\.\S+$/.test(email))return iosAlert('Masukkan email terlebih dahulu.');try{const d=await apiRequest('/register-whatsapp',{skipAuth:true,method:'POST',body:JSON.stringify({email})});registrationWhatsappId=d.registrationId;registrationVerificationToken='';$('register-wa-sn').textContent=d.sn;$('register-wa-link').href=d.waUrl;$('register-wa-status').textContent='Kirim pesan tersebut, lalu tekan Cek Verifikasi.';show('step-whatsapp-register');}catch(e){iosAlert(e.message||'Gagal memulai verifikasi WhatsApp.');}};
+  window.checkWhatsAppRegister=async function(){if(!registrationWhatsappId)return;try{const d=await apiRequest('/verify-registration-whatsapp',{skipAuth:true,method:'POST',body:JSON.stringify({registrationId:registrationWhatsappId})});if(!d.verified){$('register-wa-status').textContent=d.message||'Belum terdeteksi.';return;}registrationVerificationToken=d.verificationToken||'';$('register-wa-status').textContent='✓ WhatsApp terdeteksi. Lanjut buat username & password.';show('step-credentials');showToast('Verifikasi WhatsApp berhasil.');}catch(e){iosAlert(e.message||'Gagal memeriksa WhatsApp.');}};
+  window.startRegister=window.startRegister;
+  window.startGoogleOtpVerification=async function(){if(!googleVerificationToken)return;try{const d=await apiRequest('/send-otp',{skipAuth:true,method:'POST',body:JSON.stringify({email:$('google-verification-email')?.value||JSON.parse(localStorage.getItem('google_pending')||'{}').email})});googleOtpToken=d.otpToken||'';$('google-verify-extra')?.classList.remove('hidden');$('google-wa-extra')?.classList.add('hidden');showToast('OTP Google dikirim ke email.');}catch(e){iosAlert(e.message||'Gagal mengirim OTP.');}};
+  window.finishGoogleOtpVerification=async function(){const p=JSON.parse(localStorage.getItem('google_pending')||'{}');const otp=$('google-otp-input')?.value.trim();if(!googleOtpToken||!/^\d{4}$/.test(otp))return iosAlert('Masukkan OTP 4 digit.');try{const d=await apiRequest('/google-verify',{skipAuth:true,method:'POST',body:JSON.stringify({action:'otp',verificationToken:googleVerificationToken,otp,otpToken:googleOtpToken})});completeGoogleSession(d);}catch(e){iosAlert(e.message||'OTP Google salah.');}};
+  window.startGoogleWhatsAppVerification=async function(){try{const d=await apiRequest('/google-verify',{skipAuth:true,method:'POST',body:JSON.stringify({action:'whatsappStart',verificationToken:googleVerificationToken})});$('google-wa-sn').textContent=d.sn;$('google-wa-link').href=d.waUrl;$('google-wa-extra')?.classList.remove('hidden');$('google-verify-extra')?.classList.add('hidden');showToast('Buka WhatsApp dan kirim pesan yang sudah disiapkan.');}catch(e){iosAlert(e.message||'Gagal memulai verifikasi WhatsApp.');}};
+  window.checkGoogleWhatsAppVerification=async function(){try{const d=await apiRequest('/google-verify',{skipAuth:true,method:'POST',body:JSON.stringify({action:'whatsappCheck',verificationToken:googleVerificationToken})});if(!d.verified){$('google-wa-status').textContent=d.message||'Belum terdeteksi.';return;}completeGoogleSession(d);}catch(e){iosAlert(e.message||'Gagal memeriksa WhatsApp.');}};
+  window.completeGoogleSession=function(data){saveUserSession(data.user,data.token);localStorage.removeItem('google_pending');googleVerificationToken='';googleOtpToken='';forceUserScreen();launchUserApp();showToast('Login Google berhasil diverifikasi.');};
+  const oldGoogle=window.handleGoogleCredential;
+  window.handleGoogleCredential=async function(response){if(!response?.credential)return iosAlert('Login Google gagal.');try{const data=await apiRequest('/google-login',{method:'POST',body:JSON.stringify({credential:response.credential,turnstileToken:await waitForTurnstile('login')}),skipAuth:true});if(!data.verificationRequired)return completeGoogleSession(data);googleVerificationToken=data.verificationToken;localStorage.setItem('google_pending',JSON.stringify({email:data.email||data.user?.email||''}));$('google-verify-extra')?.classList.add('hidden');$('google-wa-extra')?.classList.add('hidden');show('step-google-verification');showToast('Pilih metode verifikasi tambahan untuk Google.');}catch(e){iosAlert(e.message||'Login Google gagal.');}};
+  // Make showAuthStep aware of the two new auth screens.
+  const originalShow=window.showAuthStep;window.showAuthStep=function(id){['user-login-panel','step-contact','step-whatsapp-register','step-otp','step-google-verification','step-credentials'].forEach(x=>$(x)?.classList.toggle('active',x===id));};
+})();
+</script>
+
+<script id="ryy-v16-admin-finance">
+(function(){
+  window.loadAdminFinance=async function(){try{const d=await adminApi('admin-finance',{method:'POST',body:{action:'summary'}});const vbox=document.getElementById('finance-voucher-list');if(vbox){vbox.innerHTML=(d.vouchers||[]).slice(0,30).map(v=>`<div class="admin-response-box"><b>${escapeHtml(v.code)}</b> · ${escapeHtml(v.type)} · ${escapeHtml(String(v.value))}${v.mode==='percent'?'%':' Rp'} · ${Number(v.uses||0)}/${Number(v.maxUses||0)}${v.expiresAt?` · exp ${escapeHtml(new Date(v.expiresAt).toLocaleString('id-ID'))}`:''}</div>`).join('')||'<div class="admin-config-note">Belum ada voucher.</div>';}const ubox=document.getElementById('finance-user-list');if(ubox){ubox.innerHTML=(d.users||[]).slice(0,50).map(u=>`<div class="admin-response-box" style="display:flex;gap:7px;align-items:center;flex-wrap:wrap"><div style="flex:1;min-width:150px"><b>@${escapeHtml(u.username||'user')}</b><br><span>${escapeHtml(u.email||'')} · ${Number(u.wallet?.coins||0).toLocaleString('id-ID')} koin (${rupiah(u.wallet?.idrValue||0)})</span></div><button type="button" class="admin-mini-btn" onclick="adjustFinanceUser('${escapeHtml(u.id)}',1)">+1</button><button type="button" class="admin-mini-btn" onclick="adjustFinanceUser('${escapeHtml(u.id)}',-1)">−1</button></div>`).join('')||'<div class="admin-config-note">Belum ada user.</div>';}}catch(e){console.warn(e);iosAlert(e.message||'Gagal memuat finance.');}};
+  window.previewFinanceVoucher=function(){const type=document.getElementById('finance-voucher-type')?.value,mode=document.getElementById('finance-voucher-mode')?.value,value=Number(document.getElementById('finance-voucher-value')?.value||0),price=Number(document.getElementById('finance-voucher-example')?.value||0),box=document.getElementById('finance-voucher-preview');if(!box)return;if(type==='cashback'){const amount=mode==='percent'?Math.floor(price*Math.min(100,value)/100):Math.min(price,Math.floor(value));box.textContent=`Cashback ${mode==='percent'?value+'%':rupiah(value)} dari ${rupiah(price)} = ${rupiah(amount)} = ${Math.floor(amount/10).toLocaleString('id-ID')} koin.`;}else{const amount=mode==='percent'?Math.floor(price*Math.min(100,value)/100):Math.min(price,Math.floor(value));box.textContent=`Diskon ${mode==='percent'?value+'%':rupiah(value)} dari ${rupiah(price)} = potongan ${rupiah(amount)}.`;}};
+  document.addEventListener('change',e=>{if(['finance-voucher-type','finance-voucher-mode','finance-voucher-value'].includes(e.target?.id))previewFinanceVoucher();});
+  window.generateFinanceVoucher=async function(){const body={action:'generate',type:document.getElementById('finance-voucher-type')?.value,mode:document.getElementById('finance-voucher-mode')?.value,value:Number(document.getElementById('finance-voucher-value')?.value||0),maxUses:Number(document.getElementById('finance-voucher-max')?.value||1),assignedUserId:document.getElementById('finance-voucher-user')?.value.trim()||'',expiresAt:document.getElementById('finance-voucher-expiry')?.value?new Date(document.getElementById('finance-voucher-expiry').value).toISOString():''};try{const d=await adminApi('voucher',{method:'POST',body});const box=document.getElementById('finance-generated-voucher');if(box){box.style.display='block';box.innerHTML=`<b>Voucher dibuat:</b> <span style="font-size:.9rem;letter-spacing:.04em">${escapeHtml(d.voucher.code)}</span><br><span>${d.voucher.type==='cashback'?'Cashback':'Diskon'} ${escapeHtml(String(d.voucher.value))}${d.voucher.mode==='percent'?'%':' Rp'}</span>`;}showToast('Voucher berhasil dibuat.');await loadAdminFinance();}catch(e){iosAlert(e.message||'Gagal membuat voucher.');}};
+  window.adjustFinanceUser=async function(userId,amount){try{const d=await adminApi('admin-finance',{method:'POST',body:{action:'adjustCoins',userId,amount}});showToast(`Saldo @${d.user?.username||'user'} diperbarui.`);await loadAdminFinance();}catch(e){iosAlert(e.message||'Gagal menyesuaikan saldo.');}};
+  function rupiah(n){return `Rp${Number(n||0).toLocaleString('id-ID')}`;}
+})();
 </script>
 </body>
 </html>
