@@ -1080,6 +1080,13 @@
         .admin-config-stack{display:grid;gap:12px}.admin-config-note{font-size:.65rem;color:var(--text-muted);line-height:1.45}
         .admin-config-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--border-color)}.admin-config-row:last-child{border-bottom:0}
         .admin-config-row strong{font-size:.72rem}.admin-config-row small{display:block;color:var(--text-muted);font-size:.6rem;margin-top:3px}
+        .admin-db-toolbar{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end}
+        .admin-db-env{display:grid;gap:8px;margin-top:10px}
+        .admin-db-env-row{display:grid;grid-template-columns:minmax(130px,.7fr) minmax(0,1.3fr) auto auto;gap:7px;align-items:center;padding:9px;border:1px solid var(--glass-border);border-radius:15px;background:rgba(255,255,255,.045)}
+        .admin-db-env-key{font-size:.66rem;font-weight:800;word-break:break-word}.admin-db-env-state{font-size:.55rem;color:var(--text-muted)}
+        .admin-db-env-input{width:100%;min-width:0;margin:0!important}.admin-db-preview{max-height:300px;overflow:auto;white-space:pre-wrap;word-break:break-word;font:.62rem/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+        @media(max-width:650px){.admin-db-toolbar{grid-template-columns:1fr 1fr}.admin-db-toolbar button{grid-column:1/-1}.admin-db-env-row{grid-template-columns:1fr}.admin-db-env-row button{width:100%}}
+
         .admin-credential-card{padding:12px;border-radius:19px;background:rgba(255,255,255,.055);border:1px solid var(--glass-border);font-size:.67rem;line-height:1.65;margin-top:9px}
         .admin-credential-card code{font-family:ui-monospace,monospace;color:var(--accent);word-break:break-all}
         .maintenance-overlay{position:fixed;inset:0;z-index:25000;display:grid;place-items:center;padding:24px;background:rgba(6,7,10,.74);backdrop-filter:blur(34px) saturate(160%);-webkit-backdrop-filter:blur(34px) saturate(160%)}
@@ -1965,7 +1972,7 @@ body.modal-open { scroll-behavior: auto; }
                         <button type="button" class="admin-tab" data-admin-tab="support" onclick="switchAdminTab('support');closeAdminSidebar()">Support</button>
                         <button type="button" class="admin-tab" data-admin-tab="broadcast" onclick="switchAdminTab('broadcast');closeAdminSidebar()">Broadcast</button>
                         <button type="button" class="admin-tab" data-admin-tab="proofs" onclick="switchAdminTab('proofs');closeAdminSidebar()">Bukti Transaksi</button>
-                        <button type="button" class="admin-tab" data-admin-tab="config" onclick="switchAdminTab('config');closeAdminSidebar()">Konfigurasi</button><button type="button" class="admin-tab" data-admin-tab="whatsapp" onclick="switchAdminTab('whatsapp');closeAdminSidebar()">WhatsApp Bot</button>
+                        <button type="button" class="admin-tab" data-admin-tab="config" onclick="switchAdminTab('config');closeAdminSidebar()">Konfigurasi</button><button type="button" class="admin-tab" data-admin-tab="database" onclick="switchAdminTab('database');closeAdminSidebar()">Database</button><button type="button" class="admin-tab" data-admin-tab="whatsapp" onclick="switchAdminTab('whatsapp');closeAdminSidebar()">WhatsApp Bot</button>
                     </nav>
 
                     <section id="admin-view-users" class="admin-view active">
@@ -2092,7 +2099,28 @@ body.modal-open { scroll-behavior: auto; }
     </div>
   </div>
 </section>
-<section id="admin-view-config" class="admin-view">
+<section id="admin-view-database" class="admin-view">
+  <div class="admin-config-stack">
+    <div class="settings-panel" style="margin-top:0">
+      <div class="admin-toolbar"><div><h4>Database</h4><p class="admin-config-note">Khusus admin_utama. Kelola dan ekspor data produk, user, serta environment aplikasi.</p></div><button type="button" class="admin-glass-btn" onclick="loadAdminDatabase()">↻</button></div>
+      <div class="admin-db-toolbar" style="margin-top:12px">
+        <label class="admin-form-label">Data<select id="admin-db-type" class="admin-form-select"><option value="products">Produk</option><option value="users">User</option><option value="env">ENV</option></select></label>
+        <label class="admin-form-label">Format<select id="admin-db-format" class="admin-form-select"><option value="json">JSON</option><option value="txt">TXT</option></select></label>
+        <button type="button" class="admin-glass-btn accent" onclick="downloadAdminDatabase()">↓ Download</button>
+      </div>
+      <div id="admin-db-summary" class="admin-config-note" style="margin-top:10px"></div>
+      <pre id="admin-db-preview" class="admin-response-box admin-db-preview" style="margin-top:9px">Pilih data lalu tekan refresh.</pre>
+    </div>
+
+    <div class="settings-panel" style="margin-top:0">
+      <div class="admin-toolbar"><div><h4>Environment Variables</h4><p class="admin-config-note">Nilai dapat dilihat dan diedit. Perubahan disimpan sebagai override aplikasi di STORE_KV; hapus override untuk kembali memakai ENV Cloudflare.</p></div><button type="button" class="admin-glass-btn" onclick="loadAdminDatabase()">↻</button></div>
+      <div id="admin-db-env-list" class="admin-db-env"></div>
+      <button type="button" class="admin-glass-btn" style="width:100%;margin-top:9px" onclick="resetAdminEnvOverrides()">Reset Semua Override ENV</button>
+    </div>
+  </div>
+</section>
+
+                    <section id="admin-view-config" class="admin-view">
                         <div class="admin-config-stack">
                             <div class="settings-panel" style="margin-top:0;">
                                 <div class="admin-toolbar"><div><h4>Konfigurasi Tampilan</h4><p class="admin-config-note">Perubahan ini diterapkan ke seluruh web user.</p></div></div>
@@ -3473,7 +3501,7 @@ body.modal-open { scroll-behavior: auto; }
             if (identity) identity.innerText = `@${adminData?.username || "admin"}`;
             const privileged = String(adminData?.username || "").trim().toLowerCase() === "admin_utama" ||
               String(adminData?.email || "").trim().toLowerCase() === "admin1@store.com";
-            const restrictedTabs = new Set(["users","products","config"]);
+            const restrictedTabs = new Set(["users","products","config","database"]);
             document.querySelectorAll("#admin-tabbar .admin-tab").forEach(tab => {
                 const name = tab.dataset.adminTab;
                 const hidden = !privileged && restrictedTabs.has(name);
@@ -5527,7 +5555,7 @@ async function loadWhatsAppBotPanel(){
     const online=d.status==='connected'||d.connected===true;
     statusEl.textContent=online?'Connected':(d.status==='pairing'?'Pairing...':'Disconnected');
     document.getElementById('wa-admin-dot')?.classList.toggle('on',online);
-    const number=document.getElementById('wa-admin-number');if(number)number.textContent=d.number||'-';
+    const number=document.getElementById('wa-admin-number');if(number)number.textContent=String(d.number||'').split('@')[0].split(':')[0]||'-';
     const bid=document.getElementById('wa-admin-id');if(bid)bid.textContent=d.botId||g?.botId||'-';
     renderWaGatewayList({...statusMap,[g?.id]:d});
     const code=d.pairingCode||'';
@@ -6055,7 +6083,7 @@ function startSupportPolling(){
     if(tab==='users'){loadUserTableForAdmin?.();loadAdminPendingPurchases();}
     if(tab==='products')loadAdminProducts?.();if(tab==='config'&&typeof loadAdminConfig==='function')loadAdminConfig();
     if(tab==='chat'){activeAdminChatEmail=null;closeAdminChatRoom?.();loadAdminChats?.();clearInterval(window.adminChatTimer);window.adminChatTimer=setInterval(()=>{if(activeAdminChatEmail)refreshActiveAdminChat?.();else loadAdminChats?.();},4000);}
-    if(tab==='support')loadAdminSupport?.();if(tab==='proofs')loadAdminTransactionProofs?.();
+    if(tab==='support')loadAdminSupport?.();if(tab==='proofs')loadAdminTransactionProofs?.();if(tab==='database')loadAdminDatabase?.();
   };
 
   // Keep Inbox visible above the AI button after authentication.
@@ -6632,6 +6660,67 @@ window.addEventListener("load", () => { const boot = () => initTurnstile(); if (
   window.showAuthStep=function(id){
     ['user-login-panel','step-contact','step-whatsapp-register','step-otp','step-google-verification','step-credentials'].forEach(x=>$(x)?.classList.toggle('active',x===id));
     if(id!=='step-whatsapp-register')clearRegistrationWhatsappPolling();
+  };
+})();
+</script>
+
+<script id="ryy-admin-database-v1">
+(function(){
+  const $=id=>document.getElementById(id);
+  const esc=v=>typeof escapeHtml==='function'?escapeHtml(String(v??'')):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  window.__adminDatabase=null;
+  function isMainAdmin(){try{const a=JSON.parse(localStorage.getItem('current_admin')||'null');return String(a?.username||'').toLowerCase()==='admin_utama'||String(a?.email||'').toLowerCase()==='admin1@store.com';}catch{return false;}}
+  function renderEnv(envData){
+    const box=$('admin-db-env-list');if(!box)return;
+    const entries=Object.entries(envData||{});
+    if(!entries.length){box.innerHTML='<div class="admin-config-note">ENV tidak tersedia.</div>';return;}
+    box.innerHTML=entries.map(([key,item])=>{
+      const value=typeof item==='object'?String(item.value??''):String(item??'');
+      const overridden=typeof item==='object'&&item.override===true;
+      return `<div class="admin-db-env-row"><div><div class="admin-db-env-key">${esc(key)}</div><div class="admin-db-env-state">${overridden?'Override aplikasi':'ENV Cloudflare'}</div></div><input class="admin-form-input admin-db-env-input" data-env-key="${esc(key)}" value="${esc(value)}" autocomplete="off"><button type="button" class="admin-mini-btn accent" onclick="saveAdminEnv('${esc(key)}',this)">Simpan</button><button type="button" class="admin-mini-btn" onclick="clearAdminEnv('${esc(key)}')">Reset</button></div>`;
+    }).join('');
+  }
+  function renderPreview(type,data){
+    const preview=$('admin-db-preview'),summary=$('admin-db-summary');if(!preview)return;
+    if(type==='env'){
+      const obj=Object.fromEntries(Object.entries(data||{}).map(([k,v])=>[k,typeof v==='object'?v.value??'':v]));
+      preview.textContent=JSON.stringify(obj,null,2);if(summary)summary.textContent=`${Object.keys(obj).length} environment variable tersedia.`;return;
+    }
+    preview.textContent=JSON.stringify(data||[],null,2);
+    if(summary)summary.textContent=`${Array.isArray(data)?data.length:0} data tersedia.`;
+  }
+  window.loadAdminDatabase=async function(){
+    if(!isMainAdmin()){return;}
+    const box=$('admin-db-summary');if(box)box.textContent='Memuat database...';
+    try{
+      const d=await adminApi('admin-database',{method:'POST',body:{action:'summary'}});
+      window.__adminDatabase=d;
+      const type=$('admin-db-type')?.value||'products';
+      renderPreview(type,d[type]);renderEnv(d.env);
+      if(box)box.textContent=type==='env'?`${Object.keys(d.env||{}).length} ENV`:type==='products'?`${(d.products||[]).length} produk`:`${(d.users||[]).length} user`;
+    }catch(e){if(box)box.textContent=e.message||'Gagal memuat Database.';iosAlert(e.message||'Gagal memuat Database.');}
+  };
+  $('admin-db-type')?.addEventListener('change',()=>{const d=window.__adminDatabase;if(!d)return;renderPreview($('admin-db-type').value,d[$('admin-db-type').value]);});
+  window.downloadAdminDatabase=async function(){
+    const type=$('admin-db-type')?.value||'products',format=$('admin-db-format')?.value||'json';
+    try{
+      const d=await adminApi('admin-database',{method:'POST',body:{action:'export',type,format}});
+      const blob=new Blob([d.content||''],{type:format==='json'?'application/json;charset=utf-8':'text/plain;charset=utf-8'});
+      const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=d.filename||`ryy-store-${type}.${format}`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);showToast(`Data ${type.toUpperCase()} berhasil didownload.`);
+    }catch(e){iosAlert(e.message||'Gagal mendownload data.');}
+  };
+  window.saveAdminEnv=async function(key,btn){
+    const input=document.querySelector(`[data-env-key="${CSS.escape(key)}"]`);if(!input)return;
+    if(btn)btn.disabled=true;
+    try{const d=await adminApi('admin-database',{method:'POST',body:{action:'env-save',key,value:input.value}});showToast(d.message||`${key} disimpan.`);await loadAdminDatabase();}catch(e){iosAlert(e.message||`Gagal menyimpan ${key}.`);}finally{if(btn)btn.disabled=false;}
+  };
+  window.clearAdminEnv=async function(key){
+    if(!(await (typeof iosConfirm==='function'?iosConfirm(`Hapus override ${key} dan kembali ke ENV Cloudflare?`,{title:'Reset ENV',okText:'Reset',danger:true}):Promise.resolve(confirm(`Reset ${key}?`)))))return;
+    try{await adminApi('admin-database',{method:'POST',body:{action:'env-save',key,value:'',clear:true}});showToast(`${key} kembali ke ENV Cloudflare.`);await loadAdminDatabase();}catch(e){iosAlert(e.message||`Gagal mereset ${key}.`);}
+  };
+  window.resetAdminEnvOverrides=async function(){
+    if(!(await (typeof iosConfirm==='function'?iosConfirm('Hapus semua override ENV aplikasi?',{title:'Reset Semua ENV',okText:'Reset Semua',danger:true}):Promise.resolve(confirm('Reset semua ENV?')))))return;
+    try{const d=await adminApi('admin-database',{method:'POST',body:{action:'env-reset-all'}});showToast(d.message||'Semua override ENV dihapus.');await loadAdminDatabase();}catch(e){iosAlert(e.message||'Gagal mereset ENV.');}
   };
 })();
 </script>
