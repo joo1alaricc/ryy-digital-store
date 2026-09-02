@@ -2674,9 +2674,13 @@ body.modal-open { scroll-behavior: auto; }
         let appliedCheckoutVoucher = null;
         let registrationWhatsappId = "";
         let registrationVerificationToken = "";
+        let registrationWhatsappPollTimer = null;
+        let registrationWhatsappCheckBusy = false;
         let googleVerificationToken = "";
         let googleOtpToken = "";
         let googleWhatsappStarted = false;
+        let googleWhatsappPollTimer = null;
+        let googleWhatsappCheckBusy = false;
         let catalogSearchQuery = "";
         let currentActiveProduct = null;
         let selectedProductType = null;
@@ -4199,13 +4203,23 @@ body.modal-open { scroll-behavior: auto; }
             });
         }
 
+        function clearRegistrationWhatsappPolling() {
+            if (registrationWhatsappPollTimer) {
+                clearInterval(registrationWhatsappPollTimer);
+                registrationWhatsappPollTimer = null;
+            }
+            registrationWhatsappCheckBusy = false;
+        }
+
         function startRegister() {
+            clearRegistrationWhatsappPolling();
             showAuthStep("step-contact");
             document.getElementById("contact-input").value = "";
             registrationOtpToken = ""; registrationWhatsappId=""; registrationVerificationToken="";
         }
 
         function cancelRegister() {
+            clearRegistrationWhatsappPolling();
             showAuthStep("user-login-panel");
         }
 
@@ -4221,12 +4235,13 @@ body.modal-open { scroll-behavior: auto; }
                     body: JSON.stringify({ email })
                 });
                 registrationOtpToken = data.otpToken || "";
-                if (!registrationOtpToken) throw new Error("Server tidak mengembalikan token OTP. Periksa konfigurasi APP_SECRET dan Gmail.");
+                if (!registrationOtpToken) throw new Error("Server tidak mengembalikan token OTP. Pastikan APP_SECRET dan konfigurasi Gmail sudah aktif.");
+                document.getElementById("otp-input").value = "";
                 showAuthStep("step-otp");
                 showToast("OTP berhasil dikirim ke email.");
             } catch (error) {
-                console.error(error);
-                iosAlert(error.message);
+                console.error("Send OTP error:", error);
+                iosAlert(error.message || "Gagal mengirim OTP ke email.");
             }
         }
 
@@ -6494,19 +6509,130 @@ window.addEventListener("load", () => { const boot = () => initTurnstile(); if (
 <script id="ryy-v16-auth-verification">
 (function(){
   const $=id=>document.getElementById(id);
-  function show(id){showAuthStep(id);}
-  window.startWhatsAppRegister=async function(){const email=$('contact-input')?.value.trim().toLowerCase();if(!/^\S+@\S+\.\S+$/.test(email))return iosAlert('Masukkan email terlebih dahulu.');try{const d=await apiRequest('/register-whatsapp',{skipAuth:true,method:'POST',body:JSON.stringify({email})});registrationWhatsappId=d.registrationId;registrationVerificationToken='';$('register-wa-sn').textContent=d.sn;$('register-wa-link').href=d.waUrl;$('register-wa-status').textContent='Kirim pesan tersebut, lalu tekan Cek Verifikasi.';show('step-whatsapp-register');}catch(e){iosAlert(e.message||'Gagal memulai verifikasi WhatsApp.');}};
-  window.checkWhatsAppRegister=async function(){if(!registrationWhatsappId)return;try{const d=await apiRequest('/verify-registration-whatsapp',{skipAuth:true,method:'POST',body:JSON.stringify({registrationId:registrationWhatsappId})});if(!d.verified){$('register-wa-status').textContent=d.message||'Belum terdeteksi.';return;}registrationVerificationToken=d.verificationToken||'';$('register-wa-status').textContent='✓ WhatsApp terdeteksi. Lanjut buat username & password.';show('step-credentials');showToast('Verifikasi WhatsApp berhasil.');}catch(e){iosAlert(e.message||'Gagal memeriksa WhatsApp.');}};
-  window.startRegister=window.startRegister;
-  window.startGoogleOtpVerification=async function(){if(!googleVerificationToken)return;try{const d=await apiRequest('/send-otp',{skipAuth:true,method:'POST',body:JSON.stringify({email:$('google-verification-email')?.value||JSON.parse(localStorage.getItem('google_pending')||'{}').email})});googleOtpToken=d.otpToken||'';$('google-verify-extra')?.classList.remove('hidden');$('google-wa-extra')?.classList.add('hidden');showToast('OTP Google dikirim ke email.');}catch(e){iosAlert(e.message||'Gagal mengirim OTP.');}};
-  window.finishGoogleOtpVerification=async function(){const p=JSON.parse(localStorage.getItem('google_pending')||'{}');const otp=$('google-otp-input')?.value.trim();if(!googleOtpToken||!/^\d{4}$/.test(otp))return iosAlert('Masukkan OTP 4 digit.');try{const d=await apiRequest('/google-verify',{skipAuth:true,method:'POST',body:JSON.stringify({action:'otp',verificationToken:googleVerificationToken,otp,otpToken:googleOtpToken})});completeGoogleSession(d);}catch(e){iosAlert(e.message||'OTP Google salah.');}};
-  window.startGoogleWhatsAppVerification=async function(){try{const d=await apiRequest('/google-verify',{skipAuth:true,method:'POST',body:JSON.stringify({action:'whatsappStart',verificationToken:googleVerificationToken})});$('google-wa-sn').textContent=d.sn;$('google-wa-link').href=d.waUrl;$('google-wa-extra')?.classList.remove('hidden');$('google-verify-extra')?.classList.add('hidden');showToast('Buka WhatsApp dan kirim pesan yang sudah disiapkan.');}catch(e){iosAlert(e.message||'Gagal memulai verifikasi WhatsApp.');}};
-  window.checkGoogleWhatsAppVerification=async function(){try{const d=await apiRequest('/google-verify',{skipAuth:true,method:'POST',body:JSON.stringify({action:'whatsappCheck',verificationToken:googleVerificationToken})});if(!d.verified){$('google-wa-status').textContent=d.message||'Belum terdeteksi.';return;}completeGoogleSession(d);}catch(e){iosAlert(e.message||'Gagal memeriksa WhatsApp.');}};
-  window.completeGoogleSession=function(data){saveUserSession(data.user,data.token);localStorage.removeItem('google_pending');googleVerificationToken='';googleOtpToken='';forceUserScreen();launchUserApp();showToast('Login Google berhasil diverifikasi.');};
-  const oldGoogle=window.handleGoogleCredential;
-  window.handleGoogleCredential=async function(response){if(!response?.credential)return iosAlert('Login Google gagal.');try{const data=await apiRequest('/google-login',{method:'POST',body:JSON.stringify({credential:response.credential,turnstileToken:await waitForTurnstile('login')}),skipAuth:true});if(!data.verificationRequired)return completeGoogleSession(data);googleVerificationToken=data.verificationToken;localStorage.setItem('google_pending',JSON.stringify({email:data.email||data.user?.email||''}));$('google-verify-extra')?.classList.add('hidden');$('google-wa-extra')?.classList.add('hidden');show('step-google-verification');showToast('Pilih metode verifikasi tambahan untuk Google.');}catch(e){iosAlert(e.message||'Login Google gagal.');}};
-  // Make showAuthStep aware of the two new auth screens.
-  const originalShow=window.showAuthStep;window.showAuthStep=function(id){['user-login-panel','step-contact','step-whatsapp-register','step-otp','step-google-verification','step-credentials'].forEach(x=>$(x)?.classList.toggle('active',x===id));};
+  const show=id=>showAuthStep(id);
+
+  async function checkWhatsAppRegisterInternal(){
+    if(!registrationWhatsappId || registrationWhatsappCheckBusy)return;
+    registrationWhatsappCheckBusy=true;
+    try{
+      const d=await apiRequest('/verify-registration-whatsapp',{skipAuth:true,method:'POST',body:JSON.stringify({registrationId:registrationWhatsappId})});
+      if(!d.verified){
+        $('register-wa-status').textContent=d.message||'Menunggu pesan WhatsApp dari kamu...';
+        return;
+      }
+      clearRegistrationWhatsappPolling();
+      registrationVerificationToken=d.verificationToken||'';
+      $('register-wa-status').textContent='✓ Verifikasi WhatsApp berhasil. Lanjut buat username & password.';
+      show('step-credentials');
+      showToast('Verifikasi WhatsApp berhasil.');
+    }catch(e){
+      const message=e.message||'Gagal memeriksa WhatsApp.';
+      $('register-wa-status').textContent=message;
+    }finally{
+      registrationWhatsappCheckBusy=false;
+    }
+  }
+
+  window.startWhatsAppRegister=async function(){
+    const email=$('contact-input')?.value.trim().toLowerCase();
+    if(!/^\S+@\S+\.\S+$/.test(email))return iosAlert('Masukkan email terlebih dahulu.');
+    clearRegistrationWhatsappPolling();
+    try{
+      const turnstileToken=await waitForTurnstile('register');
+      const d=await apiRequest('/register-whatsapp',{skipAuth:true,method:'POST',body:JSON.stringify({email,turnstileToken})});
+      registrationWhatsappId=d.registrationId;
+      registrationVerificationToken='';
+      $('register-wa-sn').textContent=d.sn;
+      $('register-wa-link').href=d.waUrl;
+      $('register-wa-status').textContent='Gateway Connected. Kirim pesan otomatis ke bot admin_utama. Setelah pesan masuk, verifikasi akan diproses otomatis.';
+      show('step-whatsapp-register');
+      registrationWhatsappPollTimer=setInterval(checkWhatsAppRegisterInternal,2500);
+      setTimeout(checkWhatsAppRegisterInternal,500);
+    }catch(e){
+      iosAlert(e.message||'Gagal memulai verifikasi WhatsApp.');
+    }
+  };
+
+  window.checkWhatsAppRegister=checkWhatsAppRegisterInternal;
+
+  window.startGoogleOtpVerification=async function(){
+    if(!googleVerificationToken)return;
+    try{
+      const email=JSON.parse(localStorage.getItem('google_pending')||'{}').email||'';
+      const d=await apiRequest('/send-otp',{skipAuth:true,method:'POST',body:JSON.stringify({email})});
+      googleOtpToken=d.otpToken||'';
+      if(!googleOtpToken)throw new Error('Server tidak mengembalikan token OTP.');
+      $('google-verify-extra')?.classList.remove('hidden');
+      $('google-wa-extra')?.classList.add('hidden');
+      showToast('OTP Google dikirim ke email.');
+    }catch(e){iosAlert(e.message||'Gagal mengirim OTP.');}
+  };
+
+  window.finishGoogleOtpVerification=async function(){
+    const otp=$('google-otp-input')?.value.trim();
+    if(!googleOtpToken||!/\d{4}/.test(otp))return iosAlert('Masukkan OTP 4 digit.');
+    try{
+      const d=await apiRequest('/google-verify',{skipAuth:true,method:'POST',body:JSON.stringify({action:'otp',verificationToken:googleVerificationToken,otp,otpToken:googleOtpToken})});
+      completeGoogleSession(d);
+    }catch(e){iosAlert(e.message||'OTP Google salah.');}
+  };
+
+  async function checkGoogleWhatsAppInternal(){
+    if(googleWhatsappCheckBusy)return;
+    googleWhatsappCheckBusy=true;
+    try{
+      const d=await apiRequest('/google-verify',{skipAuth:true,method:'POST',body:JSON.stringify({action:'whatsappCheck',verificationToken:googleVerificationToken})});
+      if(!d.verified){$('google-wa-status').textContent=d.message||'Menunggu pesan WhatsApp dari kamu...';return;}
+      if(googleWhatsappPollTimer){clearInterval(googleWhatsappPollTimer);googleWhatsappPollTimer=null;}
+      completeGoogleSession(d);
+    }catch(e){$('google-wa-status').textContent=e.message||'Gagal memeriksa WhatsApp.';}
+    finally{googleWhatsappCheckBusy=false;}
+  }
+
+  window.startGoogleWhatsAppVerification=async function(){
+    if(!googleVerificationToken)return;
+    if(googleWhatsappPollTimer){clearInterval(googleWhatsappPollTimer);googleWhatsappPollTimer=null;}
+    try{
+      const d=await apiRequest('/google-verify',{skipAuth:true,method:'POST',body:JSON.stringify({action:'whatsappStart',verificationToken:googleVerificationToken})});
+      $('google-wa-sn').textContent=d.sn;
+      $('google-wa-link').href=d.waUrl;
+      $('google-wa-extra')?.classList.remove('hidden');
+      $('google-verify-extra')?.classList.add('hidden');
+      $('google-wa-status').textContent='Gateway Connected. Kirim pesan ke bot admin_utama. Verifikasi akan diproses otomatis saat pesan masuk.';
+      googleWhatsappPollTimer=setInterval(checkGoogleWhatsAppInternal,2500);
+      setTimeout(checkGoogleWhatsAppInternal,500);
+    }catch(e){iosAlert(e.message||'Gagal memulai verifikasi WhatsApp.');}
+  };
+
+  window.checkGoogleWhatsAppVerification=checkGoogleWhatsAppInternal;
+
+  window.completeGoogleSession=function(data){
+    if(googleWhatsappPollTimer){clearInterval(googleWhatsappPollTimer);googleWhatsappPollTimer=null;}
+    saveUserSession(data.user,data.token);
+    localStorage.removeItem('google_pending');
+    googleVerificationToken='';googleOtpToken='';
+    forceUserScreen();launchUserApp();showToast('Login Google berhasil diverifikasi.');
+  };
+
+  window.handleGoogleCredential=async function(response){
+    if(!response?.credential)return iosAlert('Login Google gagal.');
+    try{
+      const data=await apiRequest('/google-login',{method:'POST',body:JSON.stringify({credential:response.credential,turnstileToken:await waitForTurnstile('login')}),skipAuth:true});
+      if(!data.verificationRequired)return completeGoogleSession(data);
+      googleVerificationToken=data.verificationToken;
+      localStorage.setItem('google_pending',JSON.stringify({email:data.email||data.user?.email||''}));
+      $('google-verify-extra')?.classList.add('hidden');
+      $('google-wa-extra')?.classList.add('hidden');
+      show('step-google-verification');
+      showToast('Pilih metode verifikasi tambahan untuk Google.');
+    }catch(e){iosAlert(e.message||'Login Google gagal.');}
+  };
+
+  const originalShow=window.showAuthStep;
+  window.showAuthStep=function(id){
+    ['user-login-panel','step-contact','step-whatsapp-register','step-otp','step-google-verification','step-credentials'].forEach(x=>$(x)?.classList.toggle('active',x===id));
+    if(id!=='step-whatsapp-register')clearRegistrationWhatsappPolling();
+  };
 })();
 </script>
 
@@ -6683,5 +6809,6 @@ window.addEventListener("load", () => { const boot = () => initTurnstile(); if (
   // If a pending QRIS exists after a refresh, use the existing Liquid Glass full-screen reminder.
   setTimeout(async()=>{const p=await getPending();if(p)showPendingOverlay(p);},1300);
 })();
-</script>\n</body>
+</script>
+</body>
 </html>
