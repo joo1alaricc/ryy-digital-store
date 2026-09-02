@@ -62,7 +62,7 @@ export default {
       const raw=url.searchParams.get("url")||"";
       let target; try{target=new URL(raw)}catch{return new Response("Invalid media URL",{status:400})}
       const host=target.hostname.toLowerCase();
-      const allowed=["tiktokcdn.com","tiktokv.com","tiktok.com","tiktokcdn-us.com","tiktokcdn-eu.com","googlevideo.com","youtube.com","youtu.be","fbcdn.net","instagram.com","cdninstagram.com","pinimg.com"];
+      const allowed=["tiktokcdn.com","tiktokv.com","tiktok.com","tiktokcdn-us.com","tiktokcdn-eu.com","googlevideo.com","youtube.com","youtu.be","fbcdn.net","instagram.com","cdninstagram.com","pinimg.com","tiktokio.com"];
       if(target.protocol!=="https:" || !allowed.some(x=>host===x||host.endsWith("."+x))) return new Response("Media host tidak diizinkan",{status:403});
       try{
         const upstream=await fetch(target.toString(),{method:request.method,headers:{"User-Agent":"Mozilla/5.0","Accept":"video/*,audio/*,*/*;q=0.8"},redirect:"follow"});
