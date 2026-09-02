@@ -1809,24 +1809,7 @@ body.modal-open { scroll-behavior: auto; }
                         <button type="button" onclick="verifyOTP()" class="btn-accent" data-i18n="verify_otp">Verifikasi OTP</button>
                     </div>
 
-                    <div id="step-google-verification" class="auth-step">
-                        <p style="font-size:.75rem;color:var(--text-muted);line-height:1.45;margin-bottom:9px;">Login Google berhasil. Demi keamanan, pilih satu verifikasi tambahan.</p>
-                        <button type="button" onclick="startGoogleOtpVerification()" class="btn-accent" style="width:100%;">✉️ Verifikasi OTP Email</button>
-                        <button type="button" onclick="startGoogleWhatsAppVerification()" class="btn-icon-minimal" style="width:100%;margin-top:7px;justify-content:center;">💬 Verifikasi via WhatsApp</button>
-                        <div id="google-verify-extra" class="hidden" style="margin-top:9px;"><input id="google-otp-input" type="text" inputmode="numeric" maxlength="4" placeholder="Masukkan 4 digit OTP"><button type="button" onclick="finishGoogleOtpVerification()" class="btn-accent" style="width:100%;margin-top:7px;">Verifikasi OTP</button></div>
-                        <div id="google-wa-extra" class="hidden" style="margin-top:9px;"><div id="google-wa-sn" class="wa-admin-code" style="font-size:.82rem;letter-spacing:.04em;word-break:break-word;"></div><a id="google-wa-link" href="#" target="_blank" rel="noopener" class="btn-accent" style="display:flex;align-items:center;justify-content:center;text-decoration:none;margin-top:8px;">Buka WhatsApp & Kirim</a><button type="button" onclick="checkGoogleWhatsAppVerification()" class="btn-icon-minimal" style="width:100%;margin-top:7px;justify-content:center;">↻ Cek Verifikasi</button><div id="google-wa-status" class="admin-config-note" style="margin-top:7px;text-align:center;">Menunggu pesan...</div></div>
-                    </div>
-
-                    <div id="step-credentials" class="auth-step">
-                        <input type="text" id="username-input" data-i18n-placeholder="create_username" placeholder="Buat Username (Min 5 huruf)">
-                        <input type="password" id="password-input" data-i18n-placeholder="create_password" placeholder="Buat Password (Min 8 char)" oninput="checkPasswordStrength(this.value)">
-                        <div class="password-strength-meter">
-                            <div id="strength-fill" class="password-strength-fill"></div>
-                        </div>
-                        <p id="strength-text" class="strength-text" data-i18n="password_low">Keamanan: Rendah</p>
-                        <div id="turnstile-register" class="turnstile-box" aria-label="Verifikasi bukan robot"></div>
-                        <button type="button" onclick="registerAccount()" class="btn-accent" data-i18n="save_login">Simpan & Masuk</button>
-                    </div>
+                    <div id="step-google-verification" class="auth-step hidden" aria-hidden="true"></div>
                 </div>
 
                 <div id="adminAuthContainer" class="hidden">
@@ -3373,8 +3356,8 @@ body.modal-open { scroll-behavior: auto; }
             if (!response?.credential) { iosAlert("Login Google gagal. Silakan coba lagi."); return; }
             try {
                 const data = await apiRequest("/google-login", { method:"POST", body:JSON.stringify({credential:response.credential,turnstileToken:await waitForTurnstile("login")}), skipAuth:true });
-                if(data?.verificationRequired){ googleVerificationToken=data.verificationToken||""; localStorage.setItem("google_pending",JSON.stringify({email:data.email||data.user?.email||""})); showAuthStep("step-google-verification"); showToast("Pilih metode verifikasi tambahan untuk Google."); return; }
-                saveUserSession(data.user, data.token); localStorage.removeItem("has_seen_landing"); showToast("Login dengan Google berhasil!"); forceUserScreen(); launchUserApp();
+                // Google sign-in is already verified by Google. No OTP or WhatsApp step.
+                saveUserSession(data.user, data.token); localStorage.removeItem("has_seen_landing"); localStorage.removeItem("google_pending"); showToast("Login dengan Google berhasil!"); forceUserScreen(); launchUserApp();
             } catch(error){ console.error(error); iosAlert(error.message||"Login Google gagal."); }
         }
 
@@ -6646,19 +6629,13 @@ window.addEventListener("load", () => { const boot = () => initTurnstile(); if (
     if(!response?.credential)return iosAlert('Login Google gagal.');
     try{
       const data=await apiRequest('/google-login',{method:'POST',body:JSON.stringify({credential:response.credential,turnstileToken:await waitForTurnstile('login')}),skipAuth:true});
-      if(!data.verificationRequired)return completeGoogleSession(data);
-      googleVerificationToken=data.verificationToken;
-      localStorage.setItem('google_pending',JSON.stringify({email:data.email||data.user?.email||''}));
-      $('google-verify-extra')?.classList.add('hidden');
-      $('google-wa-extra')?.classList.add('hidden');
-      show('step-google-verification');
-      showToast('Pilih metode verifikasi tambahan untuk Google.');
+      completeGoogleSession(data);
     }catch(e){iosAlert(e.message||'Login Google gagal.');}
   };
 
   const originalShow=window.showAuthStep;
   window.showAuthStep=function(id){
-    ['user-login-panel','step-contact','step-whatsapp-register','step-otp','step-google-verification','step-credentials'].forEach(x=>$(x)?.classList.toggle('active',x===id));
+    ['user-login-panel','step-contact','step-whatsapp-register','step-otp','step-credentials'].forEach(x=>$(x)?.classList.toggle('active',x===id));
     if(id!=='step-whatsapp-register')clearRegistrationWhatsappPolling();
   };
 })();
@@ -6735,7 +6712,7 @@ window.addEventListener("load", () => { const boot = () => initTurnstile(); if (
   function rupiah(n){return `Rp${Number(n||0).toLocaleString('id-ID')}`;}
 })();
 </script>
-\n<script id="ryy-preserve-ui-pending-checkout-fix">
+<script id="ryy-preserve-ui-pending-checkout-fix">
 (function(){
   const $=id=>document.getElementById(id);
   const esc=v=>typeof escapeHtml==='function'?escapeHtml(v):String(v??'');
@@ -6899,5 +6876,101 @@ window.addEventListener("load", () => { const boot = () => initTurnstile(); if (
   setTimeout(async()=>{const p=await getPending();if(p)showPendingOverlay(p);},1300);
 })();
 </script>
+
+<style id="ryy-v18-smoothness-performance">
+/* RYY V18 — smooth interaction + low-jank scrolling pass.
+   Only compositor-friendly properties are animated globally. */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+body {
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
+}
+main, .main-container, .dashboard-container, .admin-view, .admin-content,
+.ryy-wa-console, .support-chat-messages, .ai-chat-messages, .category-tabs {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Never animate layout/paint-heavy properties during interaction. */
+button, a, input, textarea, select, summary,
+.product-card, .bs-card, .home-category-card, .admin-product-card,
+.admin-user-card, .admin-pending-card, .admin-glass-btn, .support-btn,
+.floating-nav-item, .mode-btn, .color-option, .type-option, .theme-option {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+button, .btn, .admin-glass-btn, .support-btn, .admin-mini-btn,
+.floating-nav-item, .mode-btn, .color-option, .type-option, .theme-option,
+.product-card, .bs-card, .home-category-card {
+  transition:
+    transform .22s cubic-bezier(.22,1,.36,1),
+    opacity .20s ease,
+    box-shadow .22s ease,
+    background-color .22s ease,
+    border-color .22s ease,
+    color .18s ease;
+  will-change: auto;
+}
+button:active, .btn:active, .admin-glass-btn:active, .support-btn:active,
+.admin-mini-btn:active, .floating-nav-item:active, .mode-btn:active,
+.color-option:active, .type-option:active, .theme-option:active {
+  transform: scale(.975) translateZ(0);
+}
+
+/* Keep scrolling independent from expensive visual effects. */
+.orb, .ai-fab, .support-fab, .floating-user-nav,
+.modal-content, .ios-dialog, .payment-sheet, .language-sheet,
+.admin-edit-sheet, .admin-detail-sheet, .inbox-sheet, .support-chat, .ai-chat {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Mobile devices get lighter glass blur: visually similar, substantially less GPU work. */
+@media (max-width: 700px) {
+  .dashboard-container, .landing-box, .auth-card, .modal-content,
+  .settings-panel, .product-card, .bs-card, .admin-product-card,
+  .admin-user-card, .admin-pending-card, .subscription-card,
+  .distributor-card, .dash-card, .home-category-card {
+    -webkit-backdrop-filter: blur(18px) saturate(145%) !important;
+    backdrop-filter: blur(18px) saturate(145%) !important;
+  }
+  .ios-dialog, .payment-sheet, .language-sheet,
+  .admin-edit-sheet, .admin-detail-sheet, .inbox-sheet {
+    -webkit-backdrop-filter: blur(22px) saturate(155%) !important;
+    backdrop-filter: blur(22px) saturate(155%) !important;
+  }
+  .orb { filter: blur(46px) !important; }
+}
+
+/* Prevent accidental rubber-band/overscroll inside sheets while keeping normal page scroll. */
+.modal-content, .ios-dialog, .payment-sheet, .language-sheet,
+.admin-edit-sheet, .admin-detail-sheet, .inbox-sheet,
+.ryy-wa-console, .wa-admin-diagnostic {
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+/* Smooth visual state changes without springy/overlong motion. */
+.hidden { pointer-events: none !important; }
+.toast, .ios-dialog, .payment-sheet, .language-sheet,
+.modal-content, .admin-edit-sheet, .admin-detail-sheet {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+</style>
 </body>
 </html>
