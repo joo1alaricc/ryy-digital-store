@@ -1,7 +1,7 @@
 import legacyHandler from "./lib/_api-router.js";
 import inboxCleanup from "./lib/handler/inbox-cleanup.js";
 import subscriptionReminders from "./lib/handler/subscription-reminders.js";
-import { setRuntimeEnv } from "./lib/_env.js";
+import { setRuntimeEnv, hydrateRuntimeEnv } from "./lib/_env.js";
 
 function makeReq(request) {
   const url = new URL(request.url);
@@ -30,6 +30,7 @@ function makeRes() {
 
 async function dispatch(request, env, targetHandler = legacyHandler) {
   setRuntimeEnv(env);
+  await hydrateRuntimeEnv();
   const req = makeReq(request);
   if (!["GET", "HEAD"].includes(request.method)) {
     const type = request.headers.get("content-type") || "";
@@ -146,6 +147,7 @@ export default {
 
   async scheduled(controller, env, ctx) {
     setRuntimeEnv(env);
+    await hydrateRuntimeEnv();
     const cron = controller.cron;
     try {
       // UTC schedules: 00:00 UTC is 07:00 WIB.
