@@ -1665,6 +1665,124 @@ button:active{transform:scale(.985)!important;}
 .admin-update-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
 @media(max-width:520px){.admin-update-actions{grid-template-columns:1fr}}
 </style>
+
+<style id="ryy-v17-ios26-chat-fix">
+/* ===== iOS 26 notification banner ===== */
+#toast-container{
+  position:fixed!important;
+  top:max(10px,env(safe-area-inset-top))!important;
+  left:0!important;right:0!important;
+  width:100%!important;
+  z-index:16000!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  gap:0!important;
+  padding:0 10px!important;
+  box-sizing:border-box!important;
+  pointer-events:none!important;
+  overflow:visible!important;
+}
+#toast-container .toast{
+  position:relative!important;
+  inset:auto!important;
+  width:min(100%,560px)!important;
+  max-width:560px!important;
+  min-height:72px!important;
+  margin:0!important;
+  padding:10px 12px 10px 10px!important;
+  display:grid!important;
+  grid-template-columns:48px minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:11px!important;
+  box-sizing:border-box!important;
+  border-radius:25px!important;
+  border:1px solid rgba(255,255,255,.20)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.19),rgba(35,35,42,.78) 48%,rgba(255,255,255,.08))!important;
+  color:var(--text-main)!important;
+  backdrop-filter:blur(34px) saturate(190%)!important;
+  -webkit-backdrop-filter:blur(34px) saturate(190%)!important;
+  box-shadow:0 18px 55px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.22),inset 0 -1px 0 rgba(0,0,0,.08)!important;
+  transform:translate3d(0,0,0)!important;
+  opacity:1!important;
+  will-change:transform,opacity!important;
+  pointer-events:auto!important;
+  overflow:hidden!important;
+}
+#toast-container .toast::before{
+  content:""!important;position:absolute!important;inset:0!important;pointer-events:none!important;
+  background:linear-gradient(120deg,rgba(255,255,255,.14),transparent 35%,rgba(255,255,255,.025) 75%)!important;
+}
+#toast-container .toast-icon{width:48px!important;height:48px!important;border-radius:15px!important;z-index:1!important;background:#f7f7f8!important;color:#111!important;box-shadow:0 5px 18px rgba(0,0,0,.18)!important;overflow:hidden!important}
+#toast-container .toast-icon img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}
+#toast-container .toast-copy{min-width:0!important;z-index:1!important}
+#toast-container .toast-header{font-size:.88rem!important;font-weight:700!important;line-height:1.18!important;margin:0 0 3px!important;color:#fff!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#toast-container .toast-body{font-size:.74rem!important;line-height:1.34!important;color:rgba(255,255,255,.70)!important;overflow-wrap:anywhere!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important}
+#toast-container .toast-time{font-size:.64rem!important;color:rgba(255,255,255,.58)!important;align-self:start!important;margin-top:4px!important;z-index:1!important;white-space:nowrap!important}
+#toast-container .toast.toast--enter{animation:ryyToastEnterIOS26 .48s cubic-bezier(.22,1,.36,1) both!important}
+#toast-container .toast.toast--leaving{animation:ryyToastExitIOS26 .34s cubic-bezier(.4,0,.2,1) both!important;pointer-events:none!important}
+@keyframes ryyToastEnterIOS26{0%{transform:translate3d(0,-125%,0)!important;opacity:0!important}100%{transform:translate3d(0,0,0)!important;opacity:1!important}}
+@keyframes ryyToastExitIOS26{0%{transform:translate3d(0,0,0)!important;opacity:1!important}100%{transform:translate3d(0,-125%,0)!important;opacity:0!important}}
+body.light-mode #toast-container .toast{background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(242,242,247,.82) 55%,rgba(255,255,255,.72))!important;border-color:rgba(255,255,255,.90)!important;box-shadow:0 18px 55px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.95)!important}
+body.light-mode #toast-container .toast-header{color:#111!important}
+body.light-mode #toast-container .toast-body,body.light-mode #toast-container .toast-time{color:rgba(0,0,0,.58)!important}
+@media(max-width:520px){#toast-container{padding:0 12px!important}#toast-container .toast{width:calc(100vw - 24px)!important;min-height:68px!important;border-radius:23px!important;grid-template-columns:46px minmax(0,1fr) auto!important;gap:10px!important;padding:9px 11px 9px 9px!important}#toast-container .toast-icon{width:46px!important;height:46px!important;border-radius:14px!important}}
+
+/* ===== Shared chat platform styles: AI + Admin Support ===== */
+.support-chat.chat-style-default,.ai-chat.chat-style-default{background:#000!important;color:#fff!important}
+.support-chat.chat-style-default::before,.ai-chat.chat-style-default::before{background:radial-gradient(circle at 15% 8%,rgba(255,255,255,.035),transparent 34%),radial-gradient(circle at 85% 72%,rgba(40,90,160,.06),transparent 34%)!important;filter:none!important}
+.support-chat.chat-style-default .support-chat-header,.ai-chat.chat-style-default .ai-chat-header{background:#050505!important;color:#fff!important;border-bottom:1px solid #242424!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.support-chat.chat-style-default .support-chat-title span,.ai-chat.chat-style-default .ai-chat-title span{color:#8f8f8f!important}
+.support-chat.chat-style-default .ai-avatar,.ai-chat.chat-style-default .ai-avatar{background:#222!important;color:#fff!important;box-shadow:none!important}
+.support-chat.chat-style-default .support-chat-message,.ai-chat.chat-style-default .ai-message{border:0!important;box-shadow:none!important;border-radius:18px!important}
+.support-chat.chat-style-default .support-chat-message.admin,.ai-chat.chat-style-default .ai-message.ai{background:#29292d!important;color:#fff!important;border-top-left-radius:7px!important}
+.support-chat.chat-style-default .support-chat-message.user,.ai-chat.chat-style-default .ai-message.user{background:#1683f5!important;color:#fff!important;border-top-right-radius:7px!important}
+.support-chat.chat-style-default .support-chat-composer,.ai-chat.chat-style-default .ai-composer{background:#050505!important;border-top:1px solid #242424!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.support-chat.chat-style-default .support-chat-composer input,.ai-chat.chat-style-default .ai-composer input{background:#17171a!important;color:#fff!important;border-color:#303035!important}
+.support-chat.chat-style-default .support-chat-composer button,.ai-chat.chat-style-default .ai-composer button{background:#1683f5!important;color:#fff!important}
+
+.support-chat.chat-style-telegram,.ai-chat.chat-style-telegram{background:#e7edf3!important;color:#17212b!important}
+.support-chat.chat-style-telegram::before,.ai-chat.chat-style-telegram::before{background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(120,180,230,.08))!important;filter:none!important}
+.support-chat.chat-style-telegram .support-chat-header,.ai-chat.chat-style-telegram .ai-chat-header{background:#229ed9!important;color:#fff!important;border-bottom:0!important;backdrop-filter:none!important}
+.support-chat.chat-style-telegram .support-chat-title span,.ai-chat.chat-style-telegram .ai-chat-title span{color:#d9f4ff!important}
+.support-chat.chat-style-telegram .ai-avatar,.ai-chat.chat-style-telegram .ai-avatar{background:#fff!important;color:#229ed9!important;box-shadow:none!important}
+.support-chat.chat-style-telegram .support-chat-message,.ai-chat.chat-style-telegram .ai-message{border:0!important;box-shadow:0 1px 2px rgba(0,0,0,.10)!important;border-radius:13px!important}
+.support-chat.chat-style-telegram .support-chat-message.admin,.ai-chat.chat-style-telegram .ai-message.ai{background:#fff!important;color:#17212b!important;border-top-left-radius:5px!important}
+.support-chat.chat-style-telegram .support-chat-message.user,.ai-chat.chat-style-telegram .ai-message.user{background:#effdde!important;color:#17212b!important;border-top-right-radius:5px!important}
+.support-chat.chat-style-telegram .support-chat-composer,.ai-chat.chat-style-telegram .ai-composer{background:#fff!important;border-top:1px solid #d6e0e8!important;backdrop-filter:none!important}
+.support-chat.chat-style-telegram .support-chat-composer input,.ai-chat.chat-style-telegram .ai-composer input{background:#f1f5f8!important;color:#17212b!important;border-color:#d8e1e8!important}
+.support-chat.chat-style-telegram .support-chat-composer button,.ai-chat.chat-style-telegram .ai-composer button{background:#229ed9!important}
+
+.support-chat.chat-style-whatsapp,.ai-chat.chat-style-whatsapp{background:#0b141a!important;color:#e9edef!important}
+.support-chat.chat-style-whatsapp::before,.ai-chat.chat-style-whatsapp::before{background-color:#0b141a!important;background-image:radial-gradient(circle at 20px 20px,rgba(255,255,255,.025) 1px,transparent 1px),radial-gradient(circle at 9px 11px,rgba(255,255,255,.018) 1px,transparent 1px)!important;background-size:42px 42px,31px 31px!important;filter:none!important}
+.support-chat.chat-style-whatsapp .support-chat-header,.ai-chat.chat-style-whatsapp .ai-chat-header{background:#202c33!important;color:#e9edef!important;border-bottom:0!important;backdrop-filter:none!important}
+.support-chat.chat-style-whatsapp .support-chat-title span,.ai-chat.chat-style-whatsapp .ai-chat-title span{color:#7fe8a5!important}
+.support-chat.chat-style-whatsapp .ai-avatar,.ai-chat.chat-style-whatsapp .ai-avatar{background:#25d366!important;color:#fff!important;box-shadow:none!important}
+.support-chat.chat-style-whatsapp .support-chat-message,.ai-chat.chat-style-whatsapp .ai-message{border:0!important;box-shadow:0 1px 1px rgba(0,0,0,.24)!important;border-radius:8px!important}
+.support-chat.chat-style-whatsapp .support-chat-message.admin,.ai-chat.chat-style-whatsapp .ai-message.ai{background:#202c33!important;color:#e9edef!important;border-top-left-radius:2px!important}
+.support-chat.chat-style-whatsapp .support-chat-message.user,.ai-chat.chat-style-whatsapp .ai-message.user{background:#005c4b!important;color:#e9edef!important;border-top-right-radius:2px!important}
+.support-chat.chat-style-whatsapp .support-chat-composer,.ai-chat.chat-style-whatsapp .ai-composer{background:#202c33!important;border-top:0!important;backdrop-filter:none!important}
+.support-chat.chat-style-whatsapp .support-chat-composer input,.ai-chat.chat-style-whatsapp .ai-composer input{background:#2a3942!important;color:#e9edef!important;border-color:#2a3942!important}
+.support-chat.chat-style-whatsapp .support-chat-composer button,.ai-chat.chat-style-whatsapp .ai-composer button{background:#00a884!important}
+
+.support-chat.chat-style-instagram,.ai-chat.chat-style-instagram{background:#000!important;color:#f5f5f5!important}
+.support-chat.chat-style-instagram::before,.ai-chat.chat-style-instagram::before{background:#000!important;filter:none!important}
+.support-chat.chat-style-instagram .support-chat-header,.ai-chat.chat-style-instagram .ai-chat-header{background:#000!important;color:#f5f5f5!important;border-bottom:1px solid #262626!important;backdrop-filter:none!important}
+.support-chat.chat-style-instagram .support-chat-title span,.ai-chat.chat-style-instagram .ai-chat-title span{color:#a8a8a8!important}
+.support-chat.chat-style-instagram .ai-avatar,.ai-chat.chat-style-instagram .ai-avatar{background:#222!important;color:#fff!important;box-shadow:none!important}
+.support-chat.chat-style-instagram .support-chat-message,.ai-chat.chat-style-instagram .ai-message{border:1px solid #363636!important;box-shadow:none!important;border-radius:19px!important}
+.support-chat.chat-style-instagram .support-chat-message.admin,.ai-chat.chat-style-instagram .ai-message.ai{background:#000!important;color:#f5f5f5!important;border-top-left-radius:6px!important}
+.support-chat.chat-style-instagram .support-chat-message.user,.ai-chat.chat-style-instagram .ai-message.user{background:#262626!important;color:#f5f5f5!important;border-color:#363636!important;border-top-right-radius:6px!important}
+.support-chat.chat-style-instagram .support-chat-composer,.ai-chat.chat-style-instagram .ai-composer{background:#000!important;border-top:1px solid #262626!important;backdrop-filter:none!important}
+.support-chat.chat-style-instagram .support-chat-composer input,.ai-chat.chat-style-instagram .ai-composer input{background:#000!important;color:#f5f5f5!important;border-color:#363636!important}
+.support-chat.chat-style-instagram .support-chat-composer button,.ai-chat.chat-style-instagram .ai-composer button{background:#fff!important;color:#000!important}
+.support-chat.chat-style-instagram .ai-avatar{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)!important}
+.support-chat.chat-style-instagram .support-chat-composer button,.ai-chat.chat-style-instagram .ai-composer button{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)!important;color:#fff!important}
+
+/* Keep chat bubbles visually platform-like on narrow phones. */
+.support-chat .support-chat-message,.ai-chat .ai-message{max-width:82%!important}
+.support-chat .support-chat-time,.ai-chat .ai-message-time{font-variant-numeric:tabular-nums!important}
+</style>
 </head>
 <body>
 
@@ -2404,7 +2522,7 @@ button:active{transform:scale(.985)!important;}
         <div id="inbox-form-overlay" class="inbox-overlay hidden" onclick="closeInboxForm(event)"><div class="inbox-sheet" onclick="event.stopPropagation()"><div class="inbox-head"><h3>Lengkapi Data</h3><button type="button" class="inbox-close" onclick="closeInboxForm()">×</button></div><div id="inbox-form-content"></div></div></div>
 
         <div id="support-modal-overlay" class="inbox-overlay hidden" onclick="closeSupportModal(event)"><div class="inbox-sheet" onclick="event.stopPropagation()"><div class="inbox-head"><h3 id="support-modal-title">Bantuan</h3><button type="button" class="inbox-close" onclick="closeSupportModal()">×</button></div><div id="support-modal-content"></div></div></div>
-        <section id="support-chat" class="support-chat hidden" aria-label="Chat admin"><header class="support-chat-header"><button class="ai-back" onclick="closeSupportChat()" aria-label="Back">‹</button><div class="ai-avatar"><span style="font-size:.7rem;font-weight:800;">A</span></div><div class="support-chat-title"><strong>ADMIN RYY STORE</strong><span>online</span></div></header><div id="support-chat-messages" class="support-chat-messages"></div><form class="support-chat-composer" onsubmit="sendSupportChat(event)"><input id="support-chat-input" autocomplete="off" placeholder="Tulis pesan ke admin..."><button type="submit" aria-label="Kirim"><svg viewBox="0 0 24 24"><path d="m3 20 18-8L3 4l-9 2z"/></svg></button></form></section>
+        <section id="support-chat" class="support-chat chat-style-default hidden" aria-label="Chat admin"><header class="support-chat-header"><button class="ai-back" onclick="closeSupportChat()" aria-label="Back">‹</button><div class="ai-avatar"><span style="font-size:.7rem;font-weight:800;">A</span></div><div class="support-chat-title"><strong>ADMIN RYY STORE</strong><span>online</span></div></header><div id="support-chat-messages" class="support-chat-messages"></div><form class="support-chat-composer" onsubmit="sendSupportChat(event)"><input id="support-chat-input" autocomplete="off" placeholder="Tulis pesan ke admin..."><button type="submit" aria-label="Kirim"><svg viewBox="0 0 24 24"><path d="m3 20 18-8L3 4l-9 2z"/></svg></button></form></section>
 
         <!-- RYY AI launcher -->
         <button id="ai-fab" class="ai-fab" onclick="toggleAIChat()" aria-label="RYY AI">
@@ -3143,105 +3261,92 @@ button:active{transform:scale(.985)!important;}
             return markdown ? markdown[1] : raw;
         }
 
-        function updateToastStack() {
-            const container = document.getElementById("toast-container");
-            if (!container) return;
+        /* iOS 26-style notification presenter: one banner at a time, vertical motion only. */
+        let __toastQueue = [];
+        let __activeToast = null;
+        let __toastTimer = null;
+        let __toastClosing = false;
 
-            const visible = Array.from(container.querySelectorAll(".toast:not(.toast--leaving)"));
-            const positions = [
-                { y:0,  scale:1,    opacity:1,   blur:0,   z:120 },
-                { y:27, scale:.96,  opacity:.78, blur:.7, z:110 },
-                { y:49, scale:.92,  opacity:.56, blur:2.0, z:100 },
-                { y:68, scale:.88,  opacity:.34, blur:3.5, z:90 }
-            ];
-
-            visible.forEach((toast, index) => {
-                const p = positions[Math.min(index, positions.length - 1)];
-                toast.style.setProperty("--toast-y", `${p.y}px`);
-                toast.style.setProperty("--toast-scale", p.scale);
-                toast.style.setProperty("--toast-opacity", p.opacity);
-                toast.style.setProperty("--toast-blur", `${p.blur}px`);
-                toast.style.zIndex = String(p.z);
-            });
-
-            visible.slice(4).forEach(toast => toast.remove());
-        }
-
-        function removeToast(toast) {
-            if (!toast || toast.classList.contains("toast--leaving")) return;
-            toast.classList.add("toast--leaving");
+        function removeToast(toast, immediate=false) {
+            if (!toast) return;
+            if (toast === __activeToast) clearTimeout(__toastTimer);
+            if (immediate) {
+                toast.remove();
+                if (toast === __activeToast) __activeToast = null;
+                __toastClosing = false;
+                return;
+            }
+            if (toast.classList.contains('toast--leaving')) return;
+            toast.classList.remove('toast--enter');
+            toast.classList.add('toast--leaving');
+            __toastClosing = true;
             setTimeout(() => {
                 toast.remove();
-                updateToastStack();
-            }, 430);
+                if (toast === __activeToast) __activeToast = null;
+                __toastClosing = false;
+                showNextToast();
+            }, 360);
         }
 
-        function showToast(message, options = {}) {
-            const container = document.getElementById("toast-container");
+        function showNextToast() {
+            if (__activeToast || __toastClosing || !__toastQueue.length) return;
+            const item = __toastQueue.shift();
+            const container = document.getElementById('toast-container');
             if (!container) return;
 
-            // Finish any currently entering card so a new notification can take the front position cleanly.
-            container.querySelectorAll(".toast.toast--enter").forEach(t => t.classList.remove("toast--enter"));
-
-            const toast = document.createElement("div");
-            toast.className = "toast";
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.setAttribute('role','status');
+            toast.setAttribute('aria-live','polite');
 
             const logoUrl = imageDisplayUrl(getStoreLogoUrl());
-            const icon = document.createElement("div");
-            icon.className = "toast-icon";
-
+            const icon = document.createElement('div');
+            icon.className = 'toast-icon';
             if (logoUrl) {
-                const img = document.createElement("img");
+                const img = document.createElement('img');
                 img.src = logoUrl;
-                img.alt = "RYY STORE";
-                img.onerror = () => {
-                    img.remove();
-                    icon.textContent = "RYY";
-                };
+                img.alt = 'RYY STORE';
+                img.onerror = () => { img.remove(); icon.textContent = 'RYY'; };
                 icon.appendChild(img);
-            } else {
-                icon.textContent = "RYY";
-            }
+            } else icon.textContent = 'RYY';
             toast.appendChild(icon);
 
-            const copy = document.createElement("div");
-            copy.className = "toast-copy";
-
-            const header = document.createElement("div");
-            header.className = "toast-header";
-            header.textContent = options.title || storeData?.storeInfo?.name || "RYY STORE";
-
-            const body = document.createElement("div");
-            body.className = "toast-body";
-            body.textContent = message;
-
+            const copy = document.createElement('div');
+            copy.className = 'toast-copy';
+            const header = document.createElement('div');
+            header.className = 'toast-header';
+            header.textContent = item.options.title || storeData?.storeInfo?.name || 'RYY STORE';
+            const body = document.createElement('div');
+            body.className = 'toast-body';
+            body.textContent = item.message;
             copy.append(header, body);
             toast.appendChild(copy);
 
-            const time = document.createElement("div");
-            time.className = "toast-time";
-            time.textContent = "sekarang";
+            const time = document.createElement('div');
+            time.className = 'toast-time';
+            time.textContent = 'sekarang';
             toast.appendChild(time);
 
-            container.prepend(toast);
-            updateToastStack();
+            container.appendChild(toast);
+            __activeToast = toast;
+            __toastClosing = false;
 
-            requestAnimationFrame(() => toast.classList.add("toast--enter"));
+            requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('toast--enter')));
 
-            const duration = Number(options.duration) > 0 ? Number(options.duration) : 3600;
-            const timer = setTimeout(() => removeToast(toast), duration);
-
-            toast.addEventListener("click", () => {
-                clearTimeout(timer);
-                removeToast(toast);
-            }, { once:true });
-
-            toast.addEventListener("animationend", (event) => {
-                if (event.animationName === "toastEnter" || event.animationName === "ryyToastEnterV11" || event.animationName === "ryyToastDropV12") {
-                    toast.classList.remove("toast--enter");
-                    updateToastStack();
-                }
+            const duration = Number(item.options.duration) > 0 ? Number(item.options.duration) : 3600;
+            __toastTimer = setTimeout(() => removeToast(toast), duration);
+            toast.addEventListener('click', () => removeToast(toast), { once:true });
+            toast.addEventListener('animationend', (event) => {
+                if (event.animationName === 'ryyToastEnterIOS26') toast.classList.remove('toast--enter');
             });
+        }
+
+        function showToast(message, options = {}) {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            __toastQueue.push({ message:String(message ?? ''), options:{...options} });
+            if (__toastQueue.length > 4) __toastQueue = __toastQueue.slice(-4);
+            showNextToast();
         }
 
         // Dual Role Switcher di Halaman Login
@@ -5379,8 +5484,14 @@ Simpan data ini. Kredensial rahasia tidak ditampilkan lagi setelah ini.`;
         }
         function setChatStyle(style, persist=true) {
             if(!CHAT_STYLES.includes(style)) style='default';
-            const chat=document.getElementById('ai-chat');
-            if(chat){ CHAT_STYLES.forEach(s=>chat.classList.remove(`chat-style-${s}`)); chat.classList.add(`chat-style-${style}`); chat.dataset.chatStyle=style; }
+            ['ai-chat','support-chat'].forEach(id=>{
+                const chat=document.getElementById(id);
+                if(chat){
+                    CHAT_STYLES.forEach(s=>chat.classList.remove(`chat-style-${s}`));
+                    chat.classList.add(`chat-style-${style}`);
+                    chat.dataset.chatStyle=style;
+                }
+            });
             document.querySelectorAll('.chat-style-option').forEach(el=>{ el.classList.toggle('selected',el.dataset.chatStyle===style); el.setAttribute('aria-pressed',el.dataset.chatStyle===style?'true':'false'); });
             if(persist) localStorage.setItem('ryy_chat_style',style);
         }
