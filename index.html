@@ -2002,43 +2002,41 @@ body:not(.light-mode) .category-tabs .cat-tab:hover{color:#fff !important;}
         <div id="user-balance-pill" class="user-balance-pill hidden"><button type="button" onclick="openWalletDeposit()" aria-label="Deposit saldo">+</button><div><span>Sisa Saldo</span><strong id="user-balance-value">Rp0</strong></div></div>
 
         <main class="main-container">
-            <!-- VIEW HOME / BERANDA -->
+            <!-- VIEW HOME / BERANDA — visual shell; existing IDs retained for JavaScript -->
             <div id="view-home">
-                <section class="home-portfolio-card">
-                    <div class="home-portfolio-media">
+                <section class="reference-hero-card">
+                    <div class="reference-hero-media home-portfolio-media">
                         <img id="home-portfolio-image" src="" alt="RYY STORE">
                         <span class="home-portfolio-badge" data-i18n="official_store">Official Store</span>
                     </div>
-                    <div class="home-portfolio-body">
+                    <div class="reference-hero-copy home-portfolio-body">
                         <span class="home-eyebrow" data-i18n="welcome_store">Selamat datang di</span>
                         <h1 id="home-store-name">RYY STORE</h1>
                         <p id="home-store-slogan">Murah, cepat, dan terpercaya.</p>
-                        <p id="home-store-description" class="home-description">Memuat deskripsi toko...</p>
-                        <div class="home-meta-grid">
+                        <p id="home-store-description" class="home-description">Temukan berbagai kebutuhan digital dengan proses cepat, harga bersahabat, dan bantuan nyata.</p>
+                        <div class="reference-meta home-meta-grid">
                             <div><span data-i18n="owner">Pemilik</span><strong id="home-owner">-</strong></div>
                             <div><span data-i18n="operating_since">Beroperasi sejak</span><strong id="home-since">-</strong></div>
                             <div><span data-i18n="buyers_since">Pembeli sejak</span><strong id="home-buyers">-</strong></div>
                         </div>
                     </div>
                 </section>
-                <section class="home-section">
-                    <div class="section-heading">
-                        <div>
-                            <span class="home-eyebrow" data-i18n="browse_categories">Jelajahi toko</span>
-                            <h2 data-i18n="product_categories">Kategori Produk</h2>
-                        </div>
-                        <span id="home-total-products" class="section-count">0</span>
-                    </div>
+                <section class="reference-welcome home-section">
+                    <div><span class="home-eyebrow">DIGITAL GOODS, MADE SIMPLE</span><h2>Semua kebutuhan digital,<br><em>lebih dekat.</em></h2><p>Produk pilihan, proses praktis, dan support responsif dalam satu tempat.</p></div>
+                    <button type="button" class="btn-accent" onclick="switchView('catalog')">Jelajahi katalog →</button>
+                </section>
+                <section class="reference-benefits home-section">
+                    <div><strong>✦ Instan & praktis</strong><small>Pesanan masuk, langsung diproses.</small></div><div><strong>♢ Produk terkurasi</strong><small>Hanya layanan yang kami percaya.</small></div><div><strong>◌ Ada yang bantu</strong><small>Tim support siap menjawab.</small></div>
+                </section>
+                <section class="home-section reference-categories">
+                    <div class="section-heading"><div><span class="home-eyebrow" data-i18n="browse_categories">Jelajahi toko</span><h2 data-i18n="product_categories">Kategori Produk</h2></div><span id="home-total-products" class="section-count">0</span></div>
                     <div id="home-category-grid" class="home-category-grid"></div>
                 </section>
-                <section class="home-section">
-                    <div class="section-heading"><div><span class="home-eyebrow">Komunitas</span><h2>Channel WhatsApp</h2></div></div>
+                <section class="home-section reference-community">
+                    <div class="section-heading"><div><span class="home-eyebrow">KOMUNITAS</span><h2>Terhubung dengan RYY.</h2></div></div>
                     <a id="home-whatsapp-link" class="support-btn" href="https://whatsapp.com/channel/0029Vb76SfPDzgTBlh5Tn70I" target="_blank" rel="noopener" style="text-decoration:none;display:flex;justify-content:space-between;align-items:center;"><span><strong>Channel WhatsApp</strong><small>Ikuti informasi terbaru RYY STORE.</small></span><span>→</span></a>
                 </section>
-                <section class="home-section" id="home-testimonials-section">
-                    <div class="section-heading"><div><span class="home-eyebrow">Pengalaman pembeli</span><h2>Testimoni</h2></div></div>
-                    <div id="home-testimonials" class="home-category-grid"></div>
-                </section>
+                <section class="home-section" id="home-testimonials-section"><div class="section-heading"><div><span class="home-eyebrow">PENGALAMAN PEMBELI</span><h2>Testimoni.</h2></div></div><div id="home-testimonials" class="home-category-grid"></div></section>
             </div>
 
             <!-- VIEW CATALOG (User) -->
