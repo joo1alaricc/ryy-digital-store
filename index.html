@@ -142,150 +142,69 @@
 
         .hidden { display: none !important; }
 
-        /* iOS-style stacked notification center — stable absolute stack */
+        /* Stable centered notification stack */
         #toast-container {
-            position: fixed;
-            top: max(12px, env(safe-area-inset-top));
-            left: 12px;
-            right: 12px;
-            z-index: 16000;
-            height: 0;
-            pointer-events: none;
-            padding: 0;
+            position:fixed;
+            top:max(12px, env(safe-area-inset-top));
+            left:0;
+            right:0;
+            z-index:16000;
+            height:0;
+            pointer-events:none;
+            padding:0;
+            overflow:visible;
         }
         .toast {
-            --toast-bg: rgba(35,35,42,.78);
-            --toast-y: 0px;
-            --toast-scale: 1;
-            --toast-opacity: 1;
-            --toast-blur: 0px;
-            position: absolute;
-            top: 0;
-            left: 50%;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
-            overflow: hidden;
-            display: grid;
-            grid-template-columns: 42px minmax(0,1fr) auto;
-            align-items: center;
-            gap: 10px;
-            width: min(calc(100vw - 20px), 560px);
-            min-height: 64px;
-            padding: 8px 12px 8px 10px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,.17);
-            background: linear-gradient(145deg, rgba(255,255,255,.14), var(--toast-bg) 48%, rgba(255,255,255,.055));
-            color: var(--text-main);
-            backdrop-filter: blur(42px) saturate(190%) contrast(1.04);
-            -webkit-backdrop-filter: blur(48px) saturate(180%);
-            box-shadow: 0 18px 48px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.10);
-            pointer-events: auto;
-            transform-origin: top center;
-            transform: translate3d(-50%, var(--toast-y), 0) scale(var(--toast-scale));
-            opacity: var(--toast-opacity);
-            filter: blur(var(--toast-blur));
-            will-change: transform, opacity, filter;
-            transition: transform .48s cubic-bezier(.22,1,.36,1), opacity .42s ease, filter .48s ease;
-        }
-        .toast::before {
-            content:"";
+            --toast-bg:rgba(35,35,42,.78);
+            --toast-y:0px;
+            --toast-scale:1;
+            --toast-opacity:1;
+            --toast-blur:0px;
             position:absolute;
-            inset:0;
-            pointer-events:none;
-            background:linear-gradient(135deg, rgba(255,255,255,.13), transparent 42%, rgba(157,78,221,.09));
-        }
-        .toast-icon {
-            width:42px;
-            height:42px;
-            border-radius:13px;
-            display:grid;
-            place-items:center;
+            top:0;
+            left:50%;
+            width:min(calc(100vw - 24px),560px);
+            min-height:64px;
+            padding:8px 12px 8px 10px;
+            border-radius:20px;
+            border:1px solid rgba(255,255,255,.17);
+            background:linear-gradient(145deg,rgba(255,255,255,.14),var(--toast-bg) 48%,rgba(255,255,255,.055));
+            color:var(--text-main);
             overflow:hidden;
-            color:#fff;
-            font-size:.72rem;
-            font-weight:700;
-            letter-spacing:-.5px;
-            background:linear-gradient(145deg,#a77bf0,#5d2d88);
-            box-shadow:0 5px 17px rgba(157,78,221,.28);
-            z-index:1;
-            flex:none;
+            display:grid;
+            grid-template-columns:42px minmax(0,1fr) auto;
+            align-items:center;
+            gap:10px;
+            font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",system-ui,sans-serif;
+            backdrop-filter:blur(30px) saturate(180%);
+            -webkit-backdrop-filter:blur(30px) saturate(180%);
+            box-shadow:0 18px 48px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.10);
+            pointer-events:auto;
+            transform:translate3d(-50%,var(--toast-y),0) scale(var(--toast-scale));
+            transform-origin:top center;
+            opacity:var(--toast-opacity);
+            filter:blur(var(--toast-blur));
+            will-change:transform,opacity,filter;
+            transition:transform .42s cubic-bezier(.22,1,.36,1),opacity .35s ease,filter .35s ease;
         }
-        .toast-icon img { width:100%; height:100%; object-fit:cover; display:block; }
-        .toast-copy { min-width:0; z-index:1; }
-        .toast-header {
-            font-size:.82rem;
-            font-weight:600;
-            margin-bottom:2px;
-            color:var(--text-main);
-            letter-spacing:-.18px;
-        }
-        .toast-body {
-            font-size:.82rem;
-            font-weight:600;
-            color:var(--text-main);
-            opacity:.88;
-            line-height:1.22;
-            white-space:normal;
-            overflow-wrap:anywhere;
-        }
-        .toast-time {
-            align-self:start;
-            padding-top:2px;
-            font-size:.68rem;
-            font-weight:600;
-            color:var(--text-main);
-            opacity:.52;
-            z-index:1;
-            white-space:nowrap;
-        }
-
-        body.light-mode .toast {
-            --toast-bg: rgba(248,248,250,.82);
-            color:#1d1d1f;
-            border-color:rgba(255,255,255,.82);
-            box-shadow:0 18px 48px rgba(31,31,35,.18), inset 0 1px 0 rgba(255,255,255,.88);
-        }
-        body.light-mode .toast::before {
-            background:linear-gradient(135deg, rgba(255,255,255,.48), transparent 45%, rgba(157,78,221,.08));
-        }
-        body.light-mode .toast-header,
-        body.light-mode .toast-body,
-        body.light-mode .toast-time { color:#1d1d1f; }
-
-        .toast.toast--enter {
-            animation:toastEnter .58s cubic-bezier(.22,1,.36,1) both;
-        }
-        .toast.toast--leaving {
-            animation:toastExit .42s cubic-bezier(.4,0,.2,1) forwards;
-            pointer-events:none;
-        }
+        .toast::before {content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.13),transparent 42%,color-mix(in srgb,var(--accent) 8%,transparent));}
+        .toast-icon {width:42px;height:42px;border-radius:13px;display:grid;place-items:center;overflow:hidden;color:#fff;font-size:.72rem;font-weight:700;letter-spacing:-.5px;background:linear-gradient(145deg,color-mix(in srgb,var(--accent) 75%,#fff),color-mix(in srgb,var(--accent) 75%,#000));box-shadow:0 5px 17px var(--accent-glow);z-index:1;flex:none;}
+        .toast-icon img {width:100%;height:100%;object-fit:cover;display:block;}
+        .toast-copy {min-width:0;z-index:1;}
+        .toast-header {font-size:.82rem;line-height:1.2;margin-bottom:2px;color:var(--text-main)!important;}
+        .toast-body {font-size:.72rem;line-height:1.35;color:var(--text-muted);overflow-wrap:anywhere;}
+        .toast-time {font-size:.62rem;color:var(--text-muted);white-space:nowrap;z-index:1;}
+        body.light-mode .toast {--toast-bg:rgba(248,248,250,.88);border-color:rgba(255,255,255,.82);box-shadow:0 18px 48px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.98);}
+        .toast.toast--enter {animation:toastEnter .46s cubic-bezier(.22,1,.36,1) both;}
+        .toast.toast--leaving {animation:toastExit .34s cubic-bezier(.4,0,.2,1) forwards;pointer-events:none;}
         @keyframes toastEnter {
-            from {
-                transform:translate3d(-50%, -155%, 0) scale(.92);
-                opacity:0;
-                filter:blur(10px);
-            }
-            65% {
-                transform:translate3d(-50%, 7px, 0) scale(1.015);
-                opacity:1;
-                filter:blur(0);
-            }
-            to {
-                transform:translate3d(-50%, 0, 0) scale(1);
-                opacity:1;
-                filter:blur(0);
-            }
+            from {transform:translate3d(-50%,-18px,0) scale(.985);opacity:0;filter:blur(5px);}
+            72% {transform:translate3d(-50%,2px,0) scale(1.002);opacity:1;filter:blur(0);}
+            to {transform:translate3d(-50%,0,0) scale(1);opacity:1;filter:blur(0);}
         }
         @keyframes toastExit {
-            from {
-                transform:translate3d(-50%, var(--toast-y), 0) scale(var(--toast-scale));
-                opacity:var(--toast-opacity);
-                filter:blur(var(--toast-blur));
-            }
-            to {
-                transform:translate3d(-50%, -155%, 0) scale(.92);
-                opacity:0;
-                filter:blur(10px);
-            }
+            from {transform:translate3d(-50%,var(--toast-y),0) scale(var(--toast-scale));opacity:var(--toast-opacity);filter:blur(var(--toast-blur));}
+            to {transform:translate3d(-50%,-18px,0) scale(.985);opacity:0;filter:blur(5px);}
         }
 
         /* Apple-like confirmation / alert sheet, while retaining the store's purple/glass visual language */
@@ -391,14 +310,14 @@
             box-shadow:var(--glass-shadow);
         }
         .floating-user-nav {
-            position:fixed; left:50%; bottom:max(14px, calc(env(safe-area-inset-bottom) + 10px)); transform:translateX(-50%);
-            z-index:11500; width:min(92vw,430px); height:70px; padding:7px; display:grid; grid-template-columns:repeat(5,1fr); gap:4px;
+            position:fixed; left:50%; bottom:max(12px, calc(env(safe-area-inset-bottom) + 8px)); transform:translateX(-50%);
+            z-index:11500; width:min(92vw,430px); height:76px; padding:7px; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:4px;
             border:1px solid var(--glass-border); border-radius:28px; background:rgba(255,255,255,.12);
             backdrop-filter:blur(34px) saturate(190%); -webkit-backdrop-filter:blur(34px) saturate(190%);
             box-shadow:0 18px 60px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.3); overflow:hidden;
         }
         body.light-mode .floating-user-nav { background:rgba(255,255,255,.62); }
-        .floating-nav-item { min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; border:0; border-radius:21px; background:transparent; color:var(--text-muted); font-size:.58rem; box-shadow:none; transform:none !important; filter:none !important; }
+        .floating-nav-item { min-width:0; width:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; border:0; border-radius:21px; background:transparent; color:var(--text-muted); font-size:.58rem; box-shadow:none; transform:none !important; filter:none !important; }
         .floating-nav-item svg { width:22px; height:22px; fill:currentColor; }
         .floating-nav-item.active, .floating-nav-item:hover { background:rgba(255,255,255,.18); color:var(--text-main); box-shadow:inset 0 1px 0 rgba(255,255,255,.22); }
         .floating-cart-count { min-width:13px; height:13px; line-height:13px; border-radius:99px; background:var(--accent); color:#fff; font-size:.5rem; position:absolute; transform:translate(8px,-7px); }
@@ -1733,7 +1652,8 @@ body.modal-open { scroll-behavior: auto; }
 
 <style id="ryy-v16-upgrade-style">
 /* RYY STORE v16: adaptive glass, wallet, touch feedback, stable image surfaces */
-.brand-area,.brand-area *{color:#fff!important;mix-blend-mode:difference;text-shadow:none!important}
+.brand-area,.brand-area *{color:var(--text-main)!important;mix-blend-mode:normal;text-shadow:0 1px 2px rgba(0,0,0,.12)!important}
+body.light-mode .brand-area,body.light-mode .brand-area *{color:var(--text-main)!important}
 .store-header .header-status-pill,.store-header .catalog-search,.store-header .cart-header-button{mix-blend-mode:normal}
 .user-balance-pill{position:sticky;top:84px;z-index:110;display:flex;align-items:center;gap:8px;width:max-content;max-width:calc(100vw - 28px);margin:7px 14px 8px auto;padding:4px 10px 4px 5px;border:1px solid var(--glass-border);border-radius:999px;background:rgba(255,255,255,.13);backdrop-filter:blur(28px) saturate(190%);-webkit-backdrop-filter:blur(28px) saturate(190%);box-shadow:0 12px 35px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.28);color:var(--text-main)}
 .user-balance-pill button{width:35px;height:35px;border:0;border-radius:50%;background:var(--accent);color:#fff;font-size:1.25rem;font-weight:800;line-height:1;box-shadow:0 6px 18px var(--accent-glow);cursor:pointer}.user-balance-pill div{display:flex;flex-direction:column;line-height:1.05}.user-balance-pill span{font-size:.55rem;color:var(--text-muted)}.user-balance-pill strong{font-size:.78rem;white-space:nowrap}
@@ -2151,6 +2071,31 @@ button:active{transform:scale(.985)!important;}
                             </div>
 
                             <div class="settings-panel">
+                                <h4>Tema Web Global & Warna Aksen</h4>
+                                <p class="admin-config-note" style="margin-bottom:10px;">Tema dan warna aksen dikendalikan admin dan diterapkan ke seluruh user serta panel admin.</p>
+                                <label class="admin-form-label">Tema Web Global</label>
+                                <div id="admin-theme-grid" class="theme-grid" style="margin-top:7px;">
+                                    <button type="button" class="theme-option" data-theme="liquid-glass" onclick="setAdminGlobalTheme('liquid-glass')"><span class="theme-swatch theme-swatch-glass"></span><strong>Liquid Glass</strong><small>Transparan · blur</small></button>
+                                    <button type="button" class="theme-option" data-theme="minimalist" onclick="setAdminGlobalTheme('minimalist')"><span class="theme-swatch theme-swatch-minimal"></span><strong>Minimalist</strong><small>Bersih · sederhana</small></button>
+                                    <button type="button" class="theme-option" data-theme="liquid-glass-solid" onclick="setAdminGlobalTheme('liquid-glass-solid')"><span class="theme-swatch theme-swatch-solid"></span><strong>Liquid Glass Solid</strong><small>Blok berwarna</small></button>
+                                    <button type="button" class="theme-option" data-theme="neumorphic" onclick="setAdminGlobalTheme('neumorphic')"><span class="theme-swatch theme-swatch-neumorphic"></span><strong>Neumorphic</strong><small>Timbul · pressed</small></button>
+                                </div>
+                                <label class="admin-form-label" style="margin-top:12px;">Warna Aksen Global</label>
+                                <div id="admin-accent-grid" class="color-grid" style="margin-top:7px;">
+                                    <button type="button" class="color-option" data-accent-name="Sky Blue" onclick="setAdminGlobalAccent('#38bdf8','#0284c7','Sky Blue')"><span class="color-swatch" style="background:#38bdf8"></span>Sky Blue</button>
+                                    <button type="button" class="color-option" data-accent-name="Teal" onclick="setAdminGlobalAccent('#0d9488','#115e59','Teal')"><span class="color-swatch" style="background:#0d9488"></span>Teal</button>
+                                    <button type="button" class="color-option" data-accent-name="Lilac" onclick="setAdminGlobalAccent('#9d4edd','#7b2cbf','Lilac')"><span class="color-swatch" style="background:#9d4edd"></span>Lilac</button>
+                                    <button type="button" class="color-option" data-accent-name="Moss Green" onclick="setAdminGlobalAccent('#4d908e','#274c4a','Moss Green')"><span class="color-swatch" style="background:#4d908e"></span>Moss Green</button>
+                                    <button type="button" class="color-option" data-accent-name="Maroon" onclick="setAdminGlobalAccent('#800020','#5c0017','Maroon')"><span class="color-swatch" style="background:#800020"></span>Maroon</button>
+                                    <button type="button" class="color-option" data-accent-name="Lavender" onclick="setAdminGlobalAccent('#b79ced','#907ad6','Lavender')"><span class="color-swatch" style="background:#b79ced"></span>Lavender</button>
+                                    <button type="button" class="color-option" data-accent-name="Pink Sakura" onclick="setAdminGlobalAccent('#ff70a6','#ff477e','Pink Sakura')"><span class="color-swatch" style="background:#ff70a6"></span>Pink Sakura</button>
+                                    <button type="button" class="color-option" data-accent-name="Midnight" onclick="setAdminGlobalAccent('#1d3557','#0b1329','Midnight')"><span class="color-swatch" style="background:#1d3557"></span>Midnight</button>
+                                    <button type="button" class="color-option" data-accent-name="Mint" onclick="setAdminGlobalAccent('#2ec4b6','#209c90','Mint')"><span class="color-swatch" style="background:#2ec4b6"></span>Mint</button>
+                                    <button type="button" class="color-option" data-accent-name="Charcoal" onclick="setAdminGlobalAccent('#4a4e69','#22223b','Charcoal')"><span class="color-swatch" style="background:#4a4e69"></span>Charcoal</button>
+                                </div>
+                            </div>
+
+                            <div class="settings-panel">
                                 <h4>Tampilan & Font</h4>
                                 <div class="admin-config-row">
                                     <div><strong>UI</strong><small>Liquid Glass, Standard, atau Solid.</small></div>
@@ -2283,41 +2228,12 @@ button:active{transform:scale(.985)!important;}
                         </div>
                     </div>
                     <div class="settings-panel">
-                        <h4 data-i18n="appearance">Pengaturan Tampilan & Warna Aksen</h4>
+                        <h4 data-i18n="appearance">Mode Tampilan</h4>
+                        <p class="user-settings-help">Mode terang atau gelap hanya berlaku untuk akun/perangkat ini. Tema web dan warna aksen ditentukan oleh admin untuk seluruh pengguna.</p>
                         <label data-i18n="mode_label" style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Mode Tampilan:</label>
-                        <div class="mode-toggle-group">
-                            <button onclick="setThemeMode('dark')" id="btn-mode-dark" class="mode-btn active" data-i18n="dark"> Mode Gelap</button>
-                            <button onclick="setThemeMode('light')" id="btn-mode-light" class="mode-btn" data-i18n="light"> Mode Terang</button>
-                        </div>
-                        <label id="accent-settings-label" data-i18n="choose_accent" style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Pilih Warna Aksen:</label>
-                        <div class="color-grid">
-                            <div class="color-option" onclick="setAccentColor('#38bdf8', '#0284c7', 'Sky Blue')"><span class="color-swatch" style="background:#38bdf8;"></span>Sky Blue</div>
-                            <div class="color-option" onclick="setAccentColor('#0d9488', '#115e59', 'Teal')"><span class="color-swatch" style="background:#0d9488;"></span>Teal</div>
-                            <div class="color-option" onclick="setAccentColor('#9d4edd', '#7b2cbf', 'Lilac')"><span class="color-swatch" style="background:#9d4edd;"></span>Lilac</div>
-                            <div class="color-option" onclick="setAccentColor('#4d908e', '#274c4a', 'Moss Green')"><span class="color-swatch" style="background:#4d908e;"></span>Moss Green</div>
-                            <div class="color-option" onclick="setAccentColor('#800020', '#5c0017', 'Maroon')"><span class="color-swatch" style="background:#800020;"></span>Maroon</div>
-                            <div class="color-option selected" onclick="setAccentColor('#b79ced', '#907ad6', 'Lavender')"><span class="color-swatch" style="background:#b79ced;"></span>Lavender</div>
-                            <div class="color-option" onclick="setAccentColor('#ff70a6', '#ff477e', 'Pink Sakura')"><span class="color-swatch" style="background:#ff70a6;"></span>Pink Sakura</div>
-                            <div class="color-option" onclick="setAccentColor('#1d3557', '#0b1329', 'Midnight')"><span class="color-swatch" style="background:#1d3557;"></span>Midnight</div>
-                            <div class="color-option" onclick="setAccentColor('#2ec4b6', '#209c90', 'Mint')"><span class="color-swatch" style="background:#2ec4b6;"></span>Mint</div>
-                            <div class="color-option" onclick="setAccentColor('#4a4e69', '#22223b', 'Charcoal')"><span class="color-swatch" style="background:#4a4e69;"></span>Charcoal</div>
-                        </div>
-                    </div>
-
-                    <div class="settings-panel user-visual-settings-panel theme-settings-panel">
-                        <div class="theme-settings-head">
-                            <div><h4>Tema Web</h4><p class="user-settings-help">Pilih salah satu dari 4 tema. Pengaturan hanya berlaku di perangkat/user ini.</p></div>
-                        </div>
-                        <div id="theme-grid" class="theme-grid">
-                            <button type="button" class="theme-option" data-theme="liquid-glass" onclick="setWebTheme('liquid-glass')"><span class="theme-swatch theme-swatch-glass"></span><strong>Liquid Glass</strong><small>Default · transparan · blur</small></button>
-                            <button type="button" class="theme-option" data-theme="minimalist" onclick="setWebTheme('minimalist')"><span class="theme-swatch theme-swatch-minimal"></span><strong>Minimalist</strong><small>Bersih · terang/gelap · tanpa aksen</small></button>
-                            <button type="button" class="theme-option" data-theme="liquid-glass-solid" onclick="setWebTheme('liquid-glass-solid')"><span class="theme-swatch theme-swatch-solid"></span><strong>Liquid Glass Solid</strong><small>Warna random · bisa atur terang/gelap</small></button>
-                            <button type="button" class="theme-option" data-theme="neumorphic" onclick="setWebTheme('neumorphic')"><span class="theme-swatch theme-swatch-neumorphic"></span><strong>Neumorphic</strong><small>Timbul · tombol masuk saat ditekan</small></button>
-                        </div>
-                        <div id="solid-theme-controls" class="solid-theme-controls hidden">
-                            <div class="solid-control-row"><div><strong>Intensitas warna</strong><small>Geser untuk membuat blok lebih terang atau lebih gelap.</small></div><output id="solid-brightness-value">50%</output></div>
-                            <input id="solid-brightness-range" class="solid-brightness-range" type="range" min="0" max="100" value="50" aria-label="Intensitas warna Liquid Glass Solid" oninput="setSolidBrightness(this.value)">
-                            <button type="button" class="admin-glass-btn" onclick="randomizeSolidTheme(true)">↻ Acak warna blok</button>
+                        <div class="mode-toggle-group" style="margin-bottom:0;">
+                            <button onclick="setThemeMode('dark')" id="btn-mode-dark" class="mode-btn active" data-i18n="dark">Mode Gelap</button>
+                            <button onclick="setThemeMode('light')" id="btn-mode-light" class="mode-btn" data-i18n="light">Mode Terang</button>
                         </div>
                     </div>
 
@@ -2475,10 +2391,6 @@ button:active{transform:scale(.985)!important;}
             <button class="floating-nav-item" onclick="switchView('settings')" aria-label="Pengaturan">
                 <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.65-.07-.98s-.02-.66.07-.98l2.11-1.65-2-3.46-2.49 1a7.2 7.2 0 0 0-1.69-.98L15 2h-4l-.36 2.93c-.61.25-1.18.58-1.69.98L6.15 4.91l-2 3.46 2.11 1.65c-.04.32-.07.65-.07.98s.02.66.07.98l-2.11 1.65 2 3.46 2.49-1c.51.4 1.08.73 1.69.98L11 22h4l.36-2.93c.61-.25 1.18-.58 1.69-.98l2.49 1 2 3.46zM13 15.5A3.5 3.5 0 1 1 13 8a3.5 3.5 0 0 1 0 7.5"/></svg>
                 <span data-i18n="nav_settings">Pengaturan</span>
-            </button>
-            <button class="floating-nav-item inbox-nav-item" onclick="openInbox()" aria-label="Inbox">
-                <span class="nav-icon-wrap"><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h4l2 2 2-2h8a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2m0 11h-7l-2 2-2-2H4V6h16zM7 9h10v2H7zm0 4h7v2H7z"/></svg><span id="inbox-nav-badge" class="inbox-nav-badge hidden">0</span></span>
-                <span>Inbox</span>
             </button>
         </nav>
 
@@ -2981,13 +2893,12 @@ button:active{transform:scale(.985)!important;}
             const savedMode = localStorage.getItem("theme_mode") || "dark";
             setThemeMode(savedMode, false);
 
+            // Theme + accent are global and supplied by the admin site configuration.
             localStorage.removeItem("accent_hex");
             localStorage.removeItem("accent_glow");
-            document.documentElement.style.setProperty('--accent', document.body.classList.contains('light-mode') ? '#111111' : '#ffffff');
-            document.documentElement.style.setProperty('--accent-glow', document.body.classList.contains('light-mode') ? 'rgba(17,17,17,.10)' : 'rgba(255,255,255,.10)');
-            // Personal UI preferences are local to each user/device.
-            const userMode=localStorage.getItem('ryy_user_ui_mode') || 'standard';
-            const userBlur=Number(localStorage.getItem('ryy_user_blur') ?? USER_UI_MODES[userMode]?.blur ?? 50);
+            localStorage.removeItem("ryy_web_theme");
+            localStorage.removeItem("ryy_user_ui_mode");
+            localStorage.removeItem("ryy_user_blur");
             initUserVisualPreferences();
             initWebTheme();
             initChatStylePreference();
@@ -3004,17 +2915,18 @@ button:active{transform:scale(.985)!important;}
                 document.getElementById("btn-mode-light").classList.remove("active");
             }
             localStorage.setItem("theme_mode", mode);
-            setAccentColor();
             if(notify) showToast(`Beralih ke ${mode === 'light' ? 'Mode Terang' : 'Mode Gelap'}`);
         }
 
-        function setAccentColor(){
-            const accent=document.body.classList.contains('light-mode') ? '#111111' : '#ffffff';
-            const glow=document.body.classList.contains('light-mode') ? 'rgba(17,17,17,.10)' : 'rgba(255,255,255,.10)';
-            document.documentElement.style.setProperty('--accent',accent);
+        const DEFAULT_GLOBAL_ACCENT = {hex:'#b79ced',glow:'rgba(144,122,214,.28)',name:'Lavender'};
+        function applyGlobalAccent(accent) {
+            const a = accent && typeof accent === 'object' ? accent : DEFAULT_GLOBAL_ACCENT;
+            const hex = /^#[0-9a-fA-F]{6}$/.test(String(a.hex||'')) ? String(a.hex) : DEFAULT_GLOBAL_ACCENT.hex;
+            const glow = /^rgba\(/.test(String(a.glow||'')) ? String(a.glow) : DEFAULT_GLOBAL_ACCENT.glow;
+            document.documentElement.style.setProperty('--accent',hex);
             document.documentElement.style.setProperty('--accent-glow',glow);
-            localStorage.removeItem('accent_hex');
-            localStorage.removeItem('accent_glow');
+            document.documentElement.style.setProperty('--accent-name',String(a.name||DEFAULT_GLOBAL_ACCENT.name));
+            document.querySelectorAll('#admin-accent-grid .color-option').forEach(el=>el.classList.toggle('selected',el.dataset.accentName===String(a.name||DEFAULT_GLOBAL_ACCENT.name)));
         }
 
         const WEB_THEMES = ['liquid-glass','minimalist','liquid-glass-solid','neumorphic'];
@@ -3028,7 +2940,7 @@ button:active{transform:scale(.985)!important;}
             return `rgba(${r},${g},${b},${document.body.classList.contains('light-mode')?0.38:0.30})`;
         }
         function randomizeSolidTheme(notify=false) {
-            if(localStorage.getItem('ryy_web_theme')!=='liquid-glass-solid') return;
+            if(!document.body.classList.contains('theme-liquid-glass-solid')) return;
             const brightness=Math.max(0,Math.min(100,Number(localStorage.getItem('ryy_solid_brightness')??50)));
             document.querySelectorAll(SOLID_SURFACES).forEach((el)=>{
                 const color=SOLID_THEME_PALETTE[Math.floor(Math.random()*SOLID_THEME_PALETTE.length)];
@@ -3038,7 +2950,7 @@ button:active{transform:scale(.985)!important;}
             if(notify) showToast('Warna tiap blok diacak.');
         }
         function paintNewSolidSurfaces() {
-            if(localStorage.getItem('ryy_web_theme')!=='liquid-glass-solid') return;
+            if(!document.body.classList.contains('theme-liquid-glass-solid')) return;
             const brightness=Math.max(0,Math.min(100,Number(localStorage.getItem('ryy_solid_brightness')??50)));
             document.querySelectorAll(SOLID_SURFACES).forEach(el=>{
                 if(!el.dataset.solidColor){
@@ -3053,7 +2965,7 @@ button:active{transform:scale(.985)!important;}
             if(persist) localStorage.setItem('ryy_solid_brightness',String(brightness));
             const out=document.getElementById('solid-brightness-value'); if(out) out.textContent=`${brightness}%`;
             const range=document.getElementById('solid-brightness-range'); if(range && Number(range.value)!==brightness) range.value=String(brightness);
-            if(localStorage.getItem('ryy_web_theme')==='liquid-glass-solid'){
+            if(document.body.classList.contains('theme-liquid-glass-solid')){
                 document.querySelectorAll(SOLID_SURFACES).forEach(el=>{const color=el.dataset.solidColor||SOLID_THEME_PALETTE[0];el.style.setProperty('--solid-block-bg',solidColor(color,brightness));});
             }
         }
@@ -3063,23 +2975,17 @@ button:active{transform:scale(.985)!important;}
             controls?.classList.toggle('hidden',theme!=='liquid-glass-solid');
             if(theme==='liquid-glass-solid') setSolidBrightness(Number(localStorage.getItem('ryy_solid_brightness')??50),false);
         }
-        function setWebTheme(theme,persist=true) {
+        function setWebTheme(theme,persist=false) {
             if(!WEB_THEMES.includes(theme)) theme='liquid-glass';
             document.body.classList.remove('theme-liquid-glass','theme-minimalist','theme-liquid-glass-solid','theme-neumorphic');
             document.body.classList.add(`theme-${theme}`);
-            if(persist) localStorage.setItem('ryy_web_theme',theme);
             refreshThemeUI(theme);
             if(theme==='liquid-glass-solid') randomizeSolidTheme(false);
             else document.querySelectorAll(SOLID_SURFACES).forEach(el=>{el.style.removeProperty('--solid-block-bg');delete el.dataset.solidColor;});
-            if(theme==='minimalist') document.querySelectorAll('.color-option').forEach(el=>el.classList.remove('selected'));
         }
         function initWebTheme() {
-            const theme='liquid-glass'; localStorage.setItem('ryy_web_theme','liquid-glass');
-            setWebTheme(theme,false);
-            if(!window.__solidThemeObserver && document.body){
-                window.__solidThemeObserver=new MutationObserver(()=>{ if(localStorage.getItem('ryy_web_theme')==='liquid-glass-solid') paintNewSolidSurfaces(); });
-                window.__solidThemeObserver.observe(document.body,{subtree:true,childList:true});
-            }
+            document.body.classList.remove('theme-liquid-glass','theme-minimalist','theme-liquid-glass-solid','theme-neumorphic','user-ui-liquid','user-ui-standard','user-ui-solid');
+            setWebTheme('liquid-glass',false);
         }
 
         function initLandingPageInfo() {
@@ -5137,7 +5043,7 @@ async function uploadInboxScreenshot(index,input){
                 const info=storeData?.storeInfo||{};
                 const set=(id,val)=>{const e=document.getElementById(id);if(e)e.value=val??""};
                 set("cfg-store-name",info.name);set("cfg-store-slogan",info.slogan);set("cfg-store-description",info.description);set("cfg-store-owner",info.owner);set("cfg-store-since",info.operatingSince);set("cfg-store-photo",info.urlPhoto);set("cfg-whatsapp-link",info.whatsappLink);const photoPreview=document.getElementById("cfg-store-photo-preview");if(photoPreview&&info.urlPhoto){photoPreview.src=imageDisplayUrl(info.urlPhoto);photoPreview.style.display="block";photoPreview.onerror=()=>{photoPreview.style.display="none";};}
-                set("cfg-ui-mode",__adminConfig.uiMode||"liquid-glass");set("cfg-font-family",__adminConfig.font?.family||"san-francisco");set("cfg-font-weight",__adminConfig.font?.weight||600);
+                set("cfg-ui-mode",__adminConfig.uiMode||"liquid-glass");set("cfg-font-family",__adminConfig.font?.family||"san-francisco");set("cfg-font-weight",__adminConfig.font?.weight||600);applyAdminAppearance(__adminConfig);document.querySelectorAll("#admin-theme-grid .theme-option").forEach(el=>el.classList.toggle("selected",el.dataset.theme===(__adminConfig.webTheme||"liquid-glass")));applyGlobalAccent(__adminConfig.accent||DEFAULT_GLOBAL_ACCENT);
                 const maintenance=document.getElementById("cfg-maintenance");if(maintenance)maintenance.checked=__adminConfig.maintenance===true;
                 renderAdminConfigAdmins();
                 if (typeof window.renderAdminOtherTools === "function") window.renderAdminOtherTools();
@@ -5182,7 +5088,7 @@ Simpan data ini. Kredensial rahasia tidak ditampilkan lagi setelah ini.`;
 
         function applyAdminAppearance(config) {
             const body=document.body;
-            ["font-sans-serif","font-san-francisco","font-roboto","font-canva-sans","font-weight-400","font-weight-500","font-weight-600","font-weight-700","ui-blur-mode","admin-ui-solid-mode","admin-ui-standard-mode"].forEach(c=>body.classList.remove(c));
+            ["font-sans-serif","font-san-francisco","font-roboto","font-canva-sans","font-weight-400","font-weight-500","font-weight-600","font-weight-700","ui-blur-mode","admin-ui-solid-mode","admin-ui-standard-mode","user-ui-liquid","user-ui-standard","user-ui-solid"].forEach(c=>body.classList.remove(c));
             const family=config?.font?.family||"san-francisco";
             const weight=Number(config?.font?.weight)||600;
             body.classList.add(`font-${family}`,`font-weight-${weight}`);
@@ -5190,26 +5096,33 @@ Simpan data ini. Kredensial rahasia tidak ditampilkan lagi setelah ini.`;
             if(uiMode==="blur" || uiMode==="standard") body.classList.add("ui-blur-mode");
             if(uiMode==="standard") body.classList.add("admin-ui-standard-mode");
             if(uiMode==="solid") body.classList.add("admin-ui-solid-mode");
-            // Admin appearance is the site default; a saved user preference takes precedence.
-            const savedUserMode=localStorage.getItem('ryy_user_ui_mode');
-            if(!localStorage.getItem('admin_token') && savedUserMode && ['liquid-glass','standard','solid','custom'].includes(savedUserMode)) {
-                body.classList.remove('ui-blur-mode','admin-ui-solid-mode','admin-ui-standard-mode');
-                body.classList.remove('user-ui-liquid','user-ui-standard','user-ui-solid');
-                const cssMode=savedUserMode==='liquid-glass'?'liquid':(savedUserMode==='custom'?'standard':savedUserMode);
-                body.classList.add(`user-ui-${cssMode}`);
-                const fallbackBlur=savedUserMode==='liquid-glass'?100:savedUserMode==='solid'?0:50;
-                const savedBlur=Number(localStorage.getItem('ryy_user_blur') ?? fallbackBlur);
-                document.documentElement.style.setProperty('--user-blur-px',`${blurPercentToPx(savedBlur).toFixed(2)}px`);
-            }
+            const webTheme=WEB_THEMES.includes(config?.webTheme)?config.webTheme:'liquid-glass';
+            setWebTheme(webTheme,false);
+            applyGlobalAccent(config?.accent||DEFAULT_GLOBAL_ACCENT);
         }
 
         async function saveAdminAppearanceOnly() {
             try{
-                const config={action:"site",uiMode:document.getElementById("cfg-ui-mode").value,font:{family:document.getElementById("cfg-font-family").value,weight:Number(document.getElementById("cfg-font-weight").value)}};
+                const current=__adminConfig||{};
+                const config={action:"site",uiMode:document.getElementById("cfg-ui-mode").value,font:{family:document.getElementById("cfg-font-family").value,weight:Number(document.getElementById("cfg-font-weight").value)},webTheme:current.webTheme||'liquid-glass',accent:current.accent||DEFAULT_GLOBAL_ACCENT};
                 const data=await adminApi("admin-config",{method:"PATCH",body:config});
                 __adminConfig=data.config;applyAdminAppearance(__adminConfig);showToast("Tampilan berhasil diperbarui.");
             }catch(error){iosAlert(error.message);}
         }
+
+        async function saveAdminGlobalAppearance(patch,message){
+            try{
+                const current=__adminConfig||{};
+                const payload={action:'site',webTheme:patch.webTheme??current.webTheme??'liquid-glass',accent:patch.accent??current.accent??DEFAULT_GLOBAL_ACCENT};
+                const data=await adminApi('admin-config',{method:'PATCH',body:payload});
+                __adminConfig=data.config||{...current,...payload};
+                applyAdminAppearance(__adminConfig);
+                refreshThemeUI(__adminConfig.webTheme||'liquid-glass');
+                showToast(message||'Tampilan global diperbarui.');
+            }catch(error){iosAlert(error.message);loadAdminConfig?.();}
+        }
+        window.setAdminGlobalTheme=function(theme){ saveAdminGlobalAppearance({webTheme:theme},`Tema global diubah ke ${theme}.`); };
+        window.setAdminGlobalAccent=function(hex,glow,name){ saveAdminGlobalAppearance({accent:{hex,glow,name}},`Warna aksen global diubah ke ${name}.`); };
 
         async function handleAdminStorePhoto(event){
             const file=event.target.files?.[0];
@@ -5457,22 +5370,8 @@ Simpan data ini. Kredensial rahasia tidak ditampilkan lagi setelah ini.`;
             refreshUserVisualPreferenceUI();
         }
         function initUserVisualPreferences() {
-            const state=userVisualState();
-            applyUserVisualState(state.mode,state.blur,false);
-            const range=document.getElementById('user-blur-range');
-            if(range){
-                range.addEventListener('pointerdown',()=>showBlurComparisonPreview(Number(range.value)));
-                range.addEventListener('touchstart',()=>showBlurComparisonPreview(Number(range.value)),{passive:true});
-                range.addEventListener('input',()=>{
-                    const value=Math.max(0,Math.min(100,Number(range.value)||0));
-                    updateUserBlurRangeUI(value);
-                    showBlurComparisonPreview(value);
-                });
-                const end=()=>setTimeout(hideBlurComparisonPreview,180);
-                range.addEventListener('pointerup',end);
-                range.addEventListener('touchend',end,{passive:true});
-                range.addEventListener('change',()=>showBlurComparisonPreview(Number(range.value)));
-            }
+            // Theme/blur controls are global now; legacy local preferences are ignored.
+            document.body.classList.remove('user-ui-liquid','user-ui-standard','user-ui-solid');
         }
         function setChatStyle(style, persist=true) {
             if(!CHAT_STYLES.includes(style)) style='default';
@@ -7095,6 +6994,22 @@ button:active, .btn:active, .admin-glass-btn:active, .support-btn:active,
     transition-duration: .001ms !important;
   }
 }
+
+        #admin-theme-grid .theme-option.selected { border-color:var(--accent)!important; box-shadow:0 0 0 2px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,.18); }
+        #admin-accent-grid .color-option.selected { border-color:var(--accent)!important; box-shadow:0 0 0 2px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,.2); background:color-mix(in srgb,var(--accent) 10%,transparent); }
+        body.theme-neumorphic .type-option.selected,
+        body.theme-neumorphic:not(.light-mode) .type-option.selected {
+            background:color-mix(in srgb,var(--accent) 22%,var(--glass-surface))!important;
+            border:2px solid color-mix(in srgb,var(--accent) 72%,var(--glass-border))!important;
+            color:var(--text-main)!important;
+            box-shadow:inset 5px 5px 10px rgba(0,0,0,.28),inset -4px -4px 9px rgba(255,255,255,.045),0 0 0 2px color-mix(in srgb,var(--accent) 18%,transparent),0 8px 24px color-mix(in srgb,var(--accent) 16%,transparent)!important;
+        }
+        body.theme-neumorphic .type-option.selected strong,
+        body.theme-neumorphic .type-option.selected .reseller-final,
+        body.theme-neumorphic .type-option.selected .reseller-arrow { color:var(--text-main)!important; }
+        body.theme-neumorphic .type-option.selected > span > small { color:var(--text-muted)!important;opacity:1!important; }
+        body.theme-neumorphic .type-option.selected .adaptive-price-value { color:var(--accent)!important;-webkit-text-fill-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);border-color:color-mix(in srgb,var(--accent) 35%,var(--glass-border));text-shadow:none; }
+        body.theme-neumorphic .type-option.selected::after { content:"✓"; flex:0 0 auto; width:24px; height:24px; display:grid; place-items:center; border-radius:50%; background:color-mix(in srgb,var(--accent) 18%,var(--glass-surface)); color:var(--accent); font-size:.75rem; font-weight:900; box-shadow:inset 2px 2px 5px rgba(0,0,0,.22),inset -2px -2px 5px rgba(255,255,255,.04); }
 </style>
 </body>
 </html>
