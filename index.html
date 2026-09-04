@@ -1618,7 +1618,7 @@
 .downloader-media{width:100%;max-height:52vh;border-radius:20px;background:#000;display:block}.downloader-meta{padding:10px 2px}.downloader-meta strong{display:block}.downloader-meta small{display:block;color:var(--text-muted);margin-top:4px}.downloader-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.downloader-option{border:1px solid var(--glass-border);border-radius:17px;background:rgba(255,255,255,.07);padding:11px;text-align:left;color:inherit}.downloader-option strong{display:block;font-size:.7rem}.downloader-option small{display:block;color:var(--text-muted);margin-top:3px}.downloader-overlay{position:fixed;inset:0;z-index:22000;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;padding:14px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}.downloader-overlay.hidden{display:none!important}
 @media(max-width:600px){.downloader-options{grid-template-columns:1fr}.downloader-overlay{align-items:center;padding:14px}.downloader-sheet{border-radius:28px;max-height:88vh}}
         .product-option-checks{display:flex;flex-wrap:wrap;gap:7px}.product-option-checks label{display:flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--glass-border);border-radius:14px;background:rgba(255,255,255,.06);font-size:.68rem;color:var(--text-main);cursor:pointer}.product-option-checks input{accent-color:var(--accent)}.product-parameter-fields{display:grid;gap:8px}.product-parameter-fields label{font-size:.64rem;color:var(--text-muted)}.product-parameter-fields input{margin-top:4px}.admin-form-checks{display:flex;flex-wrap:wrap;gap:7px}.admin-form-check{display:flex!important;align-items:center;gap:6px;padding:7px 9px;border:1px solid var(--glass-border);border-radius:12px;background:rgba(255,255,255,.05);font-size:.64rem!important;cursor:pointer}.admin-form-check input{accent-color:var(--accent)}
-.turnstile-box{display:flex;justify-content:center;align-items:center;min-height:65px;margin:9px 0 4px;overflow:hidden}.turnstile-box iframe{max-width:100%}.checkout-turnstile{margin-top:10px;}
+
 </style>
 </style>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -1744,6 +1744,27 @@ body.modal-open { scroll-behavior: auto; }
 .admin-product-thumb,.product-img{object-position:center;background:rgba(255,255,255,.04)}
 @media(max-width:600px){.user-balance-pill{top:76px;margin-right:10px}.wallet-actions-grid{grid-template-columns:1fr 1fr}.wallet-modal-content{width:calc(100vw - 20px)}}
 </style>
+
+<style id="ryy-v20-minimal-glass">
+:root{--accent:#111111!important;--accent-glow:rgba(17,17,17,.12)!important;--glass-blur:blur(16px);--glass-border:rgba(127,127,127,.18);--glass-surface:rgba(255,255,255,.58);--glass-shadow:0 12px 36px rgba(0,0,0,.08);}
+body.light-mode{--accent:#111111!important;--accent-glow:rgba(17,17,17,.10)!important;--glass-surface:rgba(255,255,255,.68);}
+body:not(.light-mode){--accent:#fff!important;--accent-glow:rgba(255,255,255,.10)!important;--glass-surface:rgba(25,25,28,.62);}
+body{zoom:.985;letter-spacing:-.005em;}
+.bg-animation-container{background:var(--bg-main)!important;}
+.orb{filter:none!important;opacity:.035!important;will-change:transform;}
+.orb-1{background:#000!important}.orb-2{background:#fff!important}.orb-3{background:#777!important;opacity:.025!important}
+body:not(.light-mode) .orb-1{background:#fff!important}.toast,.floating-nav,.ai-fab,.inbox-fab,.ios-dialog,.payment-sheet,.language-sheet,.support-chat,.modal-content,.settings-panel,.dash-card,.profile-hero,.product-card,.bs-card,.admin-product-card,.admin-user-card,.admin-pending-card,.subscription-card,.distributor-card,.home-category-card,.type-option,.cart-row,.language-picker-button,.admin-glass-btn,.support-btn,.floating-user-nav{backdrop-filter:blur(16px) saturate(125%)!important;-webkit-backdrop-filter:blur(16px) saturate(125%)!important;box-shadow:0 10px 30px rgba(0,0,0,.07),inset 0 1px 0 rgba(255,255,255,.16)!important;border-color:var(--glass-border)!important;}
+body:not(.light-mode) .toast,body:not(.light-mode) .modal-content,body:not(.light-mode) .settings-panel,body:not(.light-mode) .dash-card,body:not(.light-mode) .profile-hero,body:not(.light-mode) .product-card,body:not(.light-mode) .bs-card,body:not(.light-mode) .admin-product-card,body:not(.light-mode) .admin-user-card,body:not(.light-mode) .admin-pending-card,body:not(.light-mode) .subscription-card,body:not(.light-mode) .distributor-card,body:not(.light-mode) .home-category-card,body:not(.light-mode) .type-option,body:not(.light-mode) .cart-row,body:not(.light-mode) .admin-glass-btn,body:not(.light-mode) .support-btn{background:rgba(24,24,28,.62)!important;}
+body.light-mode .toast,body.light-mode .modal-content,body.light-mode .settings-panel,body.light-mode .dash-card,body.light-mode .profile-hero,body.light-mode .product-card,body.light-mode .bs-card,body.light-mode .admin-product-card,body.light-mode .admin-user-card,body.light-mode .admin-pending-card,body.light-mode .subscription-card,body.light-mode .distributor-card,body.light-mode .home-category-card,body.light-mode .type-option,body.light-mode .cart-row,body.light-mode .admin-glass-btn,body.light-mode .support-btn{background:rgba(255,255,255,.64)!important;}
+.store-header,.dashboard-container,.landing-box,.auth-card{border-radius:24px!important;}
+.settings-panel,.dash-card,.profile-hero,.product-card,.bs-card,.admin-product-card,.admin-user-card,.admin-pending-card,.subscription-card,.distributor-card,.home-category-card,.type-option,.cart-row{border-radius:20px!important;}
+.floating-user-nav{border-radius:24px!important;}
+button,input,select,textarea{transition:transform .2s cubic-bezier(.22,1,.36,1),background-color .2s ease,border-color .2s ease,box-shadow .2s ease!important;}
+button:active{transform:scale(.985)!important;}
+.product-card:hover,.bs-card:hover,.home-category-card:hover{transform:translateY(-1px)!important;}
+.view-enter{animation:ryyViewEnter .34s cubic-bezier(.22,1,.36,1) both;}
+@keyframes ryyViewEnter{from{opacity:0;transform:translate3d(0,8px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+</style>
 </head>
 <body>
 
@@ -1754,11 +1775,10 @@ body.modal-open { scroll-behavior: auto; }
     </div>
 
     <div id="toast-container"></div>
-
     <!-- 1. AUTH SECTION (DUAL USER: USER & ADMIN) -->
     <div id="auth-section" class="auth-container">
         <div class="auth-card">
-            <div id="maintenance-auth-banner" class="admin-config-note hidden" style="padding:10px 12px;margin-bottom:12px;border:1px solid rgba(255,190,80,.28);border-radius:16px;background:rgba(255,180,60,.08);color:#ffd27a;">🛠️ RYY STORE sedang maintenance. Login admin tetap tersedia.</div>
+            <div id="maintenance-auth-banner" class="admin-config-note hidden" style="padding:10px 12px;margin-bottom:12px;border:1px solid rgba(255,190,80,.28);border-radius:16px;background:rgba(255,180,60,.08);color:#ffd27a;"> RYY STORE sedang maintenance. Login admin tetap tersedia.</div>
             <h1 class="store-title">RYY STORE</h1>
             <p class="store-subtitle" data-i18n="auth_subtitle">Masuk untuk menjelajahi toko atau panel</p>
             
@@ -1773,7 +1793,6 @@ body.modal-open { scroll-behavior: auto; }
                     <div id="user-login-panel" class="auth-step active">
                         <input type="text" id="user-login-input" data-i18n-placeholder="username_email" placeholder="Username / Email">
                         <input type="password" id="user-login-password" data-i18n-placeholder="password" placeholder="Password">
-                        <div id="turnstile-login" class="turnstile-box" aria-label="Verifikasi bukan robot"></div>
                         <button type="submit" class="btn-accent" data-i18n="login_user_btn">Masuk sebagai User</button>
 
                         <div style="display:flex;align-items:center;gap:10px;margin:10px 0;color:var(--text-muted);font-size:.72rem;">
@@ -1790,7 +1809,7 @@ body.modal-open { scroll-behavior: auto; }
                     <div id="step-contact" class="auth-step">
                         <input type="email" id="contact-input" data-i18n-placeholder="email_verify" placeholder="Masukkan Email untuk verifikasi">
                         <button type="button" onclick="sendOTP()" class="btn-accent" data-i18n="send_otp">Kirim OTP</button>
-                        <button type="button" onclick="startWhatsAppRegister()" class="btn-icon-minimal" style="width:100%;margin-top:7px;justify-content:center;">💬 Verifikasi via WhatsApp</button>
+                        <button type="button" onclick="startWhatsAppRegister()" class="btn-icon-minimal" style="width:100%;margin-top:7px;justify-content:center;"> Verifikasi via WhatsApp</button>
                         <button type="button" onclick="cancelRegister()" class="btn-icon-minimal" style="width:100%; margin-top:7px; justify-content:center;" data-i18n="back_login">Kembali ke Login</button>
                     </div>
 
@@ -1953,7 +1972,7 @@ body.modal-open { scroll-behavior: auto; }
                         <button type="button" class="admin-tab" data-admin-tab="products" onclick="switchAdminTab('products');closeAdminSidebar()">Produk</button>
                         <button type="button" class="admin-tab" data-admin-tab="chat" onclick="switchAdminTab('chat');closeAdminSidebar()">Chat</button>
                         <button type="button" class="admin-tab" data-admin-tab="support" onclick="switchAdminTab('support');closeAdminSidebar()">Support</button>
-                        <button type="button" class="admin-tab" data-admin-tab="broadcast" onclick="switchAdminTab('broadcast');closeAdminSidebar()">Broadcast</button>
+                        <button type="button" class="admin-tab" data-admin-tab="broadcast" onclick="switchAdminTab('broadcast');closeAdminSidebar()">Broadcast</button><button type="button" class="admin-tab" data-admin-tab="finance" onclick="switchAdminTab('finance');closeAdminSidebar()">Keuangan</button>
                         <button type="button" class="admin-tab" data-admin-tab="proofs" onclick="switchAdminTab('proofs');closeAdminSidebar()">Bukti Transaksi</button>
                         <button type="button" class="admin-tab" data-admin-tab="config" onclick="switchAdminTab('config');closeAdminSidebar()">Konfigurasi</button><button type="button" class="admin-tab" data-admin-tab="database" onclick="switchAdminTab('database');closeAdminSidebar()">Database</button><button type="button" class="admin-tab" data-admin-tab="whatsapp" onclick="switchAdminTab('whatsapp');closeAdminSidebar()">WhatsApp Bot</button>
                     </nav>
@@ -2002,6 +2021,16 @@ body.modal-open { scroll-behavior: auto; }
                                 <label class="admin-form-label">Pesan<textarea id="broadcast-message" class="admin-form-textarea" rows="5" placeholder="Tulis pemberitahuan..."></textarea></label>
                                 <button type="button" class="admin-glass-btn accent" onclick="sendAdminBroadcast()">Kirim Pemberitahuan</button>
                             </div>
+                        </div>
+                    </section>
+
+                    <section id="admin-view-finance" class="admin-view">
+                        <div class="admin-config-stack">
+                            <div class="settings-panel" style="margin-top:0;">
+                                <div class="admin-toolbar"><div><h4>Keuangan & Voucher</h4><p class="admin-config-note">Admin utama dapat membuat voucher, melihat saldo user, dan melakukan penyesuaian koin.</p></div><button type="button" class="admin-glass-btn" onclick="loadAdminFinance()">↻</button></div>
+                                <div class="admin-form-grid two" style="margin-top:9px"><label class="admin-form-label">Jenis Voucher<select id="finance-voucher-type" class="admin-form-select"><option value="discount">Pengurangan harga</option><option value="cashback">Cashback</option></select></label><label class="admin-form-label">Mode<select id="finance-voucher-mode" class="admin-form-select"><option value="percent">Persentase (%)</option><option value="fixed">Nominal (Rp)</option></select></label><label class="admin-form-label">Nilai<input id="finance-voucher-value" class="admin-form-input" type="number" min="1" value="20"></label><label class="admin-form-label">Maks. Penggunaan<input id="finance-voucher-max" class="admin-form-input" type="number" min="1" value="1"></label><label class="admin-form-label">User ID (opsional)<input id="finance-voucher-user" class="admin-form-input" placeholder="Kosong = semua user"></label><label class="admin-form-label">Kedaluwarsa (opsional)<input id="finance-voucher-expiry" class="admin-form-input" type="datetime-local"></label><label class="admin-form-label">Simulasi Harga Beli<input id="finance-voucher-example" class="admin-form-input" type="number" min="0" value="10000" oninput="previewFinanceVoucher()"></label></div><div id="finance-voucher-preview" class="admin-response-box" style="margin-top:8px">Cashback 20% dari Rp10.000 = Rp2.000 = 200 koin.</div><button type="button" class="admin-glass-btn accent" style="width:100%;margin-top:8px" onclick="generateFinanceVoucher()">＋ Generate Voucher</button><div id="finance-generated-voucher" class="admin-response-box" style="display:none"></div><div id="finance-voucher-list" style="margin-top:10px"></div><div class="admin-toolbar" style="margin-top:13px"><div><h4>Saldo User</h4><p class="admin-config-note">Penyesuaian koin hanya untuk admin_utama.</p></div></div><div id="finance-user-list"></div>
+                            </div>
+
                         </div>
                     </section>
 
@@ -2115,7 +2144,7 @@ body.modal-open { scroll-behavior: auto; }
                                         <label class="admin-form-label">Owner<input id="cfg-store-owner" class="admin-form-input"></label>
                                         <label class="admin-form-label">Mulai Operasi<input id="cfg-store-since" class="admin-form-input"></label>
                                     </div>
-                                    <label class="admin-form-label">Gambar Toko / Portfolio URL<input id="cfg-store-photo" class="admin-form-input" placeholder="https://..."></label>
+                                    <label class="admin-form-label">Gambar Toko / Portfolio URL<div style="display:flex;gap:7px;align-items:stretch"><input id="cfg-store-photo" class="admin-form-input" placeholder="URL otomatis setelah upload" style="margin:0;flex:1"><button type="button" class="admin-glass-btn" style="white-space:nowrap;padding:0 13px" onclick="document.getElementById('cfg-store-photo-file')?.click()">Pilih File</button></div><input id="cfg-store-photo-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif" class="hidden" onchange="handleAdminStorePhoto(event)"><img id="cfg-store-photo-preview" alt="Pratinjau gambar toko" style="display:none;width:100%;max-height:220px;object-fit:cover;border-radius:18px;margin-top:8px;border:1px solid var(--glass-border)"></label>
                                     <label class="admin-form-label">Channel WhatsApp URL<input id="cfg-whatsapp-link" class="admin-form-input" placeholder="https://whatsapp.com/channel/..."></label>
                                     <button type="button" class="admin-glass-btn accent" onclick="saveAdminSiteConfig()">Simpan Konfigurasi Toko</button>
                                 </div>
@@ -2146,11 +2175,6 @@ body.modal-open { scroll-behavior: auto; }
                                     <div><strong>Maintenance</strong><small>Web user dikunci sementara. Panel admin tetap dapat diakses.</small></div>
                                     <label class="admin-switch"><input id="cfg-maintenance" type="checkbox" onchange="toggleAdminMaintenance(this.checked)"><span class="admin-switch-track"></span></label>
                                 </div>
-                            </div>
-
-                            <div class="settings-panel">
-                                <div class="admin-toolbar"><div><h4>Keuangan & Voucher</h4><p class="admin-config-note">Admin utama dapat membuat voucher, melihat saldo user, dan melakukan penyesuaian koin.</p></div><button type="button" class="admin-glass-btn" onclick="loadAdminFinance()">↻</button></div>
-                                <div class="admin-form-grid two" style="margin-top:9px"><label class="admin-form-label">Jenis Voucher<select id="finance-voucher-type" class="admin-form-select"><option value="discount">Pengurangan harga</option><option value="cashback">Cashback</option></select></label><label class="admin-form-label">Mode<select id="finance-voucher-mode" class="admin-form-select"><option value="percent">Persentase (%)</option><option value="fixed">Nominal (Rp)</option></select></label><label class="admin-form-label">Nilai<input id="finance-voucher-value" class="admin-form-input" type="number" min="1" value="20"></label><label class="admin-form-label">Maks. Penggunaan<input id="finance-voucher-max" class="admin-form-input" type="number" min="1" value="1"></label><label class="admin-form-label">User ID (opsional)<input id="finance-voucher-user" class="admin-form-input" placeholder="Kosong = semua user"></label><label class="admin-form-label">Kedaluwarsa (opsional)<input id="finance-voucher-expiry" class="admin-form-input" type="datetime-local"></label><label class="admin-form-label">Simulasi Harga Beli<input id="finance-voucher-example" class="admin-form-input" type="number" min="0" value="10000" oninput="previewFinanceVoucher()"></label></div><div id="finance-voucher-preview" class="admin-response-box" style="margin-top:8px">Cashback 20% dari Rp10.000 = Rp2.000 = 200 koin.</div><button type="button" class="admin-glass-btn accent" style="width:100%;margin-top:8px" onclick="generateFinanceVoucher()">＋ Generate Voucher</button><div id="finance-generated-voucher" class="admin-response-box" style="display:none"></div><div id="finance-voucher-list" style="margin-top:10px"></div><div class="admin-toolbar" style="margin-top:13px"><div><h4>Saldo User</h4><p class="admin-config-note">Penyesuaian koin hanya untuk admin_utama.</p></div></div><div id="finance-user-list"></div>
                             </div>
 
                             <div class="settings-panel">
@@ -2197,10 +2221,10 @@ body.modal-open { scroll-behavior: auto; }
                         <div class="dash-card"><span data-i18n="contact_alt">Kontak Tambahan (Terverifikasi)</span><strong id="dash-secondary-contact" style="font-size: 0.8rem; color: var(--accent);">Belum Ditambahkan</strong></div>
                         <div class="dash-card"><span data-i18n="total_items">Total Item Dibeli</span><strong id="dash-total-items">0 Item</strong></div>
                         <div class="dash-card"><span data-i18n="total_spent">Total Pengeluaran</span><strong id="dash-total-spent">Rp0</strong></div>
-                        <div class="dash-card"><span data-i18n="battery">Sisa Baterai</span><strong id="dash-battery" class="device-card-value"><span class="device-icon">🔋</span><span>Memeriksa...</span></strong></div>
-                        <div class="dash-card"><span data-i18n="jakarta_time">Jam Jakarta (Asia/Jakarta)</span><strong id="dash-clock" class="device-card-value"><span class="device-icon">🕒</span><span>--:--:--</span></strong></div>
+                        <div class="dash-card"><span data-i18n="battery">Sisa Baterai</span><strong id="dash-battery" class="device-card-value"><span class="device-icon"></span><span>Memeriksa...</span></strong></div>
+                        <div class="dash-card"><span data-i18n="jakarta_time">Jam Jakarta (Asia/Jakarta)</span><strong id="dash-clock" class="device-card-value"><span class="device-icon"></span><span>--:--:--</span></strong></div>
                     </div>
-                    <div class="settings-panel wallet-profile-block" style="margin-top:12px;"><div class="admin-toolbar"><div><h4>Saldo & Keuangan</h4><p class="admin-config-note">Kelola deposit, refund, saldo koin, cashback, dan riwayat transaksi.</p></div><button type="button" class="admin-glass-btn accent" onclick="openWalletModal()">Kelola</button></div><div class="wallet-summary-grid" style="margin-top:9px;"><div><span>Sisa Koin</span><strong id="profile-wallet-coins">0</strong></div><div><span>Nilai Saldo</span><strong id="profile-wallet-idr">Rp0</strong></div><div><span>Saldo Dipakai</span><strong id="profile-wallet-spent">Rp0</strong></div><div><span>Total Deposit</span><strong id="profile-wallet-deposited">Rp0</strong></div></div><div style="display:flex;gap:7px;margin-top:8px;"><button type="button" class="support-btn accent" onclick="openWalletDeposit()">＋ Deposit</button></div></div>
+
                     <div id="profile-reseller-card" class="dash-card" style="margin-top:12px;">
                         <span data-i18n="reseller_status">Reseller: Tidak Aktif</span>
                         <strong id="dash-reseller-status">Tidak Aktif</strong>
@@ -2212,6 +2236,29 @@ body.modal-open { scroll-behavior: auto; }
                     <div class="settings-panel" style="margin-top:12px;">
                         <h4 data-i18n="active_subscriptions">Langganan aktif</h4>
                         <div id="subscription-list" class="subscription-grid"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW FINANCE (User) -->
+            <div id="view-finance" class="hidden">
+                <div class="dashboard-container">
+                    <div class="dashboard-header">
+                        <h3>Keuangan</h3>
+                        <span style="font-size:.7rem;color:var(--text-muted);">Saldo, deposit, cashback, dan riwayat transaksi</span>
+                    </div>
+                    <div class="settings-panel wallet-profile-block">
+                        <div class="wallet-summary-grid">
+                            <div><span>Sisa Koin</span><strong id="profile-wallet-coins">0</strong></div>
+                            <div><span>Nilai Saldo</span><strong id="profile-wallet-idr">Rp0</strong></div>
+                            <div><span>Saldo Dipakai</span><strong id="profile-wallet-spent">Rp0</strong></div>
+                            <div><span>Total Deposit</span><strong id="profile-wallet-deposited">Rp0</strong></div>
+                        </div>
+                        <div style="display:flex;gap:7px;margin-top:10px;flex-wrap:wrap"><button type="button" class="support-btn accent" onclick="openWalletDeposit()">Deposit</button><button type="button" class="support-btn" onclick="openRefundTool()">Refund</button><button type="button" class="support-btn" onclick="claimDailyCoins()">Claim Harian</button><button type="button" class="support-btn" onclick="spinWalletGacha()">Gacha</button></div>
+                    </div>
+                    <div class="settings-panel" style="margin-top:12px;">
+                        <div class="admin-toolbar"><div><h4>Riwayat Keuangan</h4><p class="admin-config-note">Semua perubahan saldo dan transaksi akun.</p></div><button type="button" class="admin-glass-btn" onclick="refreshWalletUI()">Muat Ulang</button></div>
+                        <div id="wallet-history-page" class="wallet-history" style="max-height:none"></div>
                     </div>
                 </div>
             </div>
@@ -2239,8 +2286,8 @@ body.modal-open { scroll-behavior: auto; }
                         <h4 data-i18n="appearance">Pengaturan Tampilan & Warna Aksen</h4>
                         <label data-i18n="mode_label" style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Mode Tampilan:</label>
                         <div class="mode-toggle-group">
-                            <button onclick="setThemeMode('dark')" id="btn-mode-dark" class="mode-btn active" data-i18n="dark">🌙 Mode Gelap</button>
-                            <button onclick="setThemeMode('light')" id="btn-mode-light" class="mode-btn" data-i18n="light">☀️ Mode Terang</button>
+                            <button onclick="setThemeMode('dark')" id="btn-mode-dark" class="mode-btn active" data-i18n="dark"> Mode Gelap</button>
+                            <button onclick="setThemeMode('light')" id="btn-mode-light" class="mode-btn" data-i18n="light"> Mode Terang</button>
                         </div>
                         <label id="accent-settings-label" data-i18n="choose_accent" style="font-size: 0.72rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Pilih Warna Aksen:</label>
                         <div class="color-grid">
@@ -2316,10 +2363,10 @@ body.modal-open { scroll-behavior: auto; }
                         <h4>Bantuan & Layanan</h4>
                         <p class="support-note">Gunakan menu ini untuk pengajuan garansi, menghitung estimasi refund, mengecek sisa durasi, atau menghubungi admin secara real-time.</p>
                         <div class="support-actions">
-                            <button type="button" class="support-btn" onclick="openWarrantyForm()">🛡️ Claim Garansi</button>
-                            <button type="button" class="support-btn" onclick="openRefundTool()">💸 Refund</button>
-                            <button type="button" class="support-btn" onclick="openDurationTool()">🗓️ Cek Sisa Durasi</button>
-                            <button type="button" class="support-btn accent" onclick="openSupportChat()">💬 Hubungi Admin</button>
+                            <button type="button" class="support-btn" onclick="openWarrantyForm()"> Claim Garansi</button>
+                            <button type="button" class="support-btn" onclick="openRefundTool()"> Refund</button>
+                            <button type="button" class="support-btn" onclick="openDurationTool()"> Cek Sisa Durasi</button>
+                            <button type="button" class="support-btn accent" onclick="openSupportChat()"> Hubungi Admin</button>
                         </div>
                     </div>
                     <div class="settings-panel">
@@ -2374,6 +2421,15 @@ body.modal-open { scroll-behavior: auto; }
             </div>
         </div>
 
+        <div id="ryy-security-overlay" class="ryy-security-overlay hidden" aria-live="polite" aria-busy="true">
+            <div class="ryy-security-card">
+                <div class="ryy-security-spinner" aria-hidden="true"></div>
+                <h2 id="ryy-security-title">Memeriksa keamanan</h2>
+                <p id="ryy-security-message">Sedang menyiapkan sesi browser. Mohon tunggu.</p>
+                <button id="ryy-security-retry" class="hidden" type="button" onclick="retryAppSecurity()">Coba lagi</button>
+            </div>
+        </div>
+
         <div id="admin-product-overlay" class="admin-edit-overlay hidden" onclick="closeAdminProductEditor(event)">
             <div class="admin-edit-sheet" style="max-height:min(88vh,820px);" onclick="event.stopPropagation()">
                 <div style="display:flex;align-items:center;gap:10px;">
@@ -2411,6 +2467,10 @@ body.modal-open { scroll-behavior: auto; }
             <button class="floating-nav-item" onclick="switchView('profile')" aria-label="Profil">
                 <svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8m-7 8a7 7 0 0 1 14 0z"/></svg>
                 <span data-i18n="nav_profile">Profil</span>
+            </button>
+            <button class="floating-nav-item" onclick="switchView('finance')" aria-label="Keuangan">
+                <svg viewBox="0 0 24 24"><path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2m0 4v2h16V9zm3 5v2h4v-2z"/></svg>
+                <span>Keuangan</span>
             </button>
             <button class="floating-nav-item" onclick="switchView('settings')" aria-label="Pengaturan">
                 <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.65-.07-.98s-.02-.66.07-.98l2.11-1.65-2-3.46-2.49 1a7.2 7.2 0 0 0-1.69-.98L15 2h-4l-.36 2.93c-.61.25-1.18.58-1.69.98L6.15 4.91l-2 3.46 2.11 1.65c-.04.32-.07.65-.07.98s.02.66.07.98l-2.11 1.65 2 3.46 2.49-1c.51.4 1.08.73 1.69.98L11 22h4l.36-2.93c.61-.25 1.18-.58 1.69-.98l2.49 1 2 3.46zM13 15.5A3.5 3.5 0 1 1 13 8a3.5 3.5 0 0 1 0 7.5"/></svg>
@@ -2478,7 +2538,7 @@ body.modal-open { scroll-behavior: auto; }
         </div>
 
         <!-- WALLET / DEPOSIT MODAL -->
-        <div id="wallet-modal" class="modal-overlay hidden" onclick="closeWalletModal(event)"><div class="modal-content wallet-modal-content" onclick="event.stopPropagation()"><div class="modal-top"><h3>Saldo RYY-STORE</h3><button onclick="closeWalletModal()" class="btn-close">&times;</button></div><div class="wallet-summary-grid"><div><span>Koin</span><strong id="wallet-modal-coins">0</strong></div><div><span>Nilai</span><strong id="wallet-modal-idr">Rp0</strong></div></div><div class="wallet-actions-grid"><button type="button" class="support-btn accent" onclick="openWalletDeposit()">＋ Deposit</button><button type="button" class="support-btn" onclick="openRefundTool()">💸 Refund</button><button type="button" class="support-btn" onclick="claimDailyCoins()">🎁 Claim Harian</button><button type="button" class="support-btn" onclick="spinWalletGacha()">🎰 Gacha</button></div><div class="wallet-deposit-area hidden" id="wallet-deposit-area"><label>Nominal Deposit<input id="wallet-deposit-amount" type="number" min="1000" step="1000" placeholder="10000"></label><div id="wallet-deposit-preview" class="support-result">Rp10.000 = 1.000 koin</div><button type="button" class="btn-accent" onclick="createWalletDeposit()">Buat QRIS Deposit</button><div id="wallet-qris-area" class="wallet-qris-area hidden"><div id="wallet-qris-code"></div><div id="wallet-deposit-status" class="admin-config-note" style="text-align:center;"></div><button type="button" id="wallet-deposit-cancel" class="support-btn" style="display:none;width:100%;margin-top:7px;">Batalkan Deposit</button></div></div><div class="wallet-history-head"><strong>Riwayat Transaksi</strong><span id="wallet-spent-summary">Terpakai Rp0</span></div><div id="wallet-history" class="wallet-history"></div><div id="wallet-cashback-list"></div></div></div>
+        <div id="wallet-modal" class="modal-overlay hidden" onclick="closeWalletModal(event)"><div class="modal-content wallet-modal-content" onclick="event.stopPropagation()"><div class="modal-top"><h3>Saldo RYY-STORE</h3><button onclick="closeWalletModal()" class="btn-close">&times;</button></div><div class="wallet-summary-grid"><div><span>Koin</span><strong id="wallet-modal-coins">0</strong></div><div><span>Nilai</span><strong id="wallet-modal-idr">Rp0</strong></div></div><div class="wallet-actions-grid"><button type="button" class="support-btn accent" onclick="openWalletDeposit()">＋ Deposit</button><button type="button" class="support-btn" onclick="openRefundTool()"> Refund</button><button type="button" class="support-btn" onclick="claimDailyCoins()"> Claim Harian</button><button type="button" class="support-btn" onclick="spinWalletGacha()"> Gacha</button></div><div class="wallet-deposit-area hidden" id="wallet-deposit-area"><label>Nominal Deposit<input id="wallet-deposit-amount" type="number" min="1000" step="1000" placeholder="10000"></label><div id="wallet-deposit-preview" class="support-result">Rp10.000 = 1.000 koin</div><button type="button" class="btn-accent" onclick="createWalletDeposit()">Buat QRIS Deposit</button><div id="wallet-qris-area" class="wallet-qris-area hidden"><div id="wallet-qris-code"></div><div id="wallet-deposit-status" class="admin-config-note" style="text-align:center;"></div><button type="button" id="wallet-deposit-cancel" class="support-btn" style="display:none;width:100%;margin-top:7px;">Batalkan Deposit</button></div></div><div class="wallet-history-head"><strong>Riwayat Transaksi</strong><span id="wallet-spent-summary">Terpakai Rp0</span></div><div id="wallet-history" class="wallet-history"></div><div id="wallet-cashback-list"></div></div></div>
 
         <!-- PRODUCT IMAGE PREVIEW MODAL -->
         <div id="product-image-modal" class="modal-overlay hidden" onclick="closeProductImagePreview(event)">
@@ -2676,8 +2736,7 @@ body.modal-open { scroll-behavior: auto; }
 
     </div>
 
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
-<script>
+    <script>
         let storeData = { storeInfo: {}, categories: [], products: [] };
         let generatedOTP = "";
         let profileOTP = "";
@@ -2705,7 +2764,7 @@ body.modal-open { scroll-behavior: auto; }
                 language_title:"Bahasa", language_label:"Pilih Bahasa", mode_label:"Mode Tampilan:", nav_home:"Beranda", nav_catalog:"Katalog", nav_profile:"Profil", nav_settings:"Pengaturan",
                 ai_online:"online", ai_placeholder:"Tulis pesan...", ai_welcome:"Halo! Saya RYY AI. Ada yang bisa saya bantu?", about:"Tentang", catalog:"Katalog", profile:"Profil", profile_dashboard:"Dashboard Akun", settings_title:"Pengaturan", settings_subtitle:"Tampilan, bahasa, dan akun",
                 cart:"Keranjang Belanja", logout:"Keluar Akun (Logout)", contact_main:"Kontak Utama (Email/No HP)", contact_alt:"Kontak Tambahan (Terverifikasi)", total_items:"Total Item Dibeli", total_spent:"Total Pengeluaran", reseller_status:"Reseller: Tidak Aktif", reseller_active:"Reseller: Aktif", active_subscriptions:"Langganan aktif", no_subscriptions:"Belum ada langganan aktif.", pending_confirmation:"Menunggu Konfirmasi", distributor:"Distributor", pending_order:"Pesanan menunggu konfirmasi admin.", pending_empty:"Tidak ada pesanan menunggu konfirmasi.", remaining:"tersisa", lifetime:"Lifetime", confirm_purchase:"Konfirmasi Pembelian", reject_purchase:"Tolak", battery:"Sisa Baterai", jakarta_time:"Jam Jakarta (Asia/Jakarta)", add_contact:"Tambah Kontak Alternatif",
-                appearance:"Pengaturan Tampilan & Warna Aksen", language:"Bahasa", dark:"🌙 Mode Gelap", light:"☀️ Mode Terang", choose_accent:"Pilih Warna Aksen:", change_password:"Ubah Kata Sandi", old_password:"Kata Sandi Lama", new_password:"Kata Sandi Baru (Min 8 char)", update_password:"Perbarui Kata Sandi",
+                appearance:"Pengaturan Tampilan & Warna Aksen", language:"Bahasa", dark:" Mode Gelap", light:" Mode Terang", choose_accent:"Pilih Warna Aksen:", change_password:"Ubah Kata Sandi", old_password:"Kata Sandi Lama", new_password:"Kata Sandi Baru (Min 8 char)", update_password:"Perbarui Kata Sandi",
                 change_photo:"Ganti Foto", remove_photo:"Hapus Foto", save_photo:"Simpan Foto Profil", add_cart:"Tambah ke Keranjang", buy_now:"Beli Sekarang", choose_variant:"Pilih Varian / Tipe:", stock:"Stok Tersedia", confirm:"OK", cancel:"Batal", send:"Kirim OTP Verifikasi", verify:"Verifikasi & Simpan Kontak",
                 all:"Semua", ready:"Ready", sold:"Sold", from_price:"Mulai", price_unavailable:"Harga belum tersedia", product_unavailable:"Produk belum tersedia", no_products:"Belum ada produk di kategori ini.", stock_unit:"unit", products_count:"produk",
                 morning:"Pagi", afternoon:"Siang", evening:"Sore", night:"Malam", official_store:"Official Store", welcome_store:"Selamat datang di", owner:"Pemilik", operating_since:"Beroperasi sejak", buyers_since:"Pembeli sejak", browse_categories:"Jelajahi toko", product_categories:"Kategori Produk", browse_catalog:"Jelajahi produk", contact_person:"Contact Person",
@@ -2719,7 +2778,7 @@ body.modal-open { scroll-behavior: auto; }
                 language_title:"Language", language_label:"Choose Language", mode_label:"Appearance Mode:", nav_home:"Home", nav_catalog:"Catalog", nav_profile:"Profile", nav_settings:"Settings",
                 ai_online:"online", ai_placeholder:"Type a message...", ai_welcome:"Hi! I'm RYY AI. How can I help you?", about:"About", catalog:"Catalog", profile:"Profile", profile_dashboard:"Account Dashboard", settings_title:"Settings", settings_subtitle:"Appearance, language, and account",
                 cart:"Shopping Cart", logout:"Log Out", contact_main:"Primary Contact (Email/Phone)", contact_alt:"Additional Contact (Verified)", total_items:"Total Items Purchased", total_spent:"Total Spending", reseller_status:"Reseller: Inactive", reseller_active:"Reseller: Active", active_subscriptions:"Active subscriptions", no_subscriptions:"No active subscriptions.", pending_confirmation:"Waiting for Confirmation", distributor:"Distributor", pending_order:"Order is waiting for admin confirmation.", pending_empty:"No orders are waiting for confirmation.", remaining:"remaining", lifetime:"Lifetime", confirm_purchase:"Confirm Purchase", reject_purchase:"Reject", battery:"Battery", jakarta_time:"Jakarta Time (Asia/Jakarta)", add_contact:"Add Alternative Contact",
-                appearance:"Appearance & Accent Color", language:"Language", dark:"🌙 Dark Mode", light:"☀️ Light Mode", choose_accent:"Choose Accent Color:", change_password:"Change Password", old_password:"Old Password", new_password:"New Password (Min 8 chars)", update_password:"Update Password",
+                appearance:"Appearance & Accent Color", language:"Language", dark:" Dark Mode", light:" Light Mode", choose_accent:"Choose Accent Color:", change_password:"Change Password", old_password:"Old Password", new_password:"New Password (Min 8 chars)", update_password:"Update Password",
                 change_photo:"Change Photo", remove_photo:"Remove Photo", save_photo:"Save Profile Photo", add_cart:"Add to Cart", buy_now:"Buy Now", choose_variant:"Choose Variant / Type:", stock:"Available Stock", confirm:"OK", cancel:"Cancel", send:"Send Verification OTP", verify:"Verify & Save Contact",
                 all:"All", ready:"Available", sold:"Sold", from_price:"From", price_unavailable:"Price unavailable", product_unavailable:"No products available", no_products:"No products in this category.", stock_unit:"units", products_count:"products",
                 morning:"Morning", afternoon:"Afternoon", evening:"Evening", night:"Night", official_store:"Official Store", welcome_store:"Welcome to", owner:"Owner", operating_since:"Operating since", buyers_since:"Buyers since", browse_categories:"Explore the store", product_categories:"Product Categories", browse_catalog:"Browse products", contact_person:"Contact Person",
@@ -2733,7 +2792,7 @@ body.modal-open { scroll-behavior: auto; }
                 language_title:"언어", language_label:"언어 선택", mode_label:"화면 모드:", nav_home:"홈", nav_catalog:"카탈로그", nav_profile:"프로필", nav_settings:"설정",
                 ai_online:"온라인", ai_placeholder:"메시지를 입력하세요...", ai_welcome:"안녕하세요! RYY AI입니다. 무엇을 도와드릴까요?", about:"소개", catalog:"카탈로그", profile:"프로필", profile_dashboard:"계정 대시보드", settings_title:"설정", settings_subtitle:"화면, 언어 및 계정",
                 cart:"장바구니", logout:"로그아웃", contact_main:"기본 연락처 (이메일/전화)", contact_alt:"추가 연락처 (인증됨)", total_items:"구매한 총 상품", total_spent:"총 지출", reseller_status:"리셀러: 비활성", reseller_active:"리셀러: 활성", active_subscriptions:"활성 구독", no_subscriptions:"활성 구독이 없습니다.", pending_confirmation:"확인 대기", distributor:"유통업체", pending_order:"주문이 관리자 확인을 기다리고 있습니다.", pending_empty:"확인을 기다리는 주문이 없습니다.", remaining:"남음", lifetime:"평생", confirm_purchase:"구매 확인", reject_purchase:"거부", battery:"배터리 잔량", jakarta_time:"자카르타 시간 (Asia/Jakarta)", add_contact:"대체 연락처 추가",
-                appearance:"화면 및 포인트 색상 설정", language:"언어", dark:"🌙 다크 모드", light:"☀️ 라이트 모드", choose_accent:"포인트 색상 선택:", change_password:"비밀번호 변경", old_password:"기존 비밀번호", new_password:"새 비밀번호 (최소 8자)", update_password:"비밀번호 업데이트",
+                appearance:"화면 및 포인트 색상 설정", language:"언어", dark:" 다크 모드", light:" 라이트 모드", choose_accent:"포인트 색상 선택:", change_password:"비밀번호 변경", old_password:"기존 비밀번호", new_password:"새 비밀번호 (최소 8자)", update_password:"비밀번호 업데이트",
                 change_photo:"사진 변경", remove_photo:"사진 삭제", save_photo:"프로필 사진 저장", add_cart:"장바구니에 추가", buy_now:"지금 구매", choose_variant:"옵션 / 유형 선택:", stock:"재고", confirm:"확인", cancel:"취소", send:"인증 OTP 보내기", verify:"인증 및 연락처 저장",
                 all:"전체", ready:"판매 가능", sold:"품절", from_price:"최저", price_unavailable:"가격 정보 없음", product_unavailable:"상품이 없습니다", no_products:"이 카테고리에 상품이 없습니다.", stock_unit:"개", products_count:"개 상품",
                 morning:"아침", afternoon:"낮", evening:"저녁", night:"밤", official_store:"공식 스토어", welcome_store:"환영합니다", owner:"소유자", operating_since:"운영 시작", buyers_since:"구매자", browse_categories:"스토어 둘러보기", product_categories:"상품 카테고리", browse_catalog:"상품 둘러보기", contact_person:"연락처",
@@ -2828,12 +2887,12 @@ body.modal-open { scroll-behavior: auto; }
         }
 
         document.addEventListener("DOMContentLoaded", async () => {
-            // Route/session first. Product and distributor data are secondary and must
-            // never delay the authentication screen or successful login navigation.
             try { checkSessionState(); } catch (e) { console.error("Initial session routing:", e); forceAuthScreen(); }
             loadSavedPreferences();
             setLanguage(currentLanguage);
+            try { await initAppSecurity(); } catch (e) { console.error("Initial app security:", e); return; }
             try { await loadStoreData(); } catch (e) { console.error("Initial store data:", e); }
+            requestAnimationFrame(()=>{ try{ renderHomeView(); }catch(e){ console.warn("Initial home render:",e); } });
         });
 
         async function loadStoreData() {
@@ -2852,7 +2911,7 @@ body.modal-open { scroll-behavior: auto; }
                 try {
                     const productsResponse = await fetch(`${API_BASE}/products?ts=${Date.now()}`, {
                         cache: 'no-store',
-                        headers: { 'Accept': 'application/json' }
+                        headers: { 'Accept': 'application/json', ...securityHeaders() }
                     });
                     if (productsResponse.ok) {
                         const productsData = await productsResponse.json();
@@ -2902,6 +2961,7 @@ body.modal-open { scroll-behavior: auto; }
                 // server-side from users whose reseller flag is true.
                 await loadDistributorData();
                 await loadHomeTestimonials();
+                requestAnimationFrame(()=>{ try{ renderHomeView(); }catch(e){ console.warn("Home render after data load:",e); } });
                 // Keep the currently visible catalog populated after async loading.
                 if (document.getElementById('product-grid')) {
                     renderCategories();
@@ -2921,12 +2981,10 @@ body.modal-open { scroll-behavior: auto; }
             const savedMode = localStorage.getItem("theme_mode") || "dark";
             setThemeMode(savedMode, false);
 
-            const savedAccentHex = localStorage.getItem("accent_hex");
-            const savedAccentGlow = localStorage.getItem("accent_glow");
-            if (savedAccentHex) {
-                document.documentElement.style.setProperty('--accent', savedAccentHex);
-                document.documentElement.style.setProperty('--accent-glow', savedAccentGlow);
-            }
+            localStorage.removeItem("accent_hex");
+            localStorage.removeItem("accent_glow");
+            document.documentElement.style.setProperty('--accent', document.body.classList.contains('light-mode') ? '#111111' : '#ffffff');
+            document.documentElement.style.setProperty('--accent-glow', document.body.classList.contains('light-mode') ? 'rgba(17,17,17,.10)' : 'rgba(255,255,255,.10)');
             // Personal UI preferences are local to each user/device.
             const userMode=localStorage.getItem('ryy_user_ui_mode') || 'standard';
             const userBlur=Number(localStorage.getItem('ryy_user_blur') ?? USER_UI_MODES[userMode]?.blur ?? 50);
@@ -2946,20 +3004,17 @@ body.modal-open { scroll-behavior: auto; }
                 document.getElementById("btn-mode-light").classList.remove("active");
             }
             localStorage.setItem("theme_mode", mode);
+            setAccentColor();
             if(notify) showToast(`Beralih ke ${mode === 'light' ? 'Mode Terang' : 'Mode Gelap'}`);
         }
 
-        function setAccentColor(hexColor, glowColor, colorName) {
-            if (localStorage.getItem('ryy_web_theme') === 'minimalist') { showToast('Tema Minimalist tidak memakai warna aksen.'); return; }
-            document.documentElement.style.setProperty('--accent', hexColor);
-            document.documentElement.style.setProperty('--accent-glow', glowColor);
-            localStorage.setItem("accent_hex", hexColor);
-            localStorage.setItem("accent_glow", glowColor);
-
-            document.querySelectorAll(".color-option").forEach(el => {
-                el.classList.toggle("selected", el.innerText.includes(colorName));
-            });
-            showToast(`Aksen diubah ke ${colorName}`);
+        function setAccentColor(){
+            const accent=document.body.classList.contains('light-mode') ? '#111111' : '#ffffff';
+            const glow=document.body.classList.contains('light-mode') ? 'rgba(17,17,17,.10)' : 'rgba(255,255,255,.10)';
+            document.documentElement.style.setProperty('--accent',accent);
+            document.documentElement.style.setProperty('--accent-glow',glow);
+            localStorage.removeItem('accent_hex');
+            localStorage.removeItem('accent_glow');
         }
 
         const WEB_THEMES = ['liquid-glass','minimalist','liquid-glass-solid','neumorphic'];
@@ -3019,7 +3074,7 @@ body.modal-open { scroll-behavior: auto; }
             if(theme==='minimalist') document.querySelectorAll('.color-option').forEach(el=>el.classList.remove('selected'));
         }
         function initWebTheme() {
-            const theme=WEB_THEMES.includes(localStorage.getItem('ryy_web_theme'))?localStorage.getItem('ryy_web_theme'):'liquid-glass';
+            const theme='liquid-glass'; localStorage.setItem('ryy_web_theme','liquid-glass');
             setWebTheme(theme,false);
             if(!window.__solidThemeObserver && document.body){
                 window.__solidThemeObserver=new MutationObserver(()=>{ if(localStorage.getItem('ryy_web_theme')==='liquid-glass-solid') paintNewSolidSurfaces(); });
@@ -3221,7 +3276,7 @@ body.modal-open { scroll-behavior: auto; }
             const toast = document.createElement("div");
             toast.className = "toast";
 
-            const logoUrl = getStoreLogoUrl();
+            const logoUrl = imageDisplayUrl(getStoreLogoUrl());
             const icon = document.createElement("div");
             icon.className = "toast-icon";
 
@@ -3355,7 +3410,7 @@ body.modal-open { scroll-behavior: auto; }
         async function handleGoogleCredential(response) {
             if (!response?.credential) { iosAlert("Login Google gagal. Silakan coba lagi."); return; }
             try {
-                const data = await apiRequest("/google-login", { method:"POST", body:JSON.stringify({credential:response.credential,turnstileToken:await waitForTurnstile("login")}), skipAuth:true });
+                const data = await apiRequest("/google-login", { method:"POST", body:JSON.stringify({credential:response.credential}), skipAuth:true });
                 // Google sign-in is already verified by Google. No OTP or WhatsApp step.
                 saveUserSession(data.user, data.token); localStorage.removeItem("has_seen_landing"); localStorage.removeItem("google_pending"); showToast("Login dengan Google berhasil!"); forceUserScreen(); launchUserApp();
             } catch(error){ console.error(error); iosAlert(error.message||"Login Google gagal."); }
@@ -3430,15 +3485,20 @@ body.modal-open { scroll-behavior: auto; }
           const raw=String(value||"").trim();
           if(!raw)return "";
           try{
-            const u=new URL(raw,window.location.origin);
-            if(u.protocol==="https:" && ["cloud.yardansh.com","cdn.phototourl.com","upload.shizukuuu.cloud","qu.ax"].includes(u.hostname.toLowerCase())) return `/api/image-proxy?url=${encodeURIComponent(u.origin+u.pathname)}`;
+            const markdown=raw.match(/\((https?:\/\/[^)]+)\)/i);
+            const candidate=markdown?markdown[1]:raw;
+            const u=new URL(candidate,window.location.origin);
+            const host=u.hostname.toLowerCase();
+            if(u.protocol==="https:" && ["cloud.yardansh.com","cdn.phototourl.com","upload.shizukuuu.cloud","qu.ax"].includes(host)){
+              return `/api/image-proxy?url=${encodeURIComponent(u.origin+u.pathname+u.search)}`;
+            }
           }catch{}
           return raw;
         }
 
         async function uploadImage(dataUrl,kind="image"){if(!dataUrl)throw new Error("Gambar belum dipilih.");const data=await apiRequest("/upload-image",{method:"POST",body:JSON.stringify({image:dataUrl,kind})});if(!data.success||!data.url)throw new Error(data.message||"Upload gambar gagal: URL tidak diterima.");return data.url;}
-        async function submitPaymentProofCheckout(){const paymentMethod=document.getElementById("payment-method")?.value||"";const selectedItems=cart.filter(i=>i.selected);if(!paymentMethod||!selectedItems.length){iosAlert("Pilih metode pembayaran dan centang minimal 1 produk.");return;}const coinPayment=paymentMethod==="RYY_COIN", qrisPayment=paymentMethod==='QRIS';if(!coinPayment&&!qrisPayment&&!paymentProofDataUrl){iosAlert("Silakan upload bukti pembayaran terlebih dahulu.");return;}try{const status=document.getElementById("payment-proof-status");if(status)status.textContent=coinPayment?"Memproses pembayaran dengan koin...":(qrisPayment?"Membuat transaksi QRIS...":"Mengupload bukti pembayaran...");const turnstileToken=await waitForTurnstile("checkout");const proofUrl=coinPayment||qrisPayment?"":await uploadImage(paymentProofDataUrl,"payment-proof");const d=await completeCheckout("",paymentMethod,proofUrl,turnstileToken);if(qrisPayment&&d?.payment){renderCheckoutQris(d.payment);if(document.getElementById('checkout-qris-status'))document.getElementById('checkout-qris-status').textContent=`Bayar ${rupiah(Number(d.payment.totalPayment||0))}. Menunggu konfirmasi otomatis...`;startCheckoutQrisPolling(d.purchaseId||d.orderId);}cart=cart.filter(i=>!i.selected);updateCartUI();paymentProofDataUrl="";const input=document.getElementById("payment-proof-input");if(input)input.value="";const preview=document.getElementById("payment-proof-preview");if(preview){preview.removeAttribute("src");preview.style.display="none";}appliedCheckoutVoucher=null;const voucherInput=document.getElementById("checkout-voucher");if(voucherInput)voucherInput.value="";if(!qrisPayment)document.getElementById("cart-modal")?.classList.add("hidden");await refreshCurrentUserSession();await refreshWalletUI();showToast(qrisPayment?"QRIS dibuat. Selesaikan pembayaran untuk melanjutkan pesanan.":(coinPayment?"Pembayaran koin berhasil dicatat.":"Bukti pembayaran dikirim. Menunggu pemeriksaan admin."));}catch(error){console.error(error);iosAlert(error.message||"Gagal mengirim checkout.");}}
-        let checkoutQrisTimer=null; function setCheckoutCancelButton(show,purchaseId){const b=document.getElementById('checkout-qris-cancel');if(!b)return;b.style.display=show?'block':'none';b.disabled=false;b.onclick=show?async()=>{if(!purchaseId)return;if(!confirm('Batalkan pembelian ini? Jika kamu sudah membayar QRIS, pembatalan di RYY STORE tidak akan membatalkan pembayaran di gateway.'))return;b.disabled=true;try{const turnstileToken=await waitForTurnstile('checkout');const d=await apiRequest('/checkout',{method:'POST',body:JSON.stringify({action:'cancelPurchase',purchaseId,turnstileToken})});clearInterval(checkoutQrisTimer);document.getElementById('checkout-qris-status').textContent='Pembelian berhasil dibatalkan. Jika belum membayar, transaksi tidak akan diproses.';setCheckoutCancelButton(false);await refreshCurrentUserSession();showToast(d.message||'Pembelian dibatalkan.');}catch(e){b.disabled=false;iosAlert(e.message||'Gagal membatalkan pembelian.');}}:null;} function startCheckoutQrisPolling(purchaseId){if(!purchaseId)return;setCheckoutCancelButton(true,purchaseId);clearInterval(checkoutQrisTimer);checkoutQrisTimer=setInterval(async()=>{try{const d=await apiRequest('/me');const u=d.user||d;const p=(u.pendingPurchases||[]).find(x=>x.id===purchaseId);if(p?.paymentStatus==='paid'){clearInterval(checkoutQrisTimer);setCheckoutCancelButton(false);if(document.getElementById('checkout-qris-status'))document.getElementById('checkout-qris-status').textContent='✓ Pembayaran diterima otomatis. Pesanan menunggu pemeriksaan admin.';showToast('Pembayaran QRIS berhasil diterima.');}else if(['expired','gagal','cancel'].includes(String(p?.paymentStatus||''))){clearInterval(checkoutQrisTimer);setCheckoutCancelButton(false);if(document.getElementById('checkout-qris-status'))document.getElementById('checkout-qris-status').textContent='Pembayaran QRIS tidak berhasil atau sudah kedaluwarsa.';}}catch{}} ,5000);setTimeout(()=>clearInterval(checkoutQrisTimer),30*60*1000);}
+        async function submitPaymentProofCheckout(){const paymentMethod=document.getElementById("payment-method")?.value||"";const selectedItems=cart.filter(i=>i.selected);if(!paymentMethod||!selectedItems.length){iosAlert("Pilih metode pembayaran dan centang minimal 1 produk.");return;}const coinPayment=paymentMethod==="RYY_COIN", qrisPayment=paymentMethod==='QRIS';if(!coinPayment&&!qrisPayment&&!paymentProofDataUrl){iosAlert("Silakan upload bukti pembayaran terlebih dahulu.");return;}try{const status=document.getElementById("payment-proof-status");if(status)status.textContent=coinPayment?"Memproses pembayaran dengan koin...":(qrisPayment?"Membuat transaksi QRIS...":"Mengupload bukti pembayaran...");const proofUrl=coinPayment||qrisPayment?"":await uploadImage(paymentProofDataUrl,"payment-proof");const d=await completeCheckout("",paymentMethod,proofUrl);if(qrisPayment&&d?.payment){renderCheckoutQris(d.payment);if(document.getElementById('checkout-qris-status'))document.getElementById('checkout-qris-status').textContent=`Bayar ${rupiah(Number(d.payment.totalPayment||0))}. Menunggu konfirmasi otomatis...`;startCheckoutQrisPolling(d.purchaseId||d.orderId);}cart=cart.filter(i=>!i.selected);updateCartUI();paymentProofDataUrl="";const input=document.getElementById("payment-proof-input");if(input)input.value="";const preview=document.getElementById("payment-proof-preview");if(preview){preview.removeAttribute("src");preview.style.display="none";}appliedCheckoutVoucher=null;const voucherInput=document.getElementById("checkout-voucher");if(voucherInput)voucherInput.value="";if(!qrisPayment)document.getElementById("cart-modal")?.classList.add("hidden");await refreshCurrentUserSession();await refreshWalletUI();showToast(qrisPayment?"QRIS dibuat. Selesaikan pembayaran untuk melanjutkan pesanan.":(coinPayment?"Pembayaran koin berhasil dicatat.":"Bukti pembayaran dikirim. Menunggu pemeriksaan admin."));}catch(error){console.error(error);iosAlert(error.message||"Gagal mengirim checkout.");}}
+        let checkoutQrisTimer=null; function setCheckoutCancelButton(show,purchaseId){const b=document.getElementById('checkout-qris-cancel');if(!b)return;b.style.display=show?'block':'none';b.disabled=false;b.onclick=show?async()=>{if(!purchaseId)return;if(!confirm('Batalkan pembelian ini? Jika kamu sudah membayar QRIS, pembatalan di RYY STORE tidak akan membatalkan pembayaran di gateway.'))return;b.disabled=true;try{const d=await apiRequest('/checkout',{method:'POST',body:JSON.stringify({action:'cancelPurchase',purchaseId})});clearInterval(checkoutQrisTimer);document.getElementById('checkout-qris-status').textContent='Pembelian berhasil dibatalkan. Jika belum membayar, transaksi tidak akan diproses.';setCheckoutCancelButton(false);await refreshCurrentUserSession();showToast(d.message||'Pembelian dibatalkan.');}catch(e){b.disabled=false;iosAlert(e.message||'Gagal membatalkan pembelian.');}}:null;} function startCheckoutQrisPolling(purchaseId){if(!purchaseId)return;setCheckoutCancelButton(true,purchaseId);clearInterval(checkoutQrisTimer);checkoutQrisTimer=setInterval(async()=>{try{const d=await apiRequest('/me');const u=d.user||d;const p=(u.pendingPurchases||[]).find(x=>x.id===purchaseId);if(p?.paymentStatus==='paid'){clearInterval(checkoutQrisTimer);setCheckoutCancelButton(false);if(document.getElementById('checkout-qris-status'))document.getElementById('checkout-qris-status').textContent=' Pembayaran diterima otomatis. Pesanan menunggu pemeriksaan admin.';showToast('Pembayaran QRIS berhasil diterima.');}else if(['expired','gagal','cancel'].includes(String(p?.paymentStatus||''))){clearInterval(checkoutQrisTimer);setCheckoutCancelButton(false);if(document.getElementById('checkout-qris-status'))document.getElementById('checkout-qris-status').textContent='Pembayaran QRIS tidak berhasil atau sudah kedaluwarsa.';}}catch{}} ,5000);setTimeout(()=>clearInterval(checkoutQrisTimer),30*60*1000);}
 
         function launchUserApp() {
             refreshWalletUI?.();
@@ -3452,6 +3512,7 @@ body.modal-open { scroll-behavior: auto; }
             document.getElementById("view-catalog")?.classList.add("hidden");
             document.getElementById("view-admin")?.classList.add("hidden");
             document.getElementById("view-profile")?.classList.add("hidden");
+            document.getElementById("view-finance")?.classList.add("hidden");
             document.getElementById("view-settings")?.classList.add("hidden");
             document.getElementById("floating-user-nav")?.classList.remove("hidden");
             document.getElementById("ai-fab")?.classList.remove("hidden");
@@ -3472,6 +3533,7 @@ body.modal-open { scroll-behavior: auto; }
             document.getElementById("view-home")?.classList.add("hidden");
             document.getElementById("view-catalog")?.classList.add("hidden");
             document.getElementById("view-profile")?.classList.add("hidden");
+            document.getElementById("view-finance")?.classList.add("hidden");
             document.getElementById("view-settings")?.classList.add("hidden");
             document.getElementById("view-admin")?.classList.remove("hidden");
             document.getElementById("floating-user-nav")?.classList.add("hidden");
@@ -3514,12 +3576,12 @@ body.modal-open { scroll-behavior: auto; }
         window.addEventListener("resize", updatePageScrollMode, {passive:true});
 
         function switchView(viewName, category=null) {
-            const views={home:"view-home",catalog:"view-catalog",profile:"view-profile",settings:"view-settings"};
+            const views={home:"view-home",catalog:"view-catalog",profile:"view-profile",finance:"view-finance",settings:"view-settings"};
             Object.values(views).forEach(id=>document.getElementById(id)?.classList.add("hidden"));
             document.querySelectorAll(".floating-nav-item").forEach((el,i)=>el.classList.toggle("active",
-                (viewName==="home"&&i===0)||(viewName==="catalog"&&i===1)||(viewName==="profile"&&i===2)||(viewName==="settings"&&i===3)
+                (viewName==="home"&&i===0)||(viewName==="catalog"&&i===1)||(viewName==="profile"&&i===2)||(viewName==="finance"&&i===3)||(viewName==="settings"&&i===4)
             ));
-            if(views[viewName]) document.getElementById(views[viewName])?.classList.remove("hidden");
+            if(views[viewName]) { const target=document.getElementById(views[viewName]); target?.classList.remove("hidden"); if(target){target.classList.remove("view-enter");requestAnimationFrame(()=>target.classList.add("view-enter"));} }
             updateCatalogHeaderControls(viewName);
             if(viewName==="home") renderHomeView();
             if(viewName==="catalog"){
@@ -3527,7 +3589,7 @@ body.modal-open { scroll-behavior: auto; }
                 renderCategories(target);
                 renderProducts(target);
             }
-            if(viewName==="profile"||viewName==="settings") updateProfileDashboard();
+            if(viewName==="profile"||viewName==="finance"||viewName==="settings") updateProfileDashboard();
             if(viewName==="profile") refreshCurrentUserSession();
             window.scrollTo({top:0,behavior:"smooth"});
             updatePageScrollMode();
@@ -3721,7 +3783,7 @@ body.modal-open { scroll-behavior: auto; }
             try {
                 const response = await fetch(`${API_BASE}/distributor?ts=${Date.now()}`, {
                     cache: "no-store",
-                    headers: { "Accept": "application/json" }
+                    headers: { "Accept": "application/json", ...securityHeaders() }
                 });
                 if (!response.ok) throw new Error(`Distributor API ${response.status}`);
                 const payload = await response.json();
@@ -3791,7 +3853,7 @@ body.modal-open { scroll-behavior: auto; }
         function renderHomeView() {
             const info=storeData?.storeInfo || {};
             const img=document.getElementById("home-portfolio-image");
-            if (img) { img.src=info.urlPhoto || ""; img.alt=info.name || "RYY STORE"; }
+            if (img) { const src=imageDisplayUrl(info.urlPhoto || ""); img.onerror=function(){ this.onerror=null; this.style.display="none"; }; img.onload=function(){ this.style.display="block"; }; img.src=src; img.alt=info.name || "RYY STORE"; }
             const setText=(id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=val ?? ""; };
             setText("home-store-name",storeText("name") || "RYY STORE");
             setText("home-store-slogan",storeText("slogan"));
@@ -4060,59 +4122,90 @@ body.modal-open { scroll-behavior: auto; }
         let registrationOtpToken = "";
         let profileOtpToken = ""; // reserved for future verified-contact API
 
-        let turnstileSiteKey = "";
-        const turnstileWidgets = {};
-        const turnstileTokens = {};
-        const turnstileWaiters = {};
+        // ===== RYY APP SECURITY =====
+        let appSecurityToken = sessionStorage.getItem("ryy_security_token") || "";
+        let appSecurityPromise = null;
+        let appSecurityReady = false;
 
-        async function initTurnstile() {
-            try {
-                const response = await fetch(`${API_BASE}/turnstile-config?ts=${Date.now()}`, { cache: "no-store", credentials: "same-origin" });
-                const data = await response.json();
-                turnstileSiteKey = data?.enabled ? String(data.siteKey || "") : "";
-                if (turnstileSiteKey) renderTurnstileWidgets();
-            } catch (error) { console.warn("Turnstile config unavailable:", error); }
+        function securityHeaders() {
+            return appSecurityToken ? { "X-RYY-Security": appSecurityToken } : {};
         }
 
-        function renderTurnstileWidgets() {
-            if (!turnstileSiteKey || !window.turnstile) return;
-            ["login","register","checkout"].forEach(kind => {
-                const container = document.getElementById(`turnstile-${kind}`);
-                if (!container || turnstileWidgets[kind] != null) return;
-                turnstileWidgets[kind] = window.turnstile.render(container, {
-                    sitekey: turnstileSiteKey,
-                    theme: "auto",
-                    callback: token => {
-                        turnstileTokens[kind] = token;
-                        (turnstileWaiters[kind] || []).splice(0).forEach(resolve => resolve(token));
-                    },
-                    "expired-callback": () => { turnstileTokens[kind] = ""; },
-                    "error-callback": () => { turnstileTokens[kind] = ""; }
-                });
-            });
+        function setSecurityOverlay(show, message, retry=false) {
+            const overlay=document.getElementById("ryy-security-overlay");
+            const msg=document.getElementById("ryy-security-message");
+            const btn=document.getElementById("ryy-security-retry");
+            if(!overlay)return;
+            overlay.classList.toggle("hidden",!show);
+            if(msg&&message)msg.textContent=message;
+            if(btn)btn.classList.toggle("hidden",!retry);
+            overlay.setAttribute("aria-busy", retry ? "false" : "true");
         }
 
-        function waitForTurnstile(kind) {
-            if (!turnstileSiteKey) return Promise.reject(new Error("Cloudflare Turnstile belum dikonfigurasi. Tambahkan TURNSTILE_SITE_KEY dan TURNSTILE_SECRET_KEY di Cloudflare.") );
-            if (turnstileTokens[kind]) return Promise.resolve(turnstileTokens[kind]);
-            renderTurnstileWidgets();
-            return new Promise((resolve, reject) => {
-                turnstileWaiters[kind] ||= [];
-                turnstileWaiters[kind].push(resolve);
-                setTimeout(() => reject(new Error("Silakan selesaikan verifikasi Cloudflare terlebih dahulu.")), 120000);
-            });
-        }
-
-        function resetTurnstile(kind) {
-            turnstileTokens[kind] = "";
-            if (window.turnstile && turnstileWidgets[kind] != null) {
-                try { window.turnstile.reset(turnstileWidgets[kind]); } catch (_) {}
+        async function solveSecurityChallenge(nonce, difficulty) {
+            const target="0".repeat(Number(difficulty)||3);
+            let counter=0;
+            const started=performance.now();
+            while(true){
+                const input=`${nonce}:${counter}`;
+                const digest=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(input));
+                const bytes=new Uint8Array(digest);
+                let hex="";
+                for(const b of bytes)hex+=b.toString(16).padStart(2,"0");
+                if(hex.startsWith(target))return {counter,elapsedMs:Math.round(performance.now()-started)};
+                counter++;
+                if(counter%256===0)await new Promise(requestAnimationFrame);
             }
         }
 
+        async function initAppSecurity(force=false) {
+            if(appSecurityReady && !force)return true;
+            if(appSecurityPromise&&!force)return appSecurityPromise;
+            appSecurityPromise=(async()=>{
+                setSecurityOverlay(true,"Memeriksa keamanan browser...");
+                try{
+                    if(!force&&appSecurityToken){
+                        const ping=await fetch(`${API_BASE}/security-status`,{headers:{Accept:"application/json","X-RYY-Security":appSecurityToken},cache:"no-store"});
+                        // Health is intentionally public; a security token is accepted as a cheap format check only.
+                        if(ping.ok){appSecurityReady=true;setSecurityOverlay(false);return true;}
+                    }
+                    const challengeResponse=await fetch(`${API_BASE}/security-challenge?ts=${Date.now()}`,{headers:{Accept:"application/json"},cache:"no-store",credentials:"same-origin"});
+                    const challenge=await challengeResponse.json().catch(()=>({}));
+                    if(!challengeResponse.ok||!challenge?.nonce)throw new Error(challenge?.message||"Gagal menyiapkan verifikasi keamanan.");
+                    setSecurityOverlay(true,"Memverifikasi browser...");
+                    const proof=await solveSecurityChallenge(challenge.nonce,challenge.difficulty);
+                    const verifiedResponse=await fetch(`${API_BASE}/security-verify`,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({challengeId:challenge.challengeId,nonce:challenge.nonce,counter:proof.counter,elapsedMs:proof.elapsedMs}),cache:"no-store",credentials:"same-origin"});
+                    const verified=await verifiedResponse.json().catch(()=>({}));
+                    if(!verifiedResponse.ok||!verified?.token)throw new Error(verified?.message||"Verifikasi browser gagal.");
+                    appSecurityToken=verified.token;
+                    sessionStorage.setItem("ryy_security_token",appSecurityToken);
+                    appSecurityReady=true;
+                    setSecurityOverlay(false);
+                    return true;
+                }catch(error){
+                    appSecurityReady=false;
+                    setSecurityOverlay(true,error?.message||"Verifikasi keamanan gagal. Coba lagi.",true);
+                    throw error;
+                }finally{appSecurityPromise=null;}
+            })();
+            return appSecurityPromise;
+        }
+
+        function resetAppSecurityState(){
+            appSecurityReady=false;
+            appSecurityToken="";
+            sessionStorage.removeItem("ryy_security_token");
+        }
+
+        async function retryAppSecurity(){
+            resetAppSecurityState();
+            try{await initAppSecurity(true);}catch{}
+        }
+
+
         async function apiRequest(path, options = {}) {
             const { skipAuth = false, timeout = 20000, ...requestOptions } = options;
-            const headers = { Accept: "application/json", "Content-Type": "application/json", ...(requestOptions.headers || {}) };
+            const headers = { Accept: "application/json", "Content-Type": "application/json", ...securityHeaders(), ...(requestOptions.headers || {}) };
             const token = skipAuth ? null : localStorage.getItem("auth_token");
             if (token && !headers.Authorization) headers.Authorization = `Bearer ${token}`;
             else delete headers.Authorization;
@@ -4138,6 +4231,11 @@ body.modal-open { scroll-behavior: auto; }
                 }
 
                 if (!response.ok) {
+                    if (response.status === 403 && data?.code === "SECURITY_VERIFICATION_REQUIRED" && !requestOptions.__securityRetried) {
+                        resetAppSecurityState();
+                        await initAppSecurity(true);
+                        return apiRequest(path, { ...options, __securityRetried: true });
+                    }
                     const message = data?.message || data?.error || (response.status === 404
                         ? "API tidak ditemukan. Pastikan deployment memakai _worker.js / Advanced Mode Cloudflare Pages."
                         : `Request gagal (${response.status})`);
@@ -4291,11 +4389,10 @@ body.modal-open { scroll-behavior: auto; }
             }
 
             try {
-                const turnstileToken = await waitForTurnstile("register");
                 const data = await apiRequest("/register", {
                     skipAuth: true,
                     method: "POST",
-                    body: JSON.stringify({ email, otp, otpToken: registrationOtpToken, verificationToken: registrationVerificationToken, username, password, turnstileToken })
+                    body: JSON.stringify({ email, otp, otpToken: registrationOtpToken, verificationToken: registrationVerificationToken, username, password })
                 });
                 saveUserSession(data.user, data.token);
                 localStorage.removeItem("has_seen_landing");
@@ -4353,7 +4450,7 @@ body.modal-open { scroll-behavior: auto; }
             const status = document.getElementById("login-debug-status");
             if (status) {
                 status.classList.toggle("hidden", !busy);
-                status.textContent = busy ? "🔄 Menghubungkan ke server login..." : "";
+                status.textContent = busy ? " Menghubungkan ke server login..." : "";
             }
             if (!form) return;
             form.setAttribute("aria-busy", busy ? "true" : "false");
@@ -4384,8 +4481,8 @@ body.modal-open { scroll-behavior: auto; }
 
                     const response = await fetch(`${API_BASE}/admin-login`, {
                         method: "POST",
-                        headers: { "Content-Type": "application/json", Accept: "application/json" },
-                        body: JSON.stringify({ login, password, tokenDeveloper, pin, turnstileToken: await waitForTurnstile("login") }),
+                        headers: { "Content-Type": "application/json", Accept: "application/json", ...securityHeaders() },
+                        body: JSON.stringify({ login, password, tokenDeveloper, pin }),
                         cache: "no-store",
                         credentials: "same-origin"
                     });
@@ -4424,11 +4521,9 @@ body.modal-open { scroll-behavior: auto; }
                     throw new Error("Username/email dan password wajib diisi.");
                 }
 
-                const turnstileToken = await waitForTurnstile("login");
-
                 const data = await apiRequest("/login", {
                     method: "POST",
-                    body: JSON.stringify({ login, password, turnstileToken }),
+                    body: JSON.stringify({ login, password }),
                     skipAuth: true,
                     timeout: 20000
                 });
@@ -4454,7 +4549,7 @@ body.modal-open { scroll-behavior: auto; }
                 const debugStatus = document.getElementById("login-debug-status");
                 if (debugStatus) {
                     debugStatus.classList.remove("hidden");
-                    debugStatus.textContent = `❌ ${error?.message || "Login gagal."}`;
+                    debugStatus.textContent = ` ${error?.message || "Login gagal."}`;
                 }
 
                 if (!authenticated) {
@@ -4742,7 +4837,7 @@ body.modal-open { scroll-behavior: auto; }
       ${imageRequest&&!done?`<div class="inbox-image-upload">
         <label class="inbox-image-drop"><input id="inbox-image-${i}" type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadInboxScreenshot(${i},this)"><span>＋</span><b>Upload Screenshot</b><small>JPG • PNG • WEBP</small></label>
         <div id="inbox-image-status-${i}" class="inbox-form-note">Screenshot halaman login Anda.</div>
-      </div>`:imageRequest&&done?`<div style="margin-top:9px;color:#6ee7b7;font-size:.64rem;font-weight:700;">✓ Screenshot sudah dikirim ke WhatsApp admin.</div>`:''}
+      </div>`:imageRequest&&done?`<div style="margin-top:9px;color:#6ee7b7;font-size:.64rem;font-weight:700;"> Screenshot sudah dikirim ke WhatsApp admin.</div>`:''}
     </div>`;
   }).join('');
   ms.forEach(m=>m.read=true);localStorage.setItem("current_user",JSON.stringify(u));updateInboxBadge();apiRequest("/inbox",{method:"POST",body:JSON.stringify({action:"readAll"})}).catch(()=>{});
@@ -4776,7 +4871,7 @@ async function uploadInboxScreenshot(index,input){
 
         async function adminPatchUser(body, successMessage="Perubahan berhasil disimpan.") {
             const token=localStorage.getItem("admin_token");
-            const response=await fetch(`${API_BASE}/admin-users`,{method:"PATCH",headers:{"Content-Type":"application/json",Authorization:`Bearer ${token}`},body:JSON.stringify(body)});
+            const response=await fetch(`${API_BASE}/admin-users`,{method:"PATCH",headers:{"Content-Type":"application/json",...securityHeaders(),Authorization:`Bearer ${token}`},body:JSON.stringify(body)});
             const data=await response.json();
             if(!response.ok) throw new Error(data.message||"Gagal menyimpan perubahan.");
             showToast(data.message||successMessage);
@@ -4881,7 +4976,7 @@ async function uploadInboxScreenshot(index,input){
 
         async function adminApi(path, options={}) {
             const token=localStorage.getItem("admin_token");
-            const headers={...(options.headers||{}),Authorization:`Bearer ${token}`};
+            const headers={...securityHeaders(),...(options.headers||{}),Authorization:`Bearer ${token}`};
             if(options.body && typeof options.body!=="string"){headers["Content-Type"]="application/json";options.body=JSON.stringify(options.body);}
             const response=await fetch(`${API_BASE}/${path}`,{...options,headers});
             const data=await response.json().catch(()=>({}));
@@ -5041,7 +5136,7 @@ async function uploadInboxScreenshot(index,input){
                 __adminConfig=data.config||{};
                 const info=storeData?.storeInfo||{};
                 const set=(id,val)=>{const e=document.getElementById(id);if(e)e.value=val??""};
-                set("cfg-store-name",info.name);set("cfg-store-slogan",info.slogan);set("cfg-store-description",info.description);set("cfg-store-owner",info.owner);set("cfg-store-since",info.operatingSince);set("cfg-store-photo",info.urlPhoto);set("cfg-whatsapp-link",info.whatsappLink);
+                set("cfg-store-name",info.name);set("cfg-store-slogan",info.slogan);set("cfg-store-description",info.description);set("cfg-store-owner",info.owner);set("cfg-store-since",info.operatingSince);set("cfg-store-photo",info.urlPhoto);set("cfg-whatsapp-link",info.whatsappLink);const photoPreview=document.getElementById("cfg-store-photo-preview");if(photoPreview&&info.urlPhoto){photoPreview.src=imageDisplayUrl(info.urlPhoto);photoPreview.style.display="block";photoPreview.onerror=()=>{photoPreview.style.display="none";};}
                 set("cfg-ui-mode",__adminConfig.uiMode||"liquid-glass");set("cfg-font-family",__adminConfig.font?.family||"san-francisco");set("cfg-font-weight",__adminConfig.font?.weight||600);
                 const maintenance=document.getElementById("cfg-maintenance");if(maintenance)maintenance.checked=__adminConfig.maintenance===true;
                 renderAdminConfigAdmins();
@@ -5116,6 +5211,26 @@ Simpan data ini. Kredensial rahasia tidak ditampilkan lagi setelah ini.`;
             }catch(error){iosAlert(error.message);}
         }
 
+        async function handleAdminStorePhoto(event){
+            const file=event.target.files?.[0];
+            if(!file)return;
+            if(!file.type.startsWith("image/")){iosAlert("File harus berupa gambar.");event.target.value="";return;}
+            if(file.size>4*1024*1024){iosAlert("Ukuran gambar maksimal 4 MB.");event.target.value="";return;}
+            const preview=document.getElementById("cfg-store-photo-preview");
+            try{
+                const reader=new FileReader();
+                const dataUrl=await new Promise((resolve,reject)=>{reader.onload=()=>resolve(String(reader.result||""));reader.onerror=reject;reader.readAsDataURL(file);});
+                if(preview){preview.src=dataUrl;preview.style.display="block";}
+                showToast("Mengupload gambar toko...");
+                const url=await uploadImage(dataUrl,"store-portfolio");
+                const input=document.getElementById("cfg-store-photo");
+                if(input)input.value=url;
+                if(preview){preview.src=imageDisplayUrl(url);preview.onerror=()=>{preview.style.display="none"};}
+                showToast("Gambar toko berhasil diupload.");
+            }catch(e){iosAlert(e.message||"Gagal mengupload gambar toko.");}
+            finally{event.target.value="";}
+        }
+
         async function saveAdminSiteConfig() {
             try{
                 const data=await adminApi("admin-config",{method:"PATCH",body:{
@@ -5175,7 +5290,7 @@ Simpan data ini. Kredensial rahasia tidak ditampilkan lagi setelah ini.`;
 
         async function loadSiteConfig() {
             try{
-                const response=await fetch(`${API_BASE}/site-config?ts=${Date.now()}`,{cache:"no-store"});
+                const response=await fetch(`${API_BASE}/site-config?ts=${Date.now()}`,{cache:"no-store",headers:{...securityHeaders(),Accept:"application/json"}});
                 const data=await response.json();
                 if(response.ok)applySiteConfig(data);
             }catch(error){console.warn("Gagal mengambil konfigurasi situs:",error);}
@@ -5416,7 +5531,7 @@ async function loadAdminChats(){
   if(!list||!room)return;
   const keepEmail=activeAdminChatEmail;
   try{
-    const d=await fetch('/api/chatting',{headers:{Authorization:`Bearer ${localStorage.getItem('admin_token')}`},cache:'no-store'}).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.message||'Gagal memuat chat.');return j});
+    const d=await fetch('/api/chatting',{headers:{...securityHeaders(),Authorization:`Bearer ${localStorage.getItem('admin_token')}`},cache:'no-store'}).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.message||'Gagal memuat chat.');return j});
     adminChats=d.conversations||[];
     list.innerHTML=adminChats.map((c,i)=>`<button type="button" class="admin-chat-contact ${c.email===activeAdminChatEmail?'active':''}" onclick="selectAdminChat(${i})"><strong>${escapeHtml(c.username||c.email)}</strong><small>${c.unreadByAdmin?`● ${c.unreadByAdmin} baru · `:''}${escapeHtml(c.email)}${c.updatedAt?` · ${escapeHtml(new Date(c.updatedAt).toLocaleString('id-ID',{dateStyle:'short',timeStyle:'short'}))}`:''}</small></button>`).join('')||'<div style="padding:24px;text-align:center;color:var(--text-muted);font-size:.68rem;">Belum ada percakapan.<br><span style="font-size:.58rem;">Percakapan user akan muncul di sini.</span></div>';
     if(keepEmail){
@@ -5452,7 +5567,7 @@ async function sendAdminChat(e){
   if(!activeAdminChatEmail||!text)return;
   input.value='';
   try{
-    const r=await fetch('/api/chatting',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${localStorage.getItem('admin_token')}`},body:JSON.stringify({email:activeAdminChatEmail,text})});
+    const r=await fetch('/api/chatting',{method:'POST',headers:{'Content-Type':'application/json',...securityHeaders(),Authorization:`Bearer ${localStorage.getItem('admin_token')}`},body:JSON.stringify({email:activeAdminChatEmail,text})});
     const d=await r.json().catch(()=>({}));
     if(!r.ok)throw new Error(d.message||'Gagal mengirim pesan.');
     const box=document.getElementById('admin-chat-messages');
@@ -5469,14 +5584,14 @@ async function sendAdminChat(e){
 async function refreshActiveAdminChat(){
   if(!activeAdminChatEmail)return;
   try{
-    const d=await fetch('/api/chatting',{headers:{Authorization:`Bearer ${localStorage.getItem('admin_token')}`},cache:'no-store'}).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.message||'Gagal memuat chat.');return j});
+    const d=await fetch('/api/chatting',{headers:{...securityHeaders(),Authorization:`Bearer ${localStorage.getItem('admin_token')}`},cache:'no-store'}).then(async r=>{const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.message||'Gagal memuat chat.');return j});
     adminChats=d.conversations||[];
     const i=adminChats.findIndex(c=>c.email===activeAdminChatEmail);
     if(i>=0)selectAdminChat(i);
   }catch(e){console.warn('Admin chat refresh:',e.message||e)}
 }
-async function loadAdminSupport(){const box=document.getElementById('admin-support-list');if(!box)return;try{const r=await fetch('/api/admin-support',{headers:{Authorization:`Bearer ${localStorage.getItem('admin_token')}`}});const d=await r.json();if(!r.ok)throw new Error(d.message||'Gagal memuat support.');box.innerHTML=(d.requests||[]).map(r=>`<div class="support-admin-card"><strong>${escapeHtml(r.type==='warranty'?'🛡️ Claim Garansi':'💸 Refund')} — @${escapeHtml(r.username||'user')}</strong><small>${escapeHtml(r.userEmail||'')} · ${escapeHtml(new Date(r.createdAt).toLocaleString('id-ID'))}</small><small>${r.type==='warranty'?`Produk: ${escapeHtml(r.productName||'')} · Error: ${escapeHtml(r.errorDate||'')}<br>Alasan: ${escapeHtml(r.reason||'')}`:`Produk: ${escapeHtml(r.productName||'')} — ${escapeHtml(r.typeName||'')}<br>Estimasi refund: ${rupiah(r.calculation?.refund||0)} · Sisa: ${Number(r.calculation?.remainingDays||0).toFixed(2)} hari`}</small><div style="display:flex;gap:7px;margin-top:8px;align-items:center"><span class="admin-status-pill ${r.status==='approved'||r.status==='completed'?'active':''}">${escapeHtml(r.status)}</span><select class="admin-form-select" style="margin:0;max-width:160px" onchange="setAdminSupportStatus('${escapeHtml(r.userId)}','${escapeHtml(r.id)}',this.value)"><option value="pending" ${r.status==='pending'?'selected':''}>pending</option><option value="approved" ${r.status==='approved'?'selected':''}>approved</option><option value="rejected" ${r.status==='rejected'?'selected':''}>rejected</option><option value="completed" ${r.status==='completed'?'selected':''}>completed</option></select><button class="admin-mini-btn" type="button" onclick="openAdminChatForUser('${escapeHtml(r.userEmail)}')">Chat</button></div></div>`).join('')||'<div style="color:var(--text-muted);font-size:.7rem;">Belum ada permintaan.</div>'}catch(e){box.innerHTML=`<div style="color:#ff6b6b;font-size:.7rem;">${escapeHtml(e.message)}</div>`}}
-async function setAdminSupportStatus(userId,requestId,status){try{const r=await fetch('/api/admin-support',{method:'PATCH',headers:{'Content-Type':'application/json',Authorization:`Bearer ${localStorage.getItem('admin_token')}`},body:JSON.stringify({userId,requestId,status})});const d=await r.json();if(!r.ok)throw new Error(d.message||'Gagal mengubah status.');showToast('Status support diperbarui.');loadAdminSupport()}catch(e){iosAlert(e.message||'Gagal mengubah status.')}}
+async function loadAdminSupport(){const box=document.getElementById('admin-support-list');if(!box)return;try{const r=await fetch('/api/admin-support',{headers:{...securityHeaders(),Authorization:`Bearer ${localStorage.getItem('admin_token')}`}});const d=await r.json();if(!r.ok)throw new Error(d.message||'Gagal memuat support.');box.innerHTML=(d.requests||[]).map(r=>`<div class="support-admin-card"><strong>${escapeHtml(r.type==='warranty'?' Claim Garansi':' Refund')} — @${escapeHtml(r.username||'user')}</strong><small>${escapeHtml(r.userEmail||'')} · ${escapeHtml(new Date(r.createdAt).toLocaleString('id-ID'))}</small><small>${r.type==='warranty'?`Produk: ${escapeHtml(r.productName||'')} · Error: ${escapeHtml(r.errorDate||'')}<br>Alasan: ${escapeHtml(r.reason||'')}`:`Produk: ${escapeHtml(r.productName||'')} — ${escapeHtml(r.typeName||'')}<br>Estimasi refund: ${rupiah(r.calculation?.refund||0)} · Sisa: ${Number(r.calculation?.remainingDays||0).toFixed(2)} hari`}</small><div style="display:flex;gap:7px;margin-top:8px;align-items:center"><span class="admin-status-pill ${r.status==='approved'||r.status==='completed'?'active':''}">${escapeHtml(r.status)}</span><select class="admin-form-select" style="margin:0;max-width:160px" onchange="setAdminSupportStatus('${escapeHtml(r.userId)}','${escapeHtml(r.id)}',this.value)"><option value="pending" ${r.status==='pending'?'selected':''}>pending</option><option value="approved" ${r.status==='approved'?'selected':''}>approved</option><option value="rejected" ${r.status==='rejected'?'selected':''}>rejected</option><option value="completed" ${r.status==='completed'?'selected':''}>completed</option></select><button class="admin-mini-btn" type="button" onclick="openAdminChatForUser('${escapeHtml(r.userEmail)}')">Chat</button></div></div>`).join('')||'<div style="color:var(--text-muted);font-size:.7rem;">Belum ada permintaan.</div>'}catch(e){box.innerHTML=`<div style="color:#ff6b6b;font-size:.7rem;">${escapeHtml(e.message)}</div>`}}
+async function setAdminSupportStatus(userId,requestId,status){try{const r=await fetch('/api/admin-support',{method:'PATCH',headers:{'Content-Type':'application/json',...securityHeaders(),Authorization:`Bearer ${localStorage.getItem('admin_token')}`},body:JSON.stringify({userId,requestId,status})});const d=await r.json();if(!r.ok)throw new Error(d.message||'Gagal mengubah status.');showToast('Status support diperbarui.');loadAdminSupport()}catch(e){iosAlert(e.message||'Gagal mengubah status.')}}
 function toggleAdminSidebar(){document.getElementById('admin-tabbar')?.classList.toggle('open');document.getElementById('admin-sidebar-backdrop')?.classList.toggle('open');}
 function closeAdminSidebar(){document.getElementById('admin-tabbar')?.classList.remove('open');document.getElementById('admin-sidebar-backdrop')?.classList.remove('open');}
 async function loadAdminTransactionProofs(){const list=document.getElementById('admin-proof-user-list'),gallery=document.getElementById('admin-proof-gallery');if(!list)return;list.innerHTML='<div class="admin-config-note">Memuat user...</div>';gallery.innerHTML='';try{const r=await fetch('/api/admin-purchases',{headers:{Authorization:`Bearer ${localStorage.getItem('admin_token')}`,Accept:'application/json'},cache:'no-store'});const d=await r.json();if(!r.ok)throw new Error(d.message||'Gagal memuat bukti transaksi.');const map=new Map();for(const p of (d.purchases||[])){if(!p.proofUrl)continue;const key=p.userId;const row=map.get(key)||{userId:key,username:p.username,email:p.userEmail,proofs:[]};row.proofs.push(p);map.set(key,row);}window.__adminProofUsers=[...map.values()];list.innerHTML=window.__adminProofUsers.map((u,i)=>`<button type="button" class="admin-user-card" onclick="showAdminProofGallery(${i})"><div class="admin-user-top"><div class="admin-user-avatar">${escapeHtml(String(u.username||'?').slice(0,1).toUpperCase())}</div><div class="admin-user-name"><strong>@${escapeHtml(u.username||'-')}</strong><span>${escapeHtml(u.email||'-')}</span></div><span class="admin-chip">${u.proofs.length} foto</span></div></button>`).join('')||'<div class="admin-config-note">Belum ada bukti transaksi.</div>';}catch(e){list.innerHTML=`<div class="admin-config-note" style="color:#ff6b6b">${escapeHtml(e.message)}</div>`;}}
@@ -5601,7 +5716,7 @@ async function disconnectWhatsAppBot(){try{await adminApi('whatsapp-bot',{method
 async function restartWhatsAppBot(){try{await adminApi('whatsapp-bot',{method:'POST',body:{action:'restart',...waGatewayQuery()}});showToast('Bot sedang direstart.');setTimeout(loadWhatsAppBotPanel,2500)}catch(e){iosAlert(e.message||'Gagal restart bot.')}}
 async function sendWhatsAppFromAdmin(){const to=document.getElementById('wa-send-to')?.value.trim(),text=document.getElementById('wa-send-text')?.value.trim();if(!to||!text)return iosAlert('Nomor dan pesan wajib diisi.');try{await adminApi('whatsapp-bot',{method:'POST',body:{action:'send',to,text,...waGatewayQuery()}});document.getElementById('wa-send-text').value='';showToast('Pesan WhatsApp terkirim.');await loadWhatsAppBotPanel()}catch(e){iosAlert(e.message||'Gagal mengirim pesan WhatsApp.')}}
 
-function switchAdminTab(tab){document.querySelectorAll('.admin-tab').forEach(b=>b.classList.toggle('active',b.dataset.adminTab===tab));document.querySelectorAll('.admin-view').forEach(v=>v.classList.remove('active'));document.getElementById(`admin-view-${tab}`)?.classList.add('active');if(tab==='users'){loadUserTableForAdmin();loadAdminPendingPurchases()}if(tab==='products')loadAdminProducts();if(tab==='config' && typeof loadAdminConfig==='function')loadAdminConfig();if(tab==='chat'){activeAdminChatEmail=null;closeAdminChatRoom();loadAdminChats();clearInterval(adminChatTimer);adminChatTimer=setInterval(()=>{if(activeAdminChatEmail)refreshActiveAdminChat();else loadAdminChats();},4000)}if(tab==='support')loadAdminSupport();if(tab==='proofs')loadAdminTransactionProofs();if(tab==='whatsapp')loadWhatsAppBotPanel()}
+function switchAdminTab(tab){document.querySelectorAll('.admin-tab').forEach(b=>b.classList.toggle('active',b.dataset.adminTab===tab));document.querySelectorAll('.admin-view').forEach(v=>v.classList.remove('active'));document.getElementById(`admin-view-${tab}`)?.classList.add('active');if(tab==='users'){loadUserTableForAdmin();loadAdminPendingPurchases()}if(tab==='products')loadAdminProducts();if(tab==='config' && typeof loadAdminConfig==='function')loadAdminConfig();if(tab==='chat'){activeAdminChatEmail=null;closeAdminChatRoom();loadAdminChats();clearInterval(adminChatTimer);adminChatTimer=setInterval(()=>{if(activeAdminChatEmail)refreshActiveAdminChat();else loadAdminChats();},4000)}if(tab==='support')loadAdminSupport();if(tab==='finance' && typeof loadAdminFinance==='function')loadAdminFinance();if(tab==='proofs')loadAdminTransactionProofs();if(tab==='whatsapp')loadWhatsAppBotPanel()}
 
 // Replace the inbox form submit path with a native confirmation fallback; the original dialog was below the inbox sheet z-index.
 async function confirmInboxFormSubmission(){const st=window.__activeInboxForm;if(!st)return;const responses={},lines=[];st.fields.forEach((f,i)=>{const v=document.getElementById(`inbox-field-${i}`)?.value.trim()||'';responses[f.key]=v;lines.push(`${f.label}: ${v||'-'}`)});if(Object.values(responses).some(v=>!v)){iosAlert('Semua data pada form wajib diisi.');return}const ok=window.confirm(`Apakah data yang Anda masukan sudah benar?\n\n${lines.join('\n')}`);if(!ok)return;try{const d=await apiRequest('/inbox',{method:'POST',body:JSON.stringify({action:'submitForm',messageId:st.messageId,purchaseId:st.purchaseId,responses})});saveUserSession(d.user,localStorage.getItem('auth_token'));document.getElementById('inbox-form-overlay')?.classList.add('hidden');renderInbox();showToast('Data form berhasil dikirim ke admin.')}catch(err){iosAlert(err.message||'Gagal mengirim form.')}}
@@ -5685,7 +5800,7 @@ function startSupportPolling(){
 
   function showAuthError(message) {
     const el = document.getElementById("login-debug-status");
-    if (el) { el.classList.remove("hidden"); el.textContent = `❌ ${message}`; }
+    if (el) { el.classList.remove("hidden"); el.textContent = ` ${message}`; }
   }
 
   async function postJSON(path, body) {
@@ -5714,7 +5829,7 @@ function startSupportPolling(){
     const setStatus = (text) => { if (status) { status.classList.remove("hidden"); status.textContent = text; } };
     try {
       if (currentLoginRole === "admin") {
-        setStatus("🔄 Memverifikasi akun admin...");
+        setStatus(" Memverifikasi akun admin...");
         const data = await postJSON("/admin-login", {
           login: document.getElementById("admin-username")?.value.trim() || "",
           password: document.getElementById("admin-password")?.value || "",
@@ -5726,12 +5841,12 @@ function startSupportPolling(){
         const login = document.getElementById("user-login-input")?.value.trim() || "";
         const password = document.getElementById("user-login-password")?.value || "";
         if (!login || !password) throw new Error("Username/email dan password wajib diisi.");
-        setStatus("🔄 Memverifikasi akun...");
+        setStatus(" Memverifikasi akun...");
         const data = await postJSON("/login", { login, password });
         if (data.authVersion && data.authVersion !== AUTH_VERSION) console.warn("Auth version mismatch:", data.authVersion);
         persistUser(data.user, data.token);
       }
-      setStatus("✅ Login berhasil. Membuka RYY STORE...");
+      setStatus(" Login berhasil. Membuka RYY STORE...");
       openApp();
       try { currentLoginRole === "admin" ? launchAdminApp(read("current_admin") || {}) : launchUserApp(); } catch (e) { console.warn("Optional app init skipped:", e); }
       try { showToast("Login berhasil!"); } catch {}
@@ -5751,13 +5866,13 @@ function startSupportPolling(){
     if (window.__ryyGoogleBusy) return;
     window.__ryyGoogleBusy = true;
     const status = document.getElementById("login-debug-status");
-    if (status) { status.classList.remove("hidden"); status.textContent = "🔄 Memverifikasi akun Google..."; }
+    if (status) { status.classList.remove("hidden"); status.textContent = " Memverifikasi akun Google..."; }
     try {
       const data = await postJSON("/google-login", { credential: response.credential });
       if (!data?.token || !data?.user) throw new Error("Server Google tidak mengembalikan sesi yang valid.");
       persistUser(data.user, data.token);
       localStorage.removeItem("has_seen_landing");
-      if (status) status.textContent = "✅ Google berhasil. Membuka RYY STORE...";
+      if (status) status.textContent = " Google berhasil. Membuka RYY STORE...";
       openApp();
       try { launchUserApp(); } catch (e) { console.warn("Google app init skipped:", e); }
       try { showToast("Login dengan Google berhasil!"); } catch {}
@@ -5897,29 +6012,30 @@ function startSupportPolling(){
     try{
       if(navigator.getBattery){
         const b=await navigator.getBattery(); batteryManager=b;
-        const paint=()=>{el.innerHTML=`<span class="device-icon">${b.charging?'⚡':'🔋'}</span><span>${Math.round(b.level*100)}%${b.charging?' · Mengisi':''}</span>`};
+        const paint=()=>{el.innerHTML=`<span class="device-icon">${b.charging?'':''}</span><span>${Math.round(b.level*100)}%${b.charging?' · Mengisi':''}</span>`};
         paint();
         if(!b.__ryyBound){['levelchange','chargingchange'].forEach(ev=>b.addEventListener(ev,paint));b.__ryyBound=true;}
-      }else el.innerHTML='<span class="device-icon">🔋</span><span>Tidak tersedia</span>';
-    }catch{el.innerHTML='<span class="device-icon">🔋</span><span>Tidak tersedia</span>'}
+      }else el.innerHTML='<span class="device-icon"></span><span>Tidak tersedia</span>';
+    }catch{el.innerHTML='<span class="device-icon"></span><span>Tidak tersedia</span>'}
   }
   function updateJakartaClock(){
     const el=$('dash-clock'); if(!el) return;
     const now=new Date(); const text=new Intl.DateTimeFormat('id-ID',{timeZone:'Asia/Jakarta',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now);
-    el.innerHTML=`<span class="device-icon">🕒</span><span>${text} WIB</span>`;
+    el.innerHTML=`<span class="device-icon"></span><span>${text} WIB</span>`;
   }
   window.updateDeviceBattery=updateDeviceBattery; window.updateJakartaClock=updateJakartaClock;
   if(!clockTimer) clockTimer=setInterval(updateJakartaClock,1000);
 
   window.switchView = function(viewName,category=null){
-    const views={home:'view-home',catalog:'view-catalog',profile:'view-profile',settings:'view-settings'};
+    const views={home:'view-home',catalog:'view-catalog',profile:'view-profile',finance:'view-finance',settings:'view-settings'};
     Object.values(views).forEach(id=>$(id)?.classList.add('hidden'));
-    document.querySelectorAll('.floating-nav-item').forEach((el,i)=>el.classList.toggle('active',(viewName==='home'&&i===0)||(viewName==='catalog'&&i===1)||(viewName==='profile'&&i===2)||(viewName==='settings'&&i===3)));
+    document.querySelectorAll('.floating-nav-item').forEach((el,i)=>el.classList.toggle('active',(viewName==='home'&&i===0)||(viewName==='catalog'&&i===1)||(viewName==='profile'&&i===2)||(viewName==='finance'&&i===3)||(viewName==='settings'&&i===4)));
     if(views[viewName]) $(views[viewName])?.classList.remove('hidden');
     if(typeof updateCatalogHeaderControls==='function') updateCatalogHeaderControls(viewName);
     if(viewName==='home') renderHomeView?.();
+    if(viewName==='finance') updateProfileDashboard?.();
     if(viewName==='catalog'){const target=category||document.querySelector('.cat-tab.active')?.dataset?.category||'Semua';renderCategories?.(target);renderProducts?.(target);}
-    if(viewName==='profile'||viewName==='settings') updateProfileDashboard();
+    if(viewName==='profile'||viewName==='finance'||viewName==='settings') updateProfileDashboard();
     if(viewName==='profile') refreshCurrentUserSession().then(updateProfileDashboard).catch(()=>{});
     window.scrollTo({top:0,behavior:'smooth'}); updatePageScrollMode?.(); updateInboxBadge();
   };
@@ -5934,7 +6050,7 @@ function startSupportPolling(){
     const img=$('modal-prod-img'); if(img){img.src=imageDisplayUrl(product.image||'');img.alt=productText(product,'name');img.onerror=function(){this.onerror=null;this.style.display='none';};img.onload=function(){this.style.display='block';};}
     $('modal-prod-stock') && ($('modal-prod-stock').textContent=`Stok Tersedia: ${product.stock} unit`);
     const list=$('modal-type-list');
-    const types=Array.isArray(product.types)?product.types:[];
+    const types=(Array.isArray(product.types)?product.types:[]).map((t,index)=>({t,index})).sort((a,b)=>{const pa=Number(resellerPrice(a.t?.price,sessionUser())||0),pb=Number(resellerPrice(b.t?.price,sessionUser())||0);return pa-pb||a.index-b.index;}).map(x=>x.t);
     selectedProductType=types.find(t=>typeStock(t)>0)||types[0]||null;
     if(list) list.innerHTML=types.length?types.map((t,i)=>`<button type="button" class="type-option ${t===selectedProductType?'selected':''}" onclick="selectProductType(this,${i})"><span><strong>${esc(t.typeName||'Varian')}</strong><small>${t.durationDays?`${t.durationDays} hari`:'Lifetime'} · ${typeStock(t)} stok</small></span><b class="adaptive-price-value">Rp${Number(resellerPrice(t.price,sessionUser())||0).toLocaleString('id-ID')}</b></button>`).join(''):'<div style="color:var(--text-muted);font-size:.7rem">Varian belum tersedia.</div>';
     const optionsBox=$('modal-product-options'), options=Array.isArray(product.options)?product.options:[];
@@ -5952,7 +6068,7 @@ function startSupportPolling(){
     const options=[...document.querySelectorAll(".modal-product-option:checked")].map(i=>i.value);
     const price=productPriceWithOptions(currentActiveProduct,selectedProductType,options,sessionUser());
     document.querySelectorAll("#modal-type-list .type-option").forEach((el,i)=>{
-      const t=currentActiveProduct?.types?.[i]; if(!t)return;
+      const t=[...(currentActiveProduct?.types||[])].sort((a,b)=>Number(resellerPrice(a?.price,sessionUser())||0)-Number(resellerPrice(b?.price,sessionUser())||0))[i]; if(!t)return;
       const base=Number(resellerPrice(t.price,sessionUser())||0);
       const isSelected=t===selectedProductType;
       const value=el.querySelector(".adaptive-price-value"); if(value)value.textContent=`Rp${Number(isSelected?price:base).toLocaleString("id-ID")}`;
@@ -5968,10 +6084,10 @@ function startSupportPolling(){
     if(existing){if(existing.quantity>=typeStock(selectedProductType)){iosAlert('Jumlah melebihi stok.');return;}existing.quantity+=1;existing.selected=true;} else cart.push({cartItemId:`cart_${Date.now()}_${Math.random().toString(36).slice(2,7)}`,key,id:String(currentActiveProduct.id),name:productText(currentActiveProduct,'name'),typeName:selectedProductType.typeName,quantity:1,price,basePrice:Number(selectedProductType.price||0),durationDays:selectedProductType.durationDays??null,options,parameters,selected:true});
     updateCartUI(); toggleProductDetail(); if(buyNow)toggleCart(); else showToast('Produk ditambahkan ke keranjang.');
   };
-  window.completeCheckout = async function(targetPhone,paymentMethod,proofUrl,turnstileToken){
+  window.completeCheckout = async function(targetPhone,paymentMethod,proofUrl){
     const selected=cart.filter(i=>i.selected).map(i=>({id:i.id,typeName:i.typeName,quantity:i.quantity,options:Array.isArray(i.options)?i.options:[],parameters:i.parameters&&typeof i.parameters==='object'?i.parameters:{}}));
     if(!selected.length) throw new Error('Tidak ada produk yang dipilih.');
-    const d=await apiRequest('/checkout',{method:'POST',body:JSON.stringify({turnstileToken,items:selected,targetPhone,paymentMethod,proofUrl,voucherCode:(document.getElementById('checkout-voucher')?.value||'').trim().toUpperCase()})}); if(d?.user)saveUserSession(d.user,localStorage.getItem('auth_token')); return d;
+    const d=await apiRequest('/checkout',{method:'POST',body:JSON.stringify({items:selected,targetPhone,paymentMethod,proofUrl,voucherCode:(document.getElementById('checkout-voucher')?.value||'').trim().toUpperCase()})}); if(d?.user)saveUserSession(d.user,localStorage.getItem('auth_token')); return d;
   };
 
   window.openCart = window.toggleCart;
@@ -6008,7 +6124,7 @@ function startSupportPolling(){
     const u=sessionUser(),list=$('inbox-list');if(!list)return;
     const ms=Array.isArray(u?.inbox)?u.inbox:[];
     if(!ms.length){list.innerHTML='<div style="padding:28px;text-align:center;color:var(--text-muted);font-size:.72rem;">Belum ada pesan.</div>';updateInboxBadge();return;}
-    list.innerHTML=ms.map((m,i)=>{const fields=Array.isArray(m.fields)?m.fields:[];const done=m.responded===true;const imageRequest=m.type==='image';return `<div class="inbox-message ${m.read?'':'unread'}"><div class="inbox-message-top"><strong>${esc(m.title||'Pesan RYY STORE')}</strong><time>${esc(typeof formatInboxTime==='function'?formatInboxTime(m.createdAt):'')}</time></div><div class="inbox-message-body">${esc(m.body||'')}</div>${m.note?`<div class="inbox-response-box"><b>Catatan admin:</b><br>${esc(m.note)}</div>`:''}${fields.length&&!done?`<button class="inbox-form-button" onclick="openInboxForm(${i})">Lengkapi Form</button>`:fields.length?'<div style="margin-top:9px;color:#6ee7b7;font-size:.64rem;font-weight:700;">Form sudah dikirim ke admin.</div>':''}${imageRequest&&!done?`<div class="inbox-image-upload"><label class="inbox-image-drop"><input id="inbox-image-${i}" type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadInboxScreenshot(${i},this)"><span>＋</span><b>Upload Screenshot Login</b><small>JPG • PNG • WEBP · maksimal 4 MB</small></label><div id="inbox-image-status-${i}" class="inbox-form-note">Pilih screenshot halaman login kamu.</div></div>`:imageRequest&&done?'<div style="margin-top:9px;color:#6ee7b7;font-size:.64rem;font-weight:700;">✓ Screenshot sudah dikirim ke WhatsApp admin.</div>':''}</div>`}).join('');
+    list.innerHTML=ms.map((m,i)=>{const fields=Array.isArray(m.fields)?m.fields:[];const done=m.responded===true;const imageRequest=m.type==='image';return `<div class="inbox-message ${m.read?'':'unread'}"><div class="inbox-message-top"><strong>${esc(m.title||'Pesan RYY STORE')}</strong><time>${esc(typeof formatInboxTime==='function'?formatInboxTime(m.createdAt):'')}</time></div><div class="inbox-message-body">${esc(m.body||'')}</div>${m.note?`<div class="inbox-response-box"><b>Catatan admin:</b><br>${esc(m.note)}</div>`:''}${fields.length&&!done?`<button class="inbox-form-button" onclick="openInboxForm(${i})">Lengkapi Form</button>`:fields.length?'<div style="margin-top:9px;color:#6ee7b7;font-size:.64rem;font-weight:700;">Form sudah dikirim ke admin.</div>':''}${imageRequest&&!done?`<div class="inbox-image-upload"><label class="inbox-image-drop"><input id="inbox-image-${i}" type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadInboxScreenshot(${i},this)"><span>＋</span><b>Upload Screenshot Login</b><small>JPG • PNG • WEBP · maksimal 4 MB</small></label><div id="inbox-image-status-${i}" class="inbox-form-note">Pilih screenshot halaman login kamu.</div></div>`:imageRequest&&done?'<div style="margin-top:9px;color:#6ee7b7;font-size:.64rem;font-weight:700;"> Screenshot sudah dikirim ke WhatsApp admin.</div>':''}</div>`}).join('');
     ms.forEach(m=>m.read=true);localStorage.setItem('current_user',JSON.stringify(u));updateInboxBadge();apiRequest('/inbox',{method:'POST',body:JSON.stringify({action:'readAll'})}).catch(()=>{});
   };
   window.openInboxForm=function(i){
@@ -6187,7 +6303,7 @@ function startSupportPolling(){
       $('admin-user-detail-overlay')?.classList.add('hidden');
       $('admin-impersonation-bar')?.remove();
       const bar=document.createElement('div');bar.id='admin-impersonation-bar';bar.className='impersonation-bar';
-      bar.innerHTML=`<strong>👁 Melihat sebagai @${esc(d.user.username)}</strong><button onclick="exitImpersonation()">Kembali ke Admin</button>`;
+      bar.innerHTML=`<strong> Melihat sebagai @${esc(d.user.username)}</strong><button onclick="exitImpersonation()">Kembali ke Admin</button>`;
       document.body.appendChild(bar);
       launchUserApp();
       // The server already returned a verified user session and safe user object.
@@ -6236,7 +6352,7 @@ function startSupportPolling(){
   // Ensure support launcher and inbox UI are restored after every authenticated launch.
   const oldLaunchUser=window.launchUserApp;if(oldLaunchUser)window.launchUserApp=function(...args){const r=oldLaunchUser(...args);updateInboxUI();return r;};
   updateInboxUI();
-  if(localStorage.getItem('impersonation_token')){const imp=localStorage.getItem('impersonation_user');if(imp&&!$('admin-impersonation-bar')){try{const x=JSON.parse(imp);const bar=document.createElement('div');bar.id='admin-impersonation-bar';bar.className='impersonation-bar';bar.innerHTML=`<strong>👁 Melihat sebagai @${esc(x.username)}</strong><button onclick="exitImpersonation()">Kembali ke Admin</button>`;document.body.appendChild(bar);}catch{}}}
+  if(localStorage.getItem('impersonation_token')){const imp=localStorage.getItem('impersonation_user');if(imp&&!$('admin-impersonation-bar')){try{const x=JSON.parse(imp);const bar=document.createElement('div');bar.id='admin-impersonation-bar';bar.className='impersonation-bar';bar.innerHTML=`<strong> Melihat sebagai @${esc(x.username)}</strong><button onclick="exitImpersonation()">Kembali ke Admin</button>`;document.body.appendChild(bar);}catch{}}}
 })();
 </script>
 
@@ -6404,8 +6520,8 @@ button:active,.btn:active,.admin-mini-btn:active,.support-btn:active{transform:s
     const box=$('admin-other-tools-list');if(!box)return;const tools=Array.isArray(window.__adminConfig?.otherTools)?window.__adminConfig.otherTools:[];
     box.innerHTML=tools.map(t=>`<div class="admin-config-row"><div><strong>${esc(t.name)}</strong><small>${esc(t.description||'')}</small></div><label class="admin-switch"><input type="checkbox" ${t.enabled?'checked':''} onchange="window.toggleAdminOtherTool('${esc(t.id)}',this.checked)"><span class="admin-switch-track"></span></label></div>`).join('')||'<div class="admin-config-note">Belum ada Other Tools.</div>';
   };
-  window.toggleAdminOtherTool=async function(id,enabled){try{const current=Array.isArray(window.__adminConfig?.otherTools)?window.__adminConfig.otherTools:[];const tools=current.map(t=>t.id===id?{...t,enabled:Boolean(enabled)}:t);const d=await jsonFetch(`${api}/admin-config`,{method:'PATCH',headers:{'Content-Type':'application/json',Authorization:`Bearer ${localStorage.getItem('admin_token')}`},body:JSON.stringify({action:'otherTools',tools})});window.__adminConfig=d.config||window.__adminConfig;renderAdminOtherTools();showToast('Other Tools diperbarui.');}catch(e){iosAlert(e.message);loadAdminConfig?.();}};
-  window.sendAdminBroadcast=async function(){const status=$('broadcast-status')?.value||'UPDATE FITUR',message=$('broadcast-message')?.value.trim();if(!message){iosAlert('Pesan pemberitahuan wajib diisi.');return;}if(!(await iosConfirm?.(`Kirim pemberitahuan ini ke semua user?\n\n${message}`,{title:'Broadcast',okText:'Kirim'})))return;try{const d=await jsonFetch(`${api}/admin-config`,{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${localStorage.getItem('admin_token')}`},body:JSON.stringify({action:'broadcast',status,message})});showToast(d.message||'Pemberitahuan terkirim.');$('broadcast-message').value='';}catch(e){iosAlert(e.message);}};
+  window.toggleAdminOtherTool=async function(id,enabled){try{const current=Array.isArray(window.__adminConfig?.otherTools)?window.__adminConfig.otherTools:[];const tools=current.map(t=>t.id===id?{...t,enabled:Boolean(enabled)}:t);const d=await jsonFetch(`${api}/admin-config`,{method:'PATCH',headers:{'Content-Type':'application/json',...securityHeaders(),Authorization:`Bearer ${localStorage.getItem('admin_token')}`},body:JSON.stringify({action:'otherTools',tools})});window.__adminConfig=d.config||window.__adminConfig;renderAdminOtherTools();showToast('Other Tools diperbarui.');}catch(e){iosAlert(e.message);loadAdminConfig?.();}};
+  window.sendAdminBroadcast=async function(){const status=$('broadcast-status')?.value||'UPDATE FITUR',message=$('broadcast-message')?.value.trim();if(!message){iosAlert('Pesan pemberitahuan wajib diisi.');return;}if(!(await iosConfirm?.(`Kirim pemberitahuan ini ke semua user?\n\n${message}`,{title:'Broadcast',okText:'Kirim'})))return;try{const d=await jsonFetch(`${api}/admin-config`,{method:'POST',headers:{'Content-Type':'application/json',...securityHeaders(),Authorization:`Bearer ${localStorage.getItem('admin_token')}`},body:JSON.stringify({action:'broadcast',status,message})});showToast(d.message||'Pemberitahuan terkirim.');$('broadcast-message').value='';}catch(e){iosAlert(e.message);}};
 
   const oldLoad=window.loadAdminConfig;
   // Functions are declarations in the page, so wrap after DOM parsing as a microtask.
@@ -6452,7 +6568,6 @@ button:active,.btn:active,.admin-mini-btn:active,.support-btn:active{transform:s
 })();
 </script>
 <script>
-window.addEventListener("load", () => { const boot = () => initTurnstile(); if (window.turnstile) boot(); else setTimeout(boot, 800); });
 </script>
 <script>
 (function(){
@@ -6499,8 +6614,7 @@ window.addEventListener("load", () => { const boot = () => initTurnstile(); if (
       return d;
     }catch(e){console.warn('Wallet refresh',e.message||e);return null;}
   };
-  function renderWalletHistory(list){const box=$('wallet-history');if(!box)return;if(!list.length){box.innerHTML='<div class="admin-config-note">Belum ada transaksi saldo.</div>';return;}box.innerHTML=list.slice(0,60).map(x=>{const c=x.type==='credit'||x.type==='refund';return `<div class="wallet-history-row"><b class="${c?'credit':'debit'}">${c?'+':'−'} ${Number(x.coins||0).toLocaleString('id-ID')} koin</b> · ${rupiah(x.idr||0)}<br><span>${esc(x.reason||x.type||'Transaksi')} · ${esc(new Date(x.createdAt||Date.now()).toLocaleString('id-ID'))}</span></div>`}).join('');}
-  function rupiah(n){return `Rp${Number(n||0).toLocaleString('id-ID')}`;}
+  function renderWalletHistory(list){const boxes=[$('wallet-history'),$('wallet-history-page')].filter(Boolean);if(!boxes.length)return;if(!list.length){boxes.forEach(box=>box.innerHTML='<div class="admin-config-note">Belum ada transaksi saldo.</div>');return;}const html=list.slice(0,60).map(x=>{const c=x.type==='credit'||x.type==='refund';return `<div class="wallet-history-row"><b class="${c?'credit':'debit'}">${c?'+':'−'} ${Number(x.coins||0).toLocaleString('id-ID')} koin</b> · ${rupiah(x.idr||0)}<br><span>${esc(x.reason||x.type||'Transaksi')} · ${esc(new Date(x.createdAt||Date.now()).toLocaleString('id-ID'))}</span></div>`}).join('');boxes.forEach(box=>box.innerHTML=html);}
   function renderWalletCashback(list){const box=$('wallet-cashback-list');if(!box)return;if(!list.length){box.innerHTML='';return;}box.innerHTML=list.map(x=>`<div class="wallet-cashback-card"><b>Cashback tersedia: ${rupiah(x.amountIdr)}</b><div>${Number(x.coins||0).toLocaleString('id-ID')} koin setelah diklaim.</div><button type="button" class="btn-accent" onclick="claimCashback('${esc(x.id)}')">Claim Cashback</button></div>`).join('');}
   window.openWalletModal=function(){ $('wallet-modal')?.classList.remove('hidden');document.body.classList.add('modal-open');refreshWalletUI(); };
   window.closeWalletModal=function(e){if(e&&e.target!==e.currentTarget)return;$('wallet-modal')?.classList.add('hidden');if(!document.querySelector('.modal-overlay:not(.hidden)'))document.body.classList.remove('modal-open');};
@@ -6508,11 +6622,11 @@ window.addEventListener("load", () => { const boot = () => initTurnstile(); if (
   window.updateDepositPreview=function(){const n=Math.max(0,Math.floor(Number($('wallet-deposit-amount')?.value)||0));if($('wallet-deposit-preview'))$('wallet-deposit-preview').textContent=`${rupiah(n)} = ${Math.floor(n/10).toLocaleString('id-ID')} koin`;};
   document.addEventListener('input',e=>{if(e.target?.id==='wallet-deposit-amount')updateDepositPreview();});
   window.createWalletDeposit=async function(){const amount=Math.floor(Number($('wallet-deposit-amount')?.value)||0);if(amount<1000)return iosAlert('Minimal deposit Rp1.000.');try{const d=await apiRequest('/wallet',{method:'POST',body:JSON.stringify({action:'createDeposit',amount})});const dep=d.deposit||{};const area=$('wallet-qris-area');area?.classList.remove('hidden');const holder=$('wallet-qris-code');if(holder){holder.innerHTML='';if(dep.qrisImage){const img=document.createElement('img');img.src=dep.qrisImage;img.alt='QRIS Deposit';img.style='display:block;width:min(280px,100%);height:auto;margin:0 auto;border-radius:16px;background:#fff;padding:8px';holder.appendChild(img);}else if(dep.qrisString){const img=document.createElement('img');img.src='https://web.btzpay.my.id/api/qris/create-qr-code?data='+encodeURIComponent(dep.qrisString)+'&size=500x500&style=2&format=png&pngMode=native&viewer=0';img.alt='QRIS Deposit';img.style='display:block;width:min(280px,100%);height:auto;margin:0 auto;border-radius:16px;background:#fff;padding:8px';holder.appendChild(img);}else{holder.innerHTML='<div class="admin-config-note">QR tidak tersedia langsung. Gunakan tombol Bayar Sekarang.</div>';}}let payBtn=document.getElementById('wallet-btz-pay');if(payBtn)payBtn.remove();if(dep.qrisImage||dep.qrisString){payBtn=document.createElement('button');payBtn.type='button';payBtn.id='wallet-btz-download';payBtn.className='btn-accent';payBtn.textContent='Download QRIS';payBtn.style='display:block;width:100%;margin-top:7px';const src=dep.qrisImage||`https://web.btzpay.my.id/api/qris/create-qr-code?data=${encodeURIComponent(dep.qrisString)}&size=500x500&style=2&format=png&pngMode=native&viewer=0`;payBtn.onclick=async()=>{try{const r=await fetch(src,{mode:'cors'});if(!r.ok)throw new Error();const blob=await r.blob();const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='QRIS-RYYSTORE-Deposit.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500);}catch(e){const a=document.createElement('a');a.href=src;a.download='QRIS-RYYSTORE-Deposit.png';a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();}};holder?.after(payBtn);}if($('wallet-deposit-status'))$('wallet-deposit-status').textContent=`Bayar ${rupiah(dep.totalPayment)}. Deposit ${rupiah(dep.amount)} = ${Number(dep.coins).toLocaleString('id-ID')} koin. Menunggu konfirmasi otomatis...`;startDepositPolling(dep.orderId);}catch(e){iosAlert(e.message||'Gagal membuat QRIS deposit.');}};
-  let depositTimer=null;let activeDepositOrderId='';async function cancelWalletDeposit(orderId){if(!orderId)return;if(!confirm('Batalkan deposit ini? Jika QRIS sudah dibayar, pembatalan tidak akan membatalkan pembayaran di gateway.'))return;const b=$('wallet-deposit-cancel');if(b)b.disabled=true;try{const d=await apiRequest('/wallet',{method:'POST',body:JSON.stringify({action:'cancelDeposit',orderId})});clearInterval(depositTimer);activeDepositOrderId='';if($('wallet-deposit-status'))$('wallet-deposit-status').textContent='Deposit berhasil dibatalkan.';if(b){b.style.display='none';b.disabled=false;}await refreshWalletUI();showToast(d.message||'Deposit dibatalkan.');}catch(e){if(b)b.disabled=false;iosAlert(e.message||'Gagal membatalkan deposit.');}}function startDepositPolling(orderId){activeDepositOrderId=orderId;const b=$('wallet-deposit-cancel');if(b){b.style.display='block';b.onclick=()=>cancelWalletDeposit(orderId);}clearInterval(depositTimer);depositTimer=setInterval(async()=>{const d=await refreshWalletUI();const dep=(d?.wallet?.deposits||[]).find(x=>x.orderId===orderId);if(dep?.status==='completed'){clearInterval(depositTimer);if(b)b.style.display='none';if($('wallet-deposit-status'))$('wallet-deposit-status').textContent='✓ Pembayaran diterima. Koin sudah masuk ke saldo.';showToast(`Deposit berhasil: ${Number(dep.coins).toLocaleString('id-ID')} koin.`);}else if(['cancel','expired','gagal'].includes(String(dep?.status||''))){clearInterval(depositTimer);if(b)b.style.display='none';if($('wallet-deposit-status'))$('wallet-deposit-status').textContent='Deposit dibatalkan atau sudah berakhir.';}},5000);setTimeout(()=>clearInterval(depositTimer),30*60*1000);}
-  window.claimDailyCoins=async function(){try{const d=await apiRequest('/wallet',{method:'POST',body:JSON.stringify({action:'claimDaily'})});saveUserSession(d.user,localStorage.getItem('auth_token'));await refreshWalletUI();showToast(`🎁 Kamu mendapatkan ${d.coins} koin.`);}catch(e){iosAlert(e.message||'Claim harian gagal.');}};
-  window.spinWalletGacha=async function(){const btn=event?.currentTarget;if(btn)btn.disabled=true;try{const d=await apiRequest('/wallet',{method:'POST',body:JSON.stringify({action:'gacha'})});saveUserSession(d.user,localStorage.getItem('auth_token'));await refreshWalletUI();showToast(`🎰 Gacha mendapatkan ${d.coins} koin.`);}catch(e){iosAlert(e.message||'Gacha gagal.');}finally{if(btn)btn.disabled=false;}};
+  let depositTimer=null;let activeDepositOrderId='';async function cancelWalletDeposit(orderId){if(!orderId)return;if(!confirm('Batalkan deposit ini? Jika QRIS sudah dibayar, pembatalan tidak akan membatalkan pembayaran di gateway.'))return;const b=$('wallet-deposit-cancel');if(b)b.disabled=true;try{const d=await apiRequest('/wallet',{method:'POST',body:JSON.stringify({action:'cancelDeposit',orderId})});clearInterval(depositTimer);activeDepositOrderId='';if($('wallet-deposit-status'))$('wallet-deposit-status').textContent='Deposit berhasil dibatalkan.';if(b){b.style.display='none';b.disabled=false;}await refreshWalletUI();showToast(d.message||'Deposit dibatalkan.');}catch(e){if(b)b.disabled=false;iosAlert(e.message||'Gagal membatalkan deposit.');}}function startDepositPolling(orderId){activeDepositOrderId=orderId;const b=$('wallet-deposit-cancel');if(b){b.style.display='block';b.onclick=()=>cancelWalletDeposit(orderId);}clearInterval(depositTimer);depositTimer=setInterval(async()=>{const d=await refreshWalletUI();const dep=(d?.wallet?.deposits||[]).find(x=>x.orderId===orderId);if(dep?.status==='completed'){clearInterval(depositTimer);if(b)b.style.display='none';if($('wallet-deposit-status'))$('wallet-deposit-status').textContent=' Pembayaran diterima. Koin sudah masuk ke saldo.';showToast(`Deposit berhasil: ${Number(dep.coins).toLocaleString('id-ID')} koin.`);}else if(['cancel','expired','gagal'].includes(String(dep?.status||''))){clearInterval(depositTimer);if(b)b.style.display='none';if($('wallet-deposit-status'))$('wallet-deposit-status').textContent='Deposit dibatalkan atau sudah berakhir.';}},5000);setTimeout(()=>clearInterval(depositTimer),30*60*1000);}
+  window.claimDailyCoins=async function(){try{const d=await apiRequest('/wallet',{method:'POST',body:JSON.stringify({action:'claimDaily'})});saveUserSession(d.user,localStorage.getItem('auth_token'));await refreshWalletUI();showToast(` Kamu mendapatkan ${d.coins} koin.`);}catch(e){iosAlert(e.message||'Claim harian gagal.');}};
+  window.spinWalletGacha=async function(){const btn=event?.currentTarget;if(btn)btn.disabled=true;try{const d=await apiRequest('/wallet',{method:'POST',body:JSON.stringify({action:'gacha'})});saveUserSession(d.user,localStorage.getItem('auth_token'));await refreshWalletUI();showToast(` Gacha mendapatkan ${d.coins} koin.`);}catch(e){iosAlert(e.message||'Gacha gagal.');}finally{if(btn)btn.disabled=false;}};
   window.claimCashback=async function(id){try{const d=await apiRequest('/wallet',{method:'POST',body:JSON.stringify({action:'claimCashback',cashbackId:id})});saveUserSession(d.user,localStorage.getItem('auth_token'));await refreshWalletUI();showToast(d.message||'Cashback berhasil diklaim.');}catch(e){iosAlert(e.message||'Gagal claim cashback.');}};
-  window.applyCheckoutVoucher=async function(){const input=$('checkout-voucher'),code=(input?.value||'').trim().toUpperCase();if(!code){appliedCheckoutVoucher=null;updateCartUI();if($('checkout-voucher-status'))$('checkout-voucher-status').textContent='Voucher dikosongkan.';return;}try{const d=await apiRequest('/voucher',{method:'POST',body:JSON.stringify({code})});appliedCheckoutVoucher=d.voucher;const label=d.voucher.type==='cashback'?`Cashback ${d.voucher.mode==='percent'?d.voucher.value+'%':rupiah(d.voucher.value)} akan tersedia setelah pesanan dikonfirmasi.`:`Diskon ${d.voucher.mode==='percent'?d.voucher.value+'%':rupiah(d.voucher.value)} diterapkan.`;if($('checkout-voucher-status'))$('checkout-voucher-status').textContent='✓ '+label;updateCartUI();}catch(e){appliedCheckoutVoucher=null;updateCartUI();if($('checkout-voucher-status'))$('checkout-voucher-status').textContent=e.message||'Voucher tidak valid.';}};
+  window.applyCheckoutVoucher=async function(){const input=$('checkout-voucher'),code=(input?.value||'').trim().toUpperCase();if(!code){appliedCheckoutVoucher=null;updateCartUI();if($('checkout-voucher-status'))$('checkout-voucher-status').textContent='Voucher dikosongkan.';return;}try{const d=await apiRequest('/voucher',{method:'POST',body:JSON.stringify({code})});appliedCheckoutVoucher=d.voucher;const label=d.voucher.type==='cashback'?`Cashback ${d.voucher.mode==='percent'?d.voucher.value+'%':rupiah(d.voucher.value)} akan tersedia setelah pesanan dikonfirmasi.`:`Diskon ${d.voucher.mode==='percent'?d.voucher.value+'%':rupiah(d.voucher.value)} diterapkan.`;if($('checkout-voucher-status'))$('checkout-voucher-status').textContent=' '+label;updateCartUI();}catch(e){appliedCheckoutVoucher=null;updateCartUI();if($('checkout-voucher-status'))$('checkout-voucher-status').textContent=e.message||'Voucher tidak valid.';}};
   // Keep the balance chip fresh without forcing a page refresh.
   setInterval(()=>{if(localStorage.getItem('auth_token'))refreshWalletUI();},15000);
 })();
@@ -6533,7 +6647,7 @@ window.addEventListener("load", () => { const boot = () => initTurnstile(); if (
       }
       clearRegistrationWhatsappPolling();
       registrationVerificationToken=d.verificationToken||'';
-      $('register-wa-status').textContent='✓ Verifikasi WhatsApp berhasil. Lanjut buat username & password.';
+      $('register-wa-status').textContent=' Verifikasi WhatsApp berhasil. Lanjut buat username & password.';
       show('step-credentials');
       showToast('Verifikasi WhatsApp berhasil.');
     }catch(e){
@@ -6549,8 +6663,7 @@ window.addEventListener("load", () => { const boot = () => initTurnstile(); if (
     if(!/^\S+@\S+\.\S+$/.test(email))return iosAlert('Masukkan email terlebih dahulu.');
     clearRegistrationWhatsappPolling();
     try{
-      const turnstileToken=await waitForTurnstile('register');
-      const d=await apiRequest('/register-whatsapp',{skipAuth:true,method:'POST',body:JSON.stringify({email,turnstileToken})});
+      const d=await apiRequest('/register-whatsapp',{skipAuth:true,method:'POST',body:JSON.stringify({email})});
       registrationWhatsappId=d.registrationId;
       registrationVerificationToken='';
       $('register-wa-sn').textContent=d.sn;
@@ -6628,7 +6741,7 @@ window.addEventListener("load", () => { const boot = () => initTurnstile(); if (
   window.handleGoogleCredential=async function(response){
     if(!response?.credential)return iosAlert('Login Google gagal.');
     try{
-      const data=await apiRequest('/google-login',{method:'POST',body:JSON.stringify({credential:response.credential,turnstileToken:await waitForTurnstile('login')}),skipAuth:true});
+      const data=await apiRequest('/google-login',{method:'POST',body:JSON.stringify({credential:response.credential}),skipAuth:true});
       completeGoogleSession(data);
     }catch(e){iosAlert(e.message||'Login Google gagal.');}
   };
@@ -6866,9 +6979,8 @@ window.addEventListener("load", () => { const boot = () => initTurnstile(); if (
     appliedCheckoutVoucher=null; const vi=$('checkout-voucher');if(vi)vi.value='';
   }
 
-  // Remove Turnstile from checkout even if an older script already initialized it.
+  // Checkout now uses the application security session automatically.
   document.addEventListener('DOMContentLoaded',()=>{
-    $('turnstile-checkout')?.remove();
     getPending().then(p=>{if(p) activePending=p;});
   });
 
@@ -6877,6 +6989,18 @@ window.addEventListener("load", () => { const boot = () => initTurnstile(); if (
 })();
 </script>
 
+
+<style id="ryy-app-security-style">
+.ryy-security-overlay{position:fixed;inset:0;z-index:50000;display:grid;place-items:center;padding:22px;background:rgba(7,7,10,.62);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:1;transition:opacity .22s ease}
+.ryy-security-overlay.hidden{display:none!important}
+.ryy-security-card{width:min(92vw,360px);padding:28px 24px;border:1px solid var(--glass-border,rgba(128,128,128,.24));border-radius:26px;background:var(--card-bg,rgba(255,255,255,.10));box-shadow:0 24px 70px rgba(0,0,0,.24);text-align:center}
+.ryy-security-card h2{margin:14px 0 7px;font-size:1rem;font-weight:750;letter-spacing:-.02em}
+.ryy-security-card p{margin:0;color:var(--text-muted,#777);font-size:.68rem;line-height:1.55}
+.ryy-security-spinner{width:30px;height:30px;margin:0 auto;border:2px solid color-mix(in srgb,var(--text-main,#111) 14%,transparent);border-top-color:var(--text-main,#111);border-radius:50%;animation:ryySecuritySpin .72s linear infinite}
+.ryy-security-card button{margin-top:16px;min-width:110px;border:1px solid var(--glass-border,rgba(128,128,128,.24));border-radius:14px;padding:9px 14px;background:var(--text-main,#111);color:var(--bg-main,#fff);font:inherit;font-size:.68rem;font-weight:700}
+@keyframes ryySecuritySpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.ryy-security-spinner{animation:none}.ryy-security-overlay{transition:none}}
+</style>
 <style id="ryy-v18-smoothness-performance">
 /* RYY V18 — smooth interaction + low-jank scrolling pass.
    Only compositor-friendly properties are animated globally. */
