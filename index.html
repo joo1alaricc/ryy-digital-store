@@ -7708,6 +7708,264 @@ button:active, .btn:active, .admin-glass-btn:active, .support-btn:active,
         body.theme-neumorphic .type-option.selected > span > small { color:var(--text-muted)!important;opacity:1!important; }
         body.theme-neumorphic .type-option.selected .adaptive-price-value { color:var(--accent)!important;-webkit-text-fill-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);border-color:color-mix(in srgb,var(--accent) 35%,var(--glass-border));text-shadow:none; }
         body.theme-neumorphic .type-option.selected::after { content:"✓"; flex:0 0 auto; width:24px; height:24px; display:grid; place-items:center; border-radius:50%; background:color-mix(in srgb,var(--accent) 18%,var(--glass-surface)); color:var(--accent); font-size:.75rem; font-weight:900; box-shadow:inset 2px 2px 5px rgba(0,0,0,.22),inset -2px -2px 5px rgba(255,255,255,.04); }
+
+/* =========================================================
+   RYY STORE — MIDNIGHT DIGITAL STORE VISUAL SYSTEM
+   appearance-only layer
+   ========================================================= */
+:root{
+  --bg-main:#050b14;
+  --card-bg:rgba(12,22,36,.72);
+  --surface-solid:#0b1524;
+  --text-main:#f3f8ff;
+  --text-muted:#8fa4b9;
+  --border-color:rgba(148,190,220,.14);
+  --accent:#61e8d0;
+  --accent-glow:rgba(77,224,205,.24);
+  --midnight:#050b14;
+  --charcoal:#0b1320;
+  --teal:#2bd4c0;
+  --cyan:#68e8ff;
+  --purple:#8174ff;
+  --glass-surface:rgba(10,20,34,.72);
+  --glass-border:rgba(148,206,226,.16);
+  --glass-shadow:0 28px 90px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.055);
+}
+
+body{
+  background:
+    radial-gradient(circle at 8% 8%,rgba(39,211,190,.08),transparent 27%),
+    radial-gradient(circle at 88% 18%,rgba(92,111,255,.10),transparent 30%),
+    radial-gradient(circle at 55% 95%,rgba(128,73,255,.07),transparent 32%),
+    #050b14 !important;
+  color:#f3f8ff !important;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  background:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:54px 54px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.55),transparent 75%);
+}
+
+.bg-animation-container{
+  background:transparent !important;
+}
+.orb{opacity:.13 !important;filter:blur(100px) !important}
+.orb-1{background:#26d9c1 !important}
+.orb-2{background:#536dff !important}
+.orb-3{background:#8b65ff !important}
+
+.auth-container{
+  min-height:100dvh !important;
+  padding:28px 18px !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+.auth-card{
+  position:relative;
+  width:min(100%,460px) !important;
+  padding:34px !important;
+  border-radius:30px !important;
+  background:
+    linear-gradient(145deg,rgba(16,30,49,.88),rgba(6,14,25,.80)) !important;
+  border:1px solid rgba(148,206,226,.17) !important;
+  box-shadow:
+    0 35px 110px rgba(0,0,0,.52),
+    inset 0 1px 0 rgba(255,255,255,.065) !important;
+  overflow:hidden;
+}
+
+.auth-card::before{
+  content:"";
+  position:absolute;
+  width:230px;height:230px;
+  right:-110px;top:-130px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#50e2cc,#6674ff 65%,#9b64ff);
+  filter:blur(60px);
+  opacity:.20;
+  pointer-events:none;
+}
+.auth-card::after{
+  content:"";
+  position:absolute;
+  left:-90px;bottom:-150px;
+  width:220px;height:220px;
+  border-radius:50%;
+  background:#26cdbb;
+  filter:blur(75px);
+  opacity:.09;
+  pointer-events:none;
+}
+
+.auth-card > *{position:relative;z-index:1}
+
+.store-title{
+  font-size:clamp(2rem,7vw,2.75rem) !important;
+  font-weight:850 !important;
+  letter-spacing:-.055em !important;
+  background:linear-gradient(100deg,#f6fbff 5%,#aef8ec 48%,#91a4ff 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent !important;
+  margin-bottom:7px !important;
+}
+.store-subtitle{
+  color:#8fa8be !important;
+  font-size:.82rem !important;
+  line-height:1.55 !important;
+  margin-bottom:23px !important;
+}
+
+.role-selector{
+  background:rgba(2,8,16,.72) !important;
+  border:1px solid rgba(126,171,198,.16) !important;
+  border-radius:16px !important;
+  padding:4px !important;
+  gap:4px !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+.role-btn{
+  min-height:43px !important;
+  border-radius:12px !important;
+  color:#9fb1c3 !important;
+  font-weight:750 !important;
+  transition:.22s ease !important;
+}
+.role-btn:hover{
+  color:#e9faff !important;
+  background:rgba(255,255,255,.045) !important;
+}
+.role-btn.active{
+  color:#031713 !important;
+  background:linear-gradient(105deg,#65ead2,#56d7ea 55%,#7e78ff) !important;
+  box-shadow:0 10px 28px rgba(65,218,202,.18) !important;
+}
+
+.auth-field-label{
+  color:#afc2d5 !important;
+  font-size:.69rem !important;
+  letter-spacing:.01em;
+}
+.auth-card input,
+.auth-card select{
+  background:rgba(2,9,17,.68) !important;
+  color:#f5fbff !important;
+  border:1px solid rgba(126,171,198,.18) !important;
+  border-radius:15px !important;
+  min-height:50px !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+.auth-card input:focus,
+.auth-card select:focus{
+  border-color:rgba(91,231,211,.72) !important;
+  box-shadow:0 0 0 3px rgba(91,231,211,.09),0 0 35px rgba(53,211,193,.07) !important;
+}
+.auth-card input::placeholder{color:#60758a !important}
+
+.btn-accent{
+  min-height:50px !important;
+  border-radius:15px !important;
+  background:linear-gradient(105deg,#62e8d1 0%,#54d7e7 52%,#8177ff 100%) !important;
+  color:#031411 !important;
+  font-weight:850 !important;
+  box-shadow:0 16px 38px rgba(55,214,194,.17) !important;
+}
+.btn-accent:hover{
+  filter:brightness(1.06) saturate(1.04);
+  transform:translateY(-1px);
+}
+.auth-card .btn-icon-minimal{
+  min-height:46px !important;
+  border-radius:14px !important;
+  color:#b7c9da !important;
+  background:rgba(255,255,255,.035) !important;
+  border:1px solid rgba(126,171,198,.15) !important;
+}
+.auth-card .btn-icon-minimal:hover{
+  color:#efffff !important;
+  background:rgba(95,229,210,.06) !important;
+  border-color:rgba(95,229,210,.28) !important;
+}
+
+.password-toggle-btn{color:#7890a5 !important}
+.password-toggle-btn:hover{color:#a9f8eb !important}
+
+/* general storefront surfaces */
+header,nav,.navbar,.top-nav,.site-header,
+.product-card,.category-card,.hero-card,.section-card,
+.admin-card,.dashboard-card,.modal-content,.sheet,
+.settings-card,.checkout-card,.profile-card{
+  border-color:rgba(145,196,220,.13) !important;
+}
+
+button:not(.role-btn):not(.password-toggle-btn){
+  -webkit-tap-highlight-color:transparent;
+}
+
+.product-card,.category-card,.hero-card,.section-card,
+.admin-card,.dashboard-card,.checkout-card,.profile-card{
+  background:linear-gradient(145deg,rgba(13,27,44,.78),rgba(7,16,28,.68)) !important;
+  box-shadow:0 20px 60px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.035) !important;
+  backdrop-filter:blur(22px) saturate(140%);
+}
+
+.ryy-security-overlay{
+  background:rgba(2,7,14,.76) !important;
+  backdrop-filter:blur(18px) saturate(125%) !important;
+  -webkit-backdrop-filter:blur(18px) saturate(125%) !important;
+}
+.ryy-security-card{
+  width:min(92vw,390px) !important;
+  padding:34px 28px 29px !important;
+  border-radius:28px !important;
+  background:linear-gradient(145deg,rgba(16,32,52,.96),rgba(7,15,27,.96)) !important;
+  border:1px solid rgba(116,210,219,.19) !important;
+  box-shadow:0 35px 100px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.055) !important;
+}
+.ryy-security-card h2{
+  color:#f2faff !important;
+  font-size:1.08rem !important;
+}
+.ryy-security-card p{
+  color:#9bb0c3 !important;
+  font-size:.74rem !important;
+}
+.ryy-security-spinner{
+  width:34px !important;
+  height:34px !important;
+  border-color:rgba(103,232,208,.16) !important;
+  border-top-color:#63e8d1 !important;
+}
+.ryy-security-card button{
+  background:linear-gradient(105deg,#62e8d1,#55d8e9 55%,#8177ff) !important;
+  color:#041512 !important;
+  border:0 !important;
+  min-height:44px;
+  box-shadow:0 12px 30px rgba(60,211,194,.16) !important;
+}
+
+@media(max-width:520px){
+  .auth-container{
+    padding:18px 12px !important;
+  }
+  .auth-card{
+    padding:27px 18px 20px !important;
+    border-radius:25px !important;
+  }
+  .store-title{
+    font-size:2.2rem !important;
+  }
+}
+
 </style>
 
 <script id="ryy-v18-particle-engine">
