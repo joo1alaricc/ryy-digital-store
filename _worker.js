@@ -88,7 +88,6 @@ export default {
       // Force the CDN's raw representation; preserve no user-supplied query params
       // so the proxy cannot be abused to request unrelated resources.
       const originalHost = target.hostname.toLowerCase();
-      target.search = "";
       if (originalHost === "cloud.yardansh.com") target.searchParams.set("raw", "");
       try {
         const upstream = await fetch(target.toString(), {
