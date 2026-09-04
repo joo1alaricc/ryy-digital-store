@@ -1865,12 +1865,12 @@ body:not(.light-mode) .category-tabs .cat-tab:hover{color:#fff !important;}
             </div>
 
             <div id="login-debug-status" class="hidden" role="status" aria-live="polite" style="margin:8px 0;padding:9px 11px;border-radius:14px;font-size:.72rem;line-height:1.45;background:rgba(255,255,255,.07);border:1px solid var(--border-color);"></div>
-            <form id="loginForm" onsubmit="handleLogin(event)">
+            <form id="loginForm" onsubmit="handleLogin(event)" autocomplete="off">
                 <div id="userAuthContainer">
                     <div id="user-login-panel" class="auth-step active">
-                        <input type="text" id="user-login-input" data-i18n-placeholder="username_email" placeholder="Username / Email">
+                        <input type="text" id="user-login-input" data-i18n-placeholder="username_email" placeholder="Username / Email" autocomplete="off" name="ryy-user-login" autocorrect="off" autocapitalize="off" spellcheck="false">
                         <div class="password-field-wrap" style="margin-bottom:12px;">
-                            <input type="password" id="user-login-password" data-i18n-placeholder="password" placeholder="Password">
+                            <input type="password" id="user-login-password" data-i18n-placeholder="password" placeholder="Password" autocomplete="off" name="ryy-user-password">
                             <button type="button" class="password-toggle-btn" aria-label="Tampilkan password" onclick="togglePasswordVisibility('user-login-password', this)">
                                 <svg class="eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
                                 <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-3.27 2.61A9.16 9.16 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 4.22-5.94M1 1l22 22"/><path d="M14.12 14.12A3 3 0 1 1 9.88 9.88"/></svg>
@@ -1915,17 +1915,17 @@ body:not(.light-mode) .category-tabs .cat-tab:hover{color:#fff !important;}
                 </div>
 
                 <div id="adminAuthContainer" class="hidden">
-                    <input type="text" id="admin-username" data-i18n-placeholder="admin_username" placeholder="Username / Email Admin">
+                    <input type="text" id="admin-username" data-i18n-placeholder="admin_username" placeholder="Username / Email Admin" autocomplete="off" name="ryy-admin-login" autocorrect="off" autocapitalize="off" spellcheck="false">
                     <div class="password-field-wrap" style="margin-bottom:12px;">
-                        <input type="password" id="admin-password" data-i18n-placeholder="admin_password" placeholder="Password Admin">
+                        <input type="password" id="admin-password" data-i18n-placeholder="admin_password" placeholder="Password Admin" autocomplete="off" name="ryy-admin-password">
                         <button type="button" class="password-toggle-btn" aria-label="Tampilkan password" onclick="togglePasswordVisibility('admin-password', this)">
                             <svg class="eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
                             <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-3.27 2.61A9.16 9.16 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 4.22-5.94M1 1l22 22"/><path d="M14.12 14.12A3 3 0 1 1 9.88 9.88"/></svg>
                         </button>
                     </div>
-                    <input type="text" id="admin-token" data-i18n-placeholder="developer_token" placeholder="Token Developer (cth: dev-7762...)">
+                    <input type="text" id="admin-token" data-i18n-placeholder="developer_token" placeholder="Token Developer (cth: dev-7762...)" autocomplete="off" name="ryy-admin-token" autocorrect="off" autocapitalize="off" spellcheck="false">
                     <div class="password-field-wrap" style="margin-bottom:12px;">
-                        <input type="password" id="admin-pin" data-i18n-placeholder="admin_pin" placeholder="PIN Admin (4-8 digit)" maxlength="8">
+                        <input type="password" id="admin-pin" data-i18n-placeholder="admin_pin" placeholder="PIN Admin (4-8 digit)" maxlength="8" autocomplete="off" name="ryy-admin-pin">
                         <button type="button" class="password-toggle-btn" aria-label="Tampilkan PIN" onclick="togglePasswordVisibility('admin-pin', this)">
                             <svg class="eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
                             <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-3.27 2.61A9.16 9.16 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 4.22-5.94M1 1l22 22"/><path d="M14.12 14.12A3 3 0 1 1 9.88 9.88"/></svg>
@@ -4425,7 +4425,8 @@ body:not(.light-mode) .category-tabs .cat-tab:hover{color:#fff !important;}
                     const message = data?.message || data?.error || (response.status === 404
                         ? "API tidak ditemukan. Pastikan deployment memakai _worker.js / Advanced Mode Cloudflare Pages."
                         : `Request gagal (${response.status})`);
-                    const error = new Error(`${message} [HTTP ${response.status}]`);
+                    const reasonSuffix = data?.reason ? ` (${data.reason})` : "";
+                    const error = new Error(`${message}${reasonSuffix} [HTTP ${response.status}]`);
                     error.status = response.status;
                     error.data = data;
                     throw error;
