@@ -7094,11 +7094,26 @@ button:active,.btn:active,.admin-mini-btn:active,.support-btn:active{transform:s
       return;
     }
     if(panel) panel.classList.remove('hidden');
-    // QRIS is deliberately removed from the current checkout tab after creation.
-    if(code) code.innerHTML='';
-    if(dl) dl.classList.add('hidden');
-    if(status) status.textContent='';
+    // Render the actual QRIS image inline in the checkout tab.
+    const src=qrisSrc(p);
+    if(code){
+      code.innerHTML='';
+      if(src){
+        const img=document.createElement('img');
+        img.src=src;
+        img.alt='QRIS Pembayaran';
+        img.className='qris-image';
+        img.style='display:block;width:min(280px,100%);height:auto;margin:0 auto;background:#fff;padding:8px;border-radius:16px;cursor:zoom-in';
+        img.onclick=()=>openDynamicQrisZoom(src);
+        code.appendChild(img);
+        window.__checkoutQrisSrc=src;
+      }else{
+        code.innerHTML='<div class="admin-config-note">QRIS tidak tersedia. Silakan coba buat pembayaran lagi.</div>';
+      }
+    }
+    if(dl) dl.classList.toggle('hidden', !src);
     const amount=Number(p.gatewayPayment?.totalPayment||p.totalSpent||0);
+    if(status) status.textContent=`Bayar ${rup(amount)}. Status akan dicek otomatis.`;
     if(text) text.innerHTML=`Pembayaran <b>${esc(purchaseName(p))}</b> sebesar <b>${rup(amount)}</b> sedang menunggu pembayaran.`;
     box.classList.remove('hidden');
     const tick=()=>{
@@ -7422,5 +7437,148 @@ button:active, .btn:active, .admin-glass-btn:active, .support-btn:active,
   state.raf=requestAnimationFrame(draw);
 })();
 </script>
+
+<style id="ryy-pro-store-redesign">
+/* =========================================================================
+   RYY STORE — PROFESSIONAL FLAT REDESIGN (visual-only override layer)
+   Tidak ada satupun logika/ID/class JS yang diubah di sini — murni CSS,
+   ditaruh paling akhir supaya menang di atas seluruh gaya "liquid glass".
+   ========================================================================= */
+
+/* 1) Matikan efek blur/glass di seluruh halaman, apapun mode UI yang aktif */
+*, *::before, *::after {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+.bg-animation-container, .orb-1, .orb-2, .orb-3 { display: none !important; }
+
+/* 2) Palet & token dasar — flat, kontras tinggi, ala toko digital profesional */
+:root, body, body.user-ui-liquid, body.user-ui-standard, body.user-ui-solid {
+    --bg-main: #08080a;
+    --surface-solid: #131318;
+    --card-bg: #131318;
+    --glass-surface: #14141a;
+    --glass-border: #24242c;
+    --glass-highlight: transparent;
+    --glass-shadow: 0 1px 0 rgba(255,255,255,.03) inset, 0 10px 24px rgba(0,0,0,.35);
+    --border-color: #24242c;
+    --text-main: #f5f5f7;
+    --text-muted: #8b8b93;
+    --user-radius: 14px;
+}
+body.light-mode {
+    --bg-main: #f4f5f7;
+    --surface-solid: #ffffff;
+    --card-bg: #ffffff;
+    --glass-surface: #ffffff;
+    --glass-border: #e4e4e9;
+    --glass-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 8px 20px rgba(20,20,30,.06);
+    --border-color: #e4e4e9;
+    --text-main: #16161a;
+    --text-muted: #6b6b74;
+}
+.orb { display: none !important; }
+
+/* 3) Tipografi — lebih tegas & "korporat", label kecil pakai kapital + tracking */
+body, button, input, select, textarea { font-weight: 500; letter-spacing: -.1px; }
+h1, h2, h3, .store-title, .landing-hero h1, .home-portfolio-body h1 { font-weight: 800 !important; letter-spacing: -.5px; }
+.home-eyebrow, .section-count, .badge-pill, .header-status-pill {
+    text-transform: uppercase; letter-spacing: .06em !important; font-weight: 800 !important;
+}
+
+/* 4) Kartu / panel bersama — solid, border tipis, shadow datar (bukan glass) */
+.store-header, .dashboard-container, .profile-hero, .dash-card, .settings-panel,
+.product-card, .bs-card, .modal-content, .landing-box, .auth-card,
+.home-portfolio-card, .home-category-card, .qris-panel, .wallet-modal-content,
+.ios-dialog, .payment-sheet, .support-admin-card, .admin-chat-window, .admin-chat-list,
+body.user-ui-liquid .store-header, body.user-ui-standard .store-header, body.user-ui-solid .store-header,
+body.user-ui-liquid .product-card, body.user-ui-standard .product-card, body.user-ui-solid .product-card,
+body.user-ui-liquid .floating-user-nav, body.user-ui-standard .floating-user-nav, body.user-ui-solid .floating-user-nav {
+    background: var(--surface-solid) !important;
+    background-image: none !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,.25) !important;
+}
+body.light-mode .store-header, body.light-mode .dashboard-container, body.light-mode .profile-hero,
+body.light-mode .dash-card, body.light-mode .settings-panel, body.light-mode .product-card,
+body.light-mode .bs-card, body.light-mode .modal-content, body.light-mode .landing-box,
+body.light-mode .auth-card, body.light-mode .home-portfolio-card, body.light-mode .home-category-card {
+    box-shadow: 0 1px 2px rgba(20,20,30,.06) !important;
+}
+.home-portfolio-card::before, .ios-dialog::before, .ai-chat::before, .support-chat::before { display: none !important; }
+
+/* 5) Header toko — navbar datar, lebar penuh, bukan kapsul melayang */
+.store-header,
+body.user-ui-liquid .store-header, body.user-ui-standard .store-header, body.user-ui-solid .store-header {
+    position: sticky !important; top: 0 !important; left: 0 !important;
+    width: 100% !important; max-width: 100% !important; margin: 0 !important;
+    border-radius: 0 !important; border-width: 0 0 1px 0 !important;
+    z-index: 100;
+}
+.store-header::before { display: none !important; }
+.brand-area h2 { font-weight: 800 !important; }
+
+/* 6) Navigasi bawah (floating tab bar) — flat bar, tidak melayang membundar */
+.floating-user-nav,
+body.user-ui-liquid .floating-user-nav, body.user-ui-standard .floating-user-nav, body.user-ui-solid .floating-user-nav {
+    bottom: 0 !important; width: 100% !important; max-width: 100% !important;
+    border-radius: 0 !important; border-width: 1px 0 0 0 !important; padding: 6px !important;
+}
+.floating-nav-item.active, .floating-nav-item:hover { background: rgba(127,127,127,.14) !important; box-shadow: none !important; }
+
+/* 7) Kartu produk — grid toko profesional: gambar rapat, judul tegas, harga aksen */
+.product-card, body.user-ui-liquid .product-card, body.user-ui-standard .product-card, body.user-ui-solid .product-card {
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.product-card:hover {
+    transform: translateY(-2px) !important;
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border-color)) !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,.30) !important;
+}
+.bs-card:hover { box-shadow: 0 8px 20px rgba(0,0,0,.30) !important; }
+
+/* 8) Tombol — flat, tegas, tanpa efek "kaca" pada hover */
+button:hover { transform: none !important; filter: none !important; box-shadow: none !important; }
+button:active { transform: scale(.98) !important; filter: brightness(.94) !important; }
+.btn-accent { border-radius: 10px !important; font-weight: 700 !important; box-shadow: none !important; }
+.support-btn { background: var(--surface-solid) !important; border: 1px solid var(--border-color) !important; border-radius: 10px !important; box-shadow: none !important; }
+.support-btn.accent { background: color-mix(in srgb, var(--accent) 14%, transparent) !important; }
+
+/* 9) Form & input — kotak rapi, border solid, tanpa efek glass */
+input, select, textarea {
+    background: var(--surface-solid) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 10px !important;
+}
+.payment-trigger, .catalog-search, .cart-header-button, .checkout-voucher, #checkout-voucher {
+    background: var(--surface-solid) !important; border: 1px solid var(--border-color) !important; box-shadow: none !important;
+}
+
+/* 10) Badge / pill / chip — solid, kontras jelas */
+.cat-tab, .home-category-icon, .header-status-pill, .section-count, .badge-pill, .toast-icon {
+    background: var(--surface-solid) !important; border-color: var(--border-color) !important; box-shadow: none !important;
+}
+.cat-tab.active, .cat-tab:hover { background: var(--accent) !important; border-color: var(--accent) !important; color: #fff !important; }
+
+/* 11) Modal overlay — gelapkan latar, panel modal solid tanpa blur */
+.modal-overlay, .maintenance-overlay, .payment-sheet-overlay, .ios-dialog-overlay, .qris-zoom-overlay {
+    background: rgba(0,0,0,.55) !important;
+}
+
+/* 12) Toast / notifikasi — kartu solid flat */
+.toast { background: var(--surface-solid) !important; background-image: none !important; border: 1px solid var(--border-color) !important; box-shadow: 0 10px 24px rgba(0,0,0,.30) !important; }
+.toast::before { display: none !important; }
+
+/* 13) AI / support chat — header & composer solid, tanpa efek gradasi kaca */
+.ai-chat-header, .ai-composer, .support-chat-header, .support-chat-composer {
+    background: var(--surface-solid) !important; background-image: none !important;
+    border-color: var(--border-color) !important; box-shadow: none !important;
+}
+
+/* 14) QRIS panel checkout — rapi & solid, ini panel yang sekarang benar-benar menampilkan QR */
+.qris-panel { box-shadow: none !important; }
+.qris-image { border: 1px solid var(--border-color); }
+</style>
 </body>
 </html>

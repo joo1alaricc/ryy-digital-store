@@ -2,7 +2,7 @@
   "developerOwner": {
     "role": "Developer & Owner",
     "name": "Eilyan Sander",
-    "photo": "https://telegra.ph/file/e42551c6e8ce9e9df569d-52564fcad82fd52a3b.jpg",
+    "photo": "https://upload.shizukuuu.cloud/get/KMr1mL.jpg",
     "socials": {
       "instagram": "https://instagram.com/brzee_.sky"
     }
@@ -12,16 +12,21 @@
     "role": "Supplier",
     "name": "Dahlan Revara Mahesa",
     "photo": "https://lh3.googleusercontent.com/a/ACg8ocJvvquxPzUDC7SwNcF3slDHcswckBxU0Q684WI-2N5mFtnfM6M=s96-c",
-    "socials": {
-      "instagram": "https://www.instagram.com/dahlanrevaramahesa?igsi=MXRmczdkdGlsenJiNQ=="
-    }
+    "socials": {}
     },
   {
     "role": "Admin",
     "name": "Adava Ihsani",
-    "photo": "https://telegra.ph/file/0471bc43400a473a92332-91dbe20c916262f919.jpg",
+    "photo": "https://upload.shizukuuu.cloud/get/cxEH23.jpg",
     "socials": {
       "instagram": "https://www.instagram.com/lowcarityy?igsi=M3R1Nnpsem51bWho"
     }
   }
-  ]}
+],
+  "reseller": {
+    "role": "Reseller",
+    "name": "RYY STORE Reseller",
+    "photo": "",
+    "socials": {}
+  }
+}
