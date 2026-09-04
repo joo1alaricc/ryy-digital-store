@@ -151,8 +151,9 @@
             z-index:16000;
             height:0;
             pointer-events:none;
-            padding:0;
+            padding:0 12px;
             overflow:visible;
+            box-sizing:border-box;
         }
         .toast {
             --toast-bg:rgba(35,35,42,.78);
@@ -161,9 +162,11 @@
             --toast-opacity:1;
             --toast-blur:0px;
             position:absolute;
-            top:0;
-            left:50%;
-            width:min(calc(100vw - 24px),560px);
+            top:var(--toast-y);
+            left:0;
+            right:0;
+            width:min(100%,560px);
+            margin:0 auto;
             min-height:64px;
             padding:8px 12px 8px 10px;
             border-radius:20px;
@@ -180,8 +183,7 @@
             -webkit-backdrop-filter:blur(30px) saturate(180%);
             box-shadow:0 18px 48px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.10);
             pointer-events:auto;
-            transform:translate3d(-50%,var(--toast-y),0) scale(var(--toast-scale));
-            transform-origin:top center;
+            transform:none;
             opacity:var(--toast-opacity);
             filter:blur(var(--toast-blur));
             will-change:transform,opacity,filter;
@@ -198,13 +200,13 @@
         .toast.toast--enter {animation:toastEnter .46s cubic-bezier(.22,1,.36,1) both;}
         .toast.toast--leaving {animation:toastExit .34s cubic-bezier(.4,0,.2,1) forwards;pointer-events:none;}
         @keyframes toastEnter {
-            from {transform:translate3d(-50%,-18px,0) scale(.985);opacity:0;filter:blur(5px);}
-            72% {transform:translate3d(-50%,2px,0) scale(1.002);opacity:1;filter:blur(0);}
-            to {transform:translate3d(-50%,0,0) scale(1);opacity:1;filter:blur(0);}
+            from {top:-18px;opacity:0;filter:blur(5px);}
+            72% {top:2px;opacity:1;filter:blur(0);}
+            to {top:var(--toast-y);opacity:1;filter:blur(0);}
         }
         @keyframes toastExit {
-            from {transform:translate3d(-50%,var(--toast-y),0) scale(var(--toast-scale));opacity:var(--toast-opacity);filter:blur(var(--toast-blur));}
-            to {transform:translate3d(-50%,-18px,0) scale(.985);opacity:0;filter:blur(5px);}
+            from {top:var(--toast-y);opacity:var(--toast-opacity);filter:blur(var(--toast-blur));}
+            to {top:-18px;opacity:0;filter:blur(5px);}
         }
 
         /* Apple-like confirmation / alert sheet, while retaining the store's purple/glass visual language */
@@ -1648,6 +1650,38 @@ body.modal-open { scroll-behavior: auto; }
 
 .inbox-image-upload{margin-top:11px;display:grid;gap:7px}.inbox-image-drop{min-height:115px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:1px dashed color-mix(in srgb,var(--accent) 38%,var(--glass-border));border-radius:19px;background:rgba(255,255,255,.045);cursor:pointer;text-align:center}.inbox-image-drop input{display:none}.inbox-image-drop span{font-size:1.35rem;color:var(--accent)}.inbox-image-drop b{font-size:.68rem}.inbox-image-drop small{font-size:.56rem;color:var(--text-muted)}
 
+</style>
+
+<style id="ryy-v10-header-toast-fix">
+/* V10: restore the established Liquid Glass top bar. Only the text color is adaptive. */
+.store-header {
+    position:sticky !important;
+    top:10px !important;
+    width:min(92vw,700px) !important;
+    min-height:66px !important;
+    margin:10px auto 0 !important;
+    padding:8px 10px 8px 15px !important;
+    border-radius:30px !important;
+    border:1px solid rgba(255,255,255,.24) !important;
+    background:linear-gradient(145deg,rgba(255,255,255,.15),rgba(255,255,255,.065) 52%,rgba(255,255,255,.11)) !important;
+    backdrop-filter:blur(30px) saturate(190%) contrast(1.03) !important;
+    -webkit-backdrop-filter:blur(30px) saturate(190%) contrast(1.03) !important;
+    box-shadow:0 20px 65px rgba(0,0,0,.27),inset 0 1px 0 rgba(255,255,255,.34),inset 0 -1px 0 rgba(255,255,255,.055) !important;
+    overflow:visible !important;
+}
+.store-header::before {
+    content:"";position:absolute;inset:1px;border-radius:29px;pointer-events:none;
+    background:linear-gradient(110deg,rgba(255,255,255,.20),transparent 34%,rgba(255,255,255,.075) 66%,transparent);
+}
+.brand-area,.brand-area * { color:var(--text-main) !important; mix-blend-mode:normal !important; text-shadow:none !important; }
+.store-header .header-status-pill,.store-header .catalog-search,.store-header .cart-header-button { mix-blend-mode:normal !important; }
+@media(max-width:600px){
+    .store-header{width:calc(100vw - 20px) !important;min-height:62px !important;margin-top:10px !important;padding-left:13px !important;}
+}
+/* Toasts are deliberately horizontal-position invariant: no translateX/scale is used. */
+#toast-container .toast { left:0 !important; right:0 !important; margin-left:auto !important; margin-right:auto !important; transform:none !important; }
+#toast-container .toast.toast--enter { animation-name:toastEnter !important; }
+#toast-container .toast.toast--leaving { animation-name:toastExit !important; }
 </style>
 
 <style id="ryy-v16-upgrade-style">
