@@ -142,72 +142,11 @@
 
         .hidden { display: none !important; }
 
-        /* Stable centered notification stack */
-        #toast-container {
-            position:fixed;
-            top:max(12px, env(safe-area-inset-top));
-            left:0;
-            right:0;
-            z-index:16000;
-            height:0;
-            pointer-events:none;
-            padding:0 12px;
-            overflow:visible;
-            box-sizing:border-box;
-        }
-        .toast {
-            --toast-bg:rgba(35,35,42,.78);
-            --toast-y:0px;
-            --toast-scale:1;
-            --toast-opacity:1;
-            --toast-blur:0px;
-            position:absolute;
-            top:var(--toast-y);
-            left:0;
-            right:0;
-            width:min(100%,560px);
-            margin:0 auto;
-            min-height:64px;
-            padding:8px 12px 8px 10px;
-            border-radius:20px;
-            border:1px solid rgba(255,255,255,.17);
-            background:linear-gradient(145deg,rgba(255,255,255,.14),var(--toast-bg) 48%,rgba(255,255,255,.055));
-            color:var(--text-main);
-            overflow:hidden;
-            display:grid;
-            grid-template-columns:42px minmax(0,1fr) auto;
-            align-items:center;
-            gap:10px;
-            font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",system-ui,sans-serif;
-            backdrop-filter:blur(30px) saturate(180%);
-            -webkit-backdrop-filter:blur(30px) saturate(180%);
-            box-shadow:0 18px 48px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.10);
-            pointer-events:auto;
-            transform:none;
-            opacity:var(--toast-opacity);
-            filter:blur(var(--toast-blur));
-            will-change:transform,opacity,filter;
-            transition:transform .42s cubic-bezier(.22,1,.36,1),opacity .35s ease,filter .35s ease;
-        }
-        .toast::before {content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.13),transparent 42%,color-mix(in srgb,var(--accent) 8%,transparent));}
-        .toast-icon {width:42px;height:42px;border-radius:13px;display:grid;place-items:center;overflow:hidden;color:#fff;font-size:.72rem;font-weight:700;letter-spacing:-.5px;background:linear-gradient(145deg,color-mix(in srgb,var(--accent) 75%,#fff),color-mix(in srgb,var(--accent) 75%,#000));box-shadow:0 5px 17px var(--accent-glow);z-index:1;flex:none;}
-        .toast-icon img {width:100%;height:100%;object-fit:cover;display:block;}
-        .toast-copy {min-width:0;z-index:1;}
-        .toast-header {font-size:.82rem;line-height:1.2;margin-bottom:2px;color:var(--text-main)!important;}
-        .toast-body {font-size:.72rem;line-height:1.35;color:var(--text-muted);overflow-wrap:anywhere;}
-        .toast-time {font-size:.62rem;color:var(--text-muted);white-space:nowrap;z-index:1;}
-        body.light-mode .toast {--toast-bg:rgba(248,248,250,.88);border-color:rgba(255,255,255,.82);box-shadow:0 18px 48px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.98);}
-        .toast.toast--enter {animation:toastEnter .46s cubic-bezier(.22,1,.36,1) both;}
-        .toast.toast--leaving {animation:toastExit .34s cubic-bezier(.4,0,.2,1) forwards;pointer-events:none;}
-        @keyframes toastEnter {
-            from {top:-18px;opacity:0;filter:blur(5px);}
-            72% {top:2px;opacity:1;filter:blur(0);}
-            to {top:var(--toast-y);opacity:1;filter:blur(0);}
-        }
-        @keyframes toastExit {
-            from {top:var(--toast-y);opacity:var(--toast-opacity);filter:blur(var(--toast-blur));}
-            to {top:-18px;opacity:0;filter:blur(5px);}
-        }
+        /* Floating notification stack — fixed-width gutter, vertical-only animation */
+        #toast-container{position:fixed;top:max(12px,env(safe-area-inset-top));left:0;right:0;z-index:16000;display:flex;flex-direction:column;align-items:center;gap:8px;padding:0 16px;box-sizing:border-box;pointer-events:none;overflow:visible}
+        .toast{--toast-bg:rgba(35,35,42,.78);position:relative;inset:auto;width:min(100%,560px);min-height:64px;box-sizing:border-box;padding:8px 12px 8px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.17);background:linear-gradient(145deg,rgba(255,255,255,.14),var(--toast-bg) 48%,rgba(255,255,255,.055));color:var(--text-main);overflow:hidden;display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;gap:10px;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",system-ui,sans-serif;backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);box-shadow:0 18px 48px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.10);pointer-events:auto;opacity:1;transform:translateY(0);will-change:transform,opacity}
+        .toast::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(135deg,rgba(255,255,255,.13),transparent 42%,color-mix(in srgb,var(--accent) 8%,transparent))}.toast-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;overflow:hidden;color:#fff;font-size:.72rem;font-weight:700;letter-spacing:-.5px;background:linear-gradient(145deg,color-mix(in srgb,var(--accent) 75%,#fff),color-mix(in srgb,var(--accent) 75%,#000));box-shadow:0 5px 17px var(--accent-glow);z-index:1;flex:none}.toast-icon img{width:100%;height:100%;object-fit:cover;display:block}.toast-copy{min-width:0;z-index:1}.toast-header{font-size:.82rem;line-height:1.2;margin-bottom:2px;color:var(--text-main)!important}.toast-body{font-size:.72rem;line-height:1.35;color:var(--text-muted);overflow-wrap:anywhere}.toast-time{font-size:.62rem;color:var(--text-muted);white-space:nowrap;z-index:1}
+        body.light-mode .toast{--toast-bg:rgba(248,248,250,.88);border-color:rgba(255,255,255,.82);box-shadow:0 18px 48px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.98)}.toast.toast--enter{animation:toastEnter .42s cubic-bezier(.22,1,.36,1) both}.toast.toast--leaving{animation:toastExit .28s cubic-bezier(.4,0,.2,1) forwards;pointer-events:none}@keyframes toastEnter{from{transform:translateY(-20px);opacity:0}to{transform:translateY(0);opacity:1}}@keyframes toastExit{from{transform:translateY(0);opacity:1}to{transform:translateY(-14px);opacity:0}}@media(max-width:520px){#toast-container{padding-left:16px;padding-right:16px}.toast{width:100%;min-height:62px;border-radius:18px}}
 
         /* Apple-like confirmation / alert sheet, while retaining the store's purple/glass visual language */
         /* Keep the iOS dialog visible even though the global .hidden rule uses !important. */
@@ -1163,6 +1102,8 @@
         body.light-mode .home-category-icon { background: rgba(255,255,255,.76) !important; }
         body.light-mode .home-category-copy small { color: var(--text-muted) !important; }
 
+        .profile-inbox-card{width:100%;margin-top:12px;padding:14px 15px;display:flex;align-items:center;gap:12px;text-align:left;border:1px solid var(--glass-border);border-radius:22px;background:var(--glass-surface);color:var(--text-main);box-shadow:var(--glass-shadow),inset 0 1px 0 rgba(255,255,255,.14);backdrop-filter:blur(28px) saturate(175%);-webkit-backdrop-filter:blur(28px) saturate(175%)}.profile-inbox-icon{position:relative;width:44px;height:44px;flex:0 0 44px;border-radius:15px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 13%,transparent);color:var(--accent)}.profile-inbox-icon svg{width:23px;height:23px;fill:currentColor}.profile-inbox-copy{min-width:0;flex:1}.profile-inbox-copy strong{display:block;font-size:.78rem}.profile-inbox-copy small{display:block;margin-top:3px;color:var(--text-muted);font-size:.58rem;line-height:1.35}.profile-inbox-chevron{font-size:1.45rem;line-height:1;color:var(--text-muted)}.profile-inbox-badge{position:absolute;right:-5px;top:-5px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;display:grid;place-items:center;background:var(--accent);color:#fff;border:2px solid var(--bg-main);font-size:9px;font-weight:900;box-shadow:0 5px 16px var(--accent-glow)}.profile-inbox-badge.hidden{display:none!important}
+
         /* ===== USER VISUAL PREFERENCES ===== */
         :root {
             --user-blur-px: 17px;
@@ -1368,49 +1309,12 @@
         .chat-preview-whatsapp b { background:#25d366; }
         .chat-preview-instagram { background:linear-gradient(145deg,#833ab4,#fd1d1d,#fcb045); }
 
-        /* ===== AI CHAT STYLES ===== */
-        .ai-chat.chat-style-default { background:var(--bg-main); }
-        .ai-chat.chat-style-default .ai-chat-header { background:linear-gradient(110deg,color-mix(in srgb,var(--accent) 20%,rgba(255,255,255,.30)),rgba(255,255,255,.16)); }
-        .ai-chat.chat-style-default .ai-chat-header::after { content:"•••"; margin-left:auto; align-self:flex-start; padding:2px 7px; border:1px solid rgba(255,255,255,.30); border-radius:999px; color:currentColor; font-size:.58rem; letter-spacing:2px; opacity:.78; }
-        .ai-chat.chat-style-default .ai-message.ai { background:rgba(220,222,228,.72); border:1px solid rgba(255,255,255,.68); color:var(--text-main); box-shadow:0 5px 18px rgba(0,0,0,.06); }
-        .ai-chat.chat-style-default .ai-message.user { background:linear-gradient(145deg,rgba(42,43,51,.96),rgba(72,65,84,.94)); color:#fff; border-color:rgba(255,255,255,.10); }
-        .ai-chat.chat-style-telegram { background:#e7eef5; color:#17212b; }
-        .ai-chat.chat-style-telegram::before { background:linear-gradient(180deg,rgba(255,255,255,.4),rgba(120,180,230,.12)); filter:none; }
-        .ai-chat.chat-style-telegram .ai-chat-header { background:#229ed9; color:#fff; border-bottom:0; backdrop-filter:none; -webkit-backdrop-filter:none; }
-        .ai-chat.chat-style-telegram .ai-chat-title span { color:#d9f4ff; }
-        .ai-chat.chat-style-telegram .ai-avatar { background:#fff; color:#229ed9; box-shadow:none; }
-        .ai-chat.chat-style-telegram .ai-message { border:0; box-shadow:0 1px 2px rgba(0,0,0,.08); border-radius:13px; }
-        .ai-chat.chat-style-telegram .ai-message.ai { background:#fff; color:#17212b; border-top-left-radius:5px; }
-        .ai-chat.chat-style-telegram .ai-message.user { background:#effdde; color:#17212b; border-top-right-radius:5px; }
-        .ai-chat.chat-style-telegram .ai-composer { background:#fff; border-top:1px solid #d6e0e8; backdrop-filter:none; -webkit-backdrop-filter:none; }
-        .ai-chat.chat-style-telegram .ai-composer input { background:#f1f5f8; color:#17212b; border-color:#d8e1e8; }
-        .ai-chat.chat-style-telegram .ai-composer button { background:#229ed9; }
-        .ai-chat.chat-style-whatsapp { background:#efeae2; color:#111b21; }
-        .ai-chat.chat-style-whatsapp::before { background:radial-gradient(circle at 15% 12%,rgba(37,211,102,.08),transparent 30%),radial-gradient(circle at 85% 70%,rgba(18,140,126,.10),transparent 32%); filter:none; }
-        .ai-chat.chat-style-whatsapp .ai-chat-header { background:#075e54; color:#fff; border-bottom:0; backdrop-filter:none; -webkit-backdrop-filter:none; }
-        .ai-chat.chat-style-whatsapp .ai-chat-title span { color:#b9fbc0; }
-        .ai-chat.chat-style-whatsapp .ai-avatar { background:#25d366; color:#fff; box-shadow:none; }
-        .ai-chat.chat-style-whatsapp .ai-message { border:0; box-shadow:0 1px 1px rgba(0,0,0,.08); border-radius:8px; }
-        .ai-chat.chat-style-whatsapp .ai-message.ai { background:#fff; color:#111b21; border-top-left-radius:2px; }
-        .ai-chat.chat-style-whatsapp .ai-message.user { background:#d9fdd3; color:#111b21; border-top-right-radius:2px; }
-        .ai-chat.chat-style-whatsapp .ai-composer { background:#f0f2f5; border-top:0; backdrop-filter:none; -webkit-backdrop-filter:none; }
-        .ai-chat.chat-style-whatsapp .ai-composer input { background:#fff; color:#111b21; border-color:#fff; }
-        .ai-chat.chat-style-whatsapp .ai-composer button { background:#25d366; }
-        .ai-chat.chat-style-instagram { background:#fafafa; color:#171717; }
-        .ai-chat.chat-style-instagram::before { background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(250,250,250,.88)); filter:none; }
-        .ai-chat.chat-style-instagram .ai-chat-header { background:linear-gradient(100deg,#833ab4,#fd1d1d,#fcb045); color:#fff; border-bottom:0; backdrop-filter:none; -webkit-backdrop-filter:none; }
-        .ai-chat.chat-style-instagram .ai-chat-title span { color:#fff; opacity:.88; }
-        .ai-chat.chat-style-instagram .ai-avatar { background:#fff; color:#833ab4; box-shadow:none; }
-        .ai-chat.chat-style-instagram .ai-message { border:1px solid #e7e7e7; box-shadow:none; border-radius:18px; }
-        .ai-chat.chat-style-instagram .ai-message.ai { background:#fff; color:#171717; border-top-left-radius:5px; }
-        .ai-chat.chat-style-instagram .ai-message.user { background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); color:#fff; border:0; border-top-right-radius:5px; }
-        .ai-chat.chat-style-instagram .ai-composer { background:#fff; border-top:1px solid #e6e6e6; backdrop-filter:none; -webkit-backdrop-filter:none; }
-        .ai-chat.chat-style-instagram .ai-composer input { background:#fafafa; color:#171717; border-color:#dbdbdb; }
-        .ai-chat.chat-style-instagram .ai-composer button { background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); }
-
-        @media (min-width:520px) {
-            .user-ui-mode-grid, .chat-style-grid { grid-template-columns:1fr 1fr; }
-        }
+        /* ===== AI CHAT STYLES — faithful platform-inspired presets ===== */
+        .ai-chat.chat-style-default{background:#000;color:#fff}.ai-chat.chat-style-default::before{background:radial-gradient(circle at 15% 8%,rgba(255,255,255,.035),transparent 34%),radial-gradient(circle at 85% 72%,rgba(40,90,160,.06),transparent 34%);filter:none}.ai-chat.chat-style-default .ai-chat-header{background:#050505;color:#fff;border-bottom:1px solid #242424;backdrop-filter:none;-webkit-backdrop-filter:none}.ai-chat.chat-style-default .ai-chat-title span{color:#8f8f8f}.ai-chat.chat-style-default .ai-avatar{background:#222;color:#fff;box-shadow:none}.ai-chat.chat-style-default .ai-message{border:0;box-shadow:none;border-radius:18px}.ai-chat.chat-style-default .ai-message.ai{background:#29292d;color:#fff;border-top-left-radius:7px}.ai-chat.chat-style-default .ai-message.user{background:#1683f5;color:#fff;border-top-right-radius:7px}.ai-chat.chat-style-default .ai-composer{background:#050505;border-top:1px solid #242424;backdrop-filter:none;-webkit-backdrop-filter:none}.ai-chat.chat-style-default .ai-composer input{background:#17171a;color:#fff;border-color:#303035}.ai-chat.chat-style-default .ai-composer button{background:#1683f5}
+        .ai-chat.chat-style-telegram{background:#e7edf3;color:#17212b}.ai-chat.chat-style-telegram::before{background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(120,180,230,.08));filter:none}.ai-chat.chat-style-telegram .ai-chat-header{background:#229ed9;color:#fff;border-bottom:0;backdrop-filter:none;-webkit-backdrop-filter:none}.ai-chat.chat-style-telegram .ai-chat-title span{color:#d9f4ff}.ai-chat.chat-style-telegram .ai-avatar{background:#fff;color:#229ed9;box-shadow:none}.ai-chat.chat-style-telegram .ai-message{border:0;box-shadow:0 1px 2px rgba(0,0,0,.10);border-radius:13px}.ai-chat.chat-style-telegram .ai-message.ai{background:#fff;color:#17212b;border-top-left-radius:5px}.ai-chat.chat-style-telegram .ai-message.user{background:#effdde;color:#17212b;border-top-right-radius:5px}.ai-chat.chat-style-telegram .ai-composer{background:#fff;border-top:1px solid #d6e0e8;backdrop-filter:none;-webkit-backdrop-filter:none}.ai-chat.chat-style-telegram .ai-composer input{background:#f1f5f8;color:#17212b;border-color:#d8e1e8}.ai-chat.chat-style-telegram .ai-composer button{background:#229ed9}
+        .ai-chat.chat-style-whatsapp{background:#0b141a;color:#e9edef}.ai-chat.chat-style-whatsapp::before{background:#0b141a;filter:none}.ai-chat.chat-style-whatsapp .ai-chat-header{background:#202c33;color:#e9edef;border-bottom:0;backdrop-filter:none;-webkit-backdrop-filter:none}.ai-chat.chat-style-whatsapp .ai-chat-title span{color:#7fe8a5}.ai-chat.chat-style-whatsapp .ai-avatar{background:#25d366;color:#fff;box-shadow:none}.ai-chat.chat-style-whatsapp .ai-message{border:0;box-shadow:0 1px 1px rgba(0,0,0,.24);border-radius:8px}.ai-chat.chat-style-whatsapp .ai-message.ai{background:#202c33;color:#e9edef;border-top-left-radius:2px}.ai-chat.chat-style-whatsapp .ai-message.user{background:#005c4b;color:#e9edef;border-top-right-radius:2px}.ai-chat.chat-style-whatsapp .ai-composer{background:#202c33;border-top:0;backdrop-filter:none;-webkit-backdrop-filter:none}.ai-chat.chat-style-whatsapp .ai-composer input{background:#2a3942;color:#e9edef;border-color:#2a3942}.ai-chat.chat-style-whatsapp .ai-composer button{background:#00a884}
+        .ai-chat.chat-style-instagram{background:#000;color:#f5f5f5}.ai-chat.chat-style-instagram::before{background:#000;filter:none}.ai-chat.chat-style-instagram .ai-chat-header{background:#000;color:#f5f5f5;border-bottom:1px solid #262626;backdrop-filter:none;-webkit-backdrop-filter:none}.ai-chat.chat-style-instagram .ai-chat-title span{color:#a8a8a8}.ai-chat.chat-style-instagram .ai-avatar{background:#222;color:#fff;box-shadow:none}.ai-chat.chat-style-instagram .ai-message{border:1px solid #363636;box-shadow:none;border-radius:19px}.ai-chat.chat-style-instagram .ai-message.ai{background:#000;color:#f5f5f5;border-top-left-radius:6px}.ai-chat.chat-style-instagram .ai-message.user{background:#262626;color:#f5f5f5;border-color:#363636;border-top-right-radius:6px}.ai-chat.chat-style-instagram .ai-composer{background:#000;border-top:1px solid #262626;backdrop-filter:none;-webkit-backdrop-filter:none}.ai-chat.chat-style-instagram .ai-composer input{background:#000;color:#f5f5f5;border-color:#363636}.ai-chat.chat-style-instagram .ai-composer button{background:#fff;color:#000}
+        @media (min-width:520px){.user-ui-mode-grid,.chat-style-grid{grid-template-columns:1fr 1fr;}}
 
 
         body.admin-ui-standard-mode .liquid-glass, body.admin-ui-standard-mode .settings-panel, body.admin-ui-standard-mode .dash-card, body.admin-ui-standard-mode .profile-hero, body.admin-ui-standard-mode .product-card, body.admin-ui-standard-mode .home-category-card { border-radius:10px !important; }
@@ -1679,7 +1583,7 @@ body.modal-open { scroll-behavior: auto; }
     .store-header{width:calc(100vw - 20px) !important;min-height:62px !important;margin-top:10px !important;padding-left:13px !important;}
 }
 /* Toasts are deliberately horizontal-position invariant: no translateX/scale is used. */
-#toast-container .toast { left:0 !important; right:0 !important; margin-left:auto !important; margin-right:auto !important; transform:none !important; }
+#toast-container .toast { left:0 !important; right:0 !important; margin-left:auto !important; margin-right:auto !important; }
 #toast-container .toast.toast--enter { animation-name:toastEnter !important; }
 #toast-container .toast.toast--leaving { animation-name:toastExit !important; }
 </style>
@@ -1718,6 +1622,27 @@ button:active{transform:scale(.985)!important;}
 .product-card:hover,.bs-card:hover,.home-category-card:hover{transform:translateY(-1px)!important;}
 .view-enter{animation:ryyViewEnter .34s cubic-bezier(.22,1,.36,1) both;}
 @keyframes ryyViewEnter{from{opacity:0;transform:translate3d(0,8px,0)}to{opacity:1;transform:translate3d(0,0,0)}}
+</style>
+<style id="ryy-v11-final-fixes">
+/* V11: definitive notification + AI platform-style pass + Profile Inbox. */
+#toast-container{left:0!important;right:0!important;width:100%!important;padding-left:16px!important;padding-right:16px!important;display:flex!important;align-items:center!important;flex-direction:column!important;gap:8px!important;}
+#toast-container .toast{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;width:min(100%,560px)!important;max-width:560px!important;margin:0!important;transform:translateY(0)!important;opacity:1!important;}
+#toast-container .toast.toast--enter{animation:ryyToastEnterV11 .42s cubic-bezier(.22,1,.36,1) both!important;}
+#toast-container .toast.toast--leaving{animation:ryyToastExitV11 .28s cubic-bezier(.4,0,.2,1) forwards!important;}
+@keyframes ryyToastEnterV11{from{transform:translateY(-20px)!important;opacity:0!important}to{transform:translateY(0)!important;opacity:1!important}}
+@keyframes ryyToastExitV11{from{transform:translateY(0)!important;opacity:1!important}to{transform:translateY(-14px)!important;opacity:0!important}}
+
+/* Default / iMessage-like */
+.ai-chat.chat-style-default{background:#000!important;color:#fff!important}.ai-chat.chat-style-default::before{background:radial-gradient(circle at 15% 8%,rgba(255,255,255,.035),transparent 34%),radial-gradient(circle at 85% 72%,rgba(40,90,160,.06),transparent 34%)!important;filter:none!important}.ai-chat.chat-style-default .ai-chat-header{background:#050505!important;color:#fff!important;border-bottom:1px solid #242424!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}.ai-chat.chat-style-default .ai-chat-title span{color:#8f8f8f!important}.ai-chat.chat-style-default .ai-avatar{background:#222!important;color:#fff!important;box-shadow:none!important}.ai-chat.chat-style-default .ai-message{border:0!important;box-shadow:none!important;border-radius:18px!important}.ai-chat.chat-style-default .ai-message.ai{background:#29292d!important;color:#fff!important;border-top-left-radius:7px!important}.ai-chat.chat-style-default .ai-message.user{background:#1683f5!important;color:#fff!important;border-top-right-radius:7px!important}.ai-chat.chat-style-default .ai-composer{background:#050505!important;border-top:1px solid #242424!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}.ai-chat.chat-style-default .ai-composer input{background:#17171a!important;color:#fff!important;border-color:#303035!important}.ai-chat.chat-style-default .ai-composer button{background:#1683f5!important}
+/* Telegram */
+.ai-chat.chat-style-telegram{background:#e7edf3!important;color:#17212b!important}.ai-chat.chat-style-telegram::before{background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(120,180,230,.08))!important;filter:none!important}.ai-chat.chat-style-telegram .ai-chat-header{background:#229ed9!important;color:#fff!important;border-bottom:0!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}.ai-chat.chat-style-telegram .ai-chat-title span{color:#d9f4ff!important}.ai-chat.chat-style-telegram .ai-avatar{background:#fff!important;color:#229ed9!important;box-shadow:none!important}.ai-chat.chat-style-telegram .ai-message{border:0!important;box-shadow:0 1px 2px rgba(0,0,0,.10)!important;border-radius:13px!important}.ai-chat.chat-style-telegram .ai-message.ai{background:#fff!important;color:#17212b!important;border-top-left-radius:5px!important}.ai-chat.chat-style-telegram .ai-message.user{background:#effdde!important;color:#17212b!important;border-top-right-radius:5px!important}.ai-chat.chat-style-telegram .ai-composer{background:#fff!important;border-top:1px solid #d6e0e8!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}.ai-chat.chat-style-telegram .ai-composer input{background:#f1f5f8!important;color:#17212b!important;border-color:#d8e1e8!important}.ai-chat.chat-style-telegram .ai-composer button{background:#229ed9!important}
+/* WhatsApp */
+.ai-chat.chat-style-whatsapp{background:#0b141a!important;color:#e9edef!important}.ai-chat.chat-style-whatsapp::before{background:#0b141a!important;filter:none!important}.ai-chat.chat-style-whatsapp .ai-chat-header{background:#202c33!important;color:#e9edef!important;border-bottom:0!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}.ai-chat.chat-style-whatsapp .ai-chat-title span{color:#7fe8a5!important}.ai-chat.chat-style-whatsapp .ai-avatar{background:#25d366!important;color:#fff!important;box-shadow:none!important}.ai-chat.chat-style-whatsapp .ai-message{border:0!important;box-shadow:0 1px 1px rgba(0,0,0,.24)!important;border-radius:8px!important}.ai-chat.chat-style-whatsapp .ai-message.ai{background:#202c33!important;color:#e9edef!important;border-top-left-radius:2px!important}.ai-chat.chat-style-whatsapp .ai-message.user{background:#005c4b!important;color:#e9edef!important;border-top-right-radius:2px!important}.ai-chat.chat-style-whatsapp .ai-composer{background:#202c33!important;border-top:0!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}.ai-chat.chat-style-whatsapp .ai-composer input{background:#2a3942!important;color:#e9edef!important;border-color:#2a3942!important}.ai-chat.chat-style-whatsapp .ai-composer button{background:#00a884!important}
+/* Instagram DM */
+.ai-chat.chat-style-instagram{background:#000!important;color:#f5f5f5!important}.ai-chat.chat-style-instagram::before{background:#000!important;filter:none!important}.ai-chat.chat-style-instagram .ai-chat-header{background:#000!important;color:#f5f5f5!important;border-bottom:1px solid #262626!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}.ai-chat.chat-style-instagram .ai-chat-title span{color:#a8a8a8!important}.ai-chat.chat-style-instagram .ai-avatar{background:#222!important;color:#fff!important;box-shadow:none!important}.ai-chat.chat-style-instagram .ai-message{border:1px solid #363636!important;box-shadow:none!important;border-radius:19px!important}.ai-chat.chat-style-instagram .ai-message.ai{background:#000!important;color:#f5f5f5!important;border-top-left-radius:6px!important}.ai-chat.chat-style-instagram .ai-message.user{background:#262626!important;color:#f5f5f5!important;border-color:#363636!important;border-top-right-radius:6px!important}.ai-chat.chat-style-instagram .ai-composer{background:#000!important;border-top:1px solid #262626!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}.ai-chat.chat-style-instagram .ai-composer input{background:#000!important;color:#f5f5f5!important;border-color:#363636!important}.ai-chat.chat-style-instagram .ai-composer button{background:#fff!important;color:#000!important}
+
+.profile-inbox-card{width:100%!important;margin-top:12px!important;padding:14px 15px!important;display:flex!important;align-items:center!important;gap:12px!important;text-align:left!important;border:1px solid var(--glass-border)!important;border-radius:22px!important;background:var(--glass-surface)!important;color:var(--text-main)!important;box-shadow:var(--glass-shadow),inset 0 1px 0 rgba(255,255,255,.14)!important;backdrop-filter:blur(28px) saturate(175%)!important;-webkit-backdrop-filter:blur(28px) saturate(175%)!important}
+.profile-inbox-icon{position:relative!important;width:44px!important;height:44px!important;flex:0 0 44px!important;border-radius:15px!important;display:grid!important;place-items:center!important;background:color-mix(in srgb,var(--accent) 13%,transparent)!important;color:var(--accent)!important}.profile-inbox-icon svg{width:23px!important;height:23px!important;fill:currentColor!important}.profile-inbox-copy{min-width:0!important;flex:1!important}.profile-inbox-copy strong{display:block!important;font-size:.78rem!important}.profile-inbox-copy small{display:block!important;margin-top:3px!important;color:var(--text-muted)!important;font-size:.58rem!important;line-height:1.35!important}.profile-inbox-chevron{font-size:1.45rem!important;line-height:1!important;color:var(--text-muted)!important}.profile-inbox-badge{position:absolute!important;right:-5px!important;top:-5px!important;min-width:18px!important;height:18px!important;padding:0 5px!important;border-radius:999px!important;display:grid!important;place-items:center!important;background:var(--accent)!important;color:#fff!important;border:2px solid var(--bg-main)!important;font-size:9px!important;font-weight:900!important;box-shadow:0 5px 16px var(--accent-glow)!important}.profile-inbox-badge.hidden{display:none!important}
 </style>
 </head>
 <body>
@@ -2203,6 +2128,8 @@ button:active{transform:scale(.985)!important;}
                         <div class="dash-card"><span data-i18n="battery">Sisa Baterai</span><strong id="dash-battery" class="device-card-value"><span class="device-icon"></span><span>Memeriksa...</span></strong></div>
                         <div class="dash-card"><span data-i18n="jakarta_time">Jam Jakarta (Asia/Jakarta)</span><strong id="dash-clock" class="device-card-value"><span class="device-icon"></span><span>--:--:--</span></strong></div>
                     </div>
+
+                    <button type="button" id="profile-inbox-card" class="profile-inbox-card" onclick="openInbox()" aria-label="Buka Inbox"><span class="profile-inbox-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h4l2 2 2-2h8a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2m0 11h-7l-2 2-2-2H4V6h16zM7 9h10v2H7zm0 4h7v2H7z"/></svg><span id="profile-inbox-badge" class="profile-inbox-badge hidden">0</span></span><span class="profile-inbox-copy"><strong>Inbox</strong><small>Pesan, pemberitahuan, dan permintaan dari RYY STORE</small></span><span class="profile-inbox-chevron">›</span></button>
 
                     <div id="profile-reseller-card" class="dash-card" style="margin-top:12px;">
                         <span data-i18n="reseller_status">Reseller: Tidak Aktif</span>
@@ -6118,8 +6045,8 @@ function startSupportPolling(){
     if(tab==='support')loadAdminSupport?.();if(tab==='proofs')loadAdminTransactionProofs?.();if(tab==='database')loadAdminDatabase?.();
   };
 
-  // Keep Inbox visible above the AI button after authentication.
-  const inbox=$('inbox-fab'); if(inbox){inbox.classList.add('inbox-v3'); if(!inbox.querySelector('.inbox-fab-label')) inbox.insertAdjacentHTML('beforeend','<span class="inbox-fab-label">Inbox</span>');}
+  // Inbox lives inside Profile; keep the legacy floating launcher hidden.
+  $('inbox-fab')?.classList.add('hidden');
   const style=document.createElement('style');style.textContent=`
     .inbox-fab.inbox-v3{width:auto;min-width:78px;padding:0 12px;border-radius:18px;display:flex;align-items:center;justify-content:center;gap:7px;font-size:.65rem;font-weight:800;}
     .inbox-fab.inbox-v3 svg{width:21px;height:21px;flex:0 0 auto}.inbox-fab-label{font-size:.62rem;font-weight:800}.inbox-fab.inbox-v3 .inbox-fab-badge{right:-3px;top:-4px}
@@ -6148,10 +6075,11 @@ function startSupportPolling(){
     @media(max-width:700px){.admin-detail-grid{grid-template-columns:1fr}.admin-chat-layout{grid-template-columns:1fr}.admin-chat-list{max-height:180px}.support-fab{bottom:max(148px,calc(env(safe-area-inset-bottom) + 143px))}}
   `;document.head.appendChild(style);
 
-  // Inbox is now a fifth bottom-nav item; legacy floating inbox stays hidden.
+  // Inbox is opened from Profile; the unread count is shown on the Profile card.
   function updateInboxUI(){
     const u=user(), n=Array.isArray(u?.inbox)?u.inbox.filter(m=>m.read!==true).length:0;
-    $('inbox-nav-badge')?.classList.toggle('hidden',n===0);if($('inbox-nav-badge'))$('inbox-nav-badge').textContent=n>99?'99+':String(n);
+    $('profile-inbox-badge')?.classList.toggle('hidden',n===0);
+    if($('profile-inbox-badge'))$('profile-inbox-badge').textContent=n>99?'99+':String(n);
     $('inbox-fab')?.classList.add('hidden');
     $('support-fab')?.classList.toggle('hidden',!u);
   }
@@ -6273,8 +6201,8 @@ function startSupportPolling(){
     return originalRefresh?originalRefresh():user();
   };
 
-  // Five-tab navigation: Inbox joins the bottom bar.
-  const originalSwitch=window.switchView;window.switchView=function(view,cat){if(localStorage.getItem('impersonation_token')&&view==='settings'){} if(view==='inbox'){openInbox();return;}return originalSwitch?originalSwitch(view,cat):undefined;};
+  // Inbox is intentionally not a bottom-navigation tab. It belongs to Profile.
+
 
   // WhatsApp alignment: user left, admin right.
   const chatStyle=document.createElement('style');chatStyle.textContent=`.admin-chat-messages .support-chat-message.user{align-self:flex-start!important;background:rgba(255,255,255,.11)!important;border:1px solid var(--glass-border)!important;border-bottom-left-radius:6px!important;border-bottom-right-radius:17px!important;color:var(--text-main)!important}.admin-chat-messages .support-chat-message.admin{align-self:flex-end!important;background:var(--accent)!important;color:#fff!important;border:0!important;border-bottom-right-radius:6px!important;border-bottom-left-radius:17px!important}`;document.head.appendChild(chatStyle);
