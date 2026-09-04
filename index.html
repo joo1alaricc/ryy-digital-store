@@ -1644,6 +1644,27 @@ button:active{transform:scale(.985)!important;}
 .profile-inbox-card{width:100%!important;margin-top:12px!important;padding:14px 15px!important;display:flex!important;align-items:center!important;gap:12px!important;text-align:left!important;border:1px solid var(--glass-border)!important;border-radius:22px!important;background:var(--glass-surface)!important;color:var(--text-main)!important;box-shadow:var(--glass-shadow),inset 0 1px 0 rgba(255,255,255,.14)!important;backdrop-filter:blur(28px) saturate(175%)!important;-webkit-backdrop-filter:blur(28px) saturate(175%)!important}
 .profile-inbox-icon{position:relative!important;width:44px!important;height:44px!important;flex:0 0 44px!important;border-radius:15px!important;display:grid!important;place-items:center!important;background:color-mix(in srgb,var(--accent) 13%,transparent)!important;color:var(--accent)!important}.profile-inbox-icon svg{width:23px!important;height:23px!important;fill:currentColor!important}.profile-inbox-copy{min-width:0!important;flex:1!important}.profile-inbox-copy strong{display:block!important;font-size:.78rem!important}.profile-inbox-copy small{display:block!important;margin-top:3px!important;color:var(--text-muted)!important;font-size:.58rem!important;line-height:1.35!important}.profile-inbox-chevron{font-size:1.45rem!important;line-height:1!important;color:var(--text-muted)!important}.profile-inbox-badge{position:absolute!important;right:-5px!important;top:-5px!important;min-width:18px!important;height:18px!important;padding:0 5px!important;border-radius:999px!important;display:grid!important;place-items:center!important;background:var(--accent)!important;color:#fff!important;border:2px solid var(--bg-main)!important;font-size:9px!important;font-weight:900!important;box-shadow:0 5px 16px var(--accent-glow)!important}.profile-inbox-badge.hidden{display:none!important}
 </style>
+<style id="ryy-v12-update-toast-fix">
+/* V12 notification: position is fixed by the container; motion is vertical only. */
+#toast-container{top:max(12px,env(safe-area-inset-top))!important;left:0!important;right:0!important;width:100%!important;padding:0 16px!important;box-sizing:border-box!important;overflow:visible!important;}
+#toast-container .toast{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;width:min(100%,560px)!important;max-width:560px!important;margin:0 auto!important;transform:translate3d(0,0,0)!important;will-change:transform,opacity!important;}
+#toast-container .toast.toast--enter{animation:ryyToastDropV12 .46s cubic-bezier(.22,1,.36,1) both!important;}
+#toast-container .toast.toast--leaving{animation:ryyToastRiseV12 .34s cubic-bezier(.4,0,.2,1) both!important;}
+@keyframes ryyToastDropV12{0%{transform:translate3d(0,-110%,0)!important;opacity:0!important}100%{transform:translate3d(0,0,0)!important;opacity:1!important}}
+@keyframes ryyToastRiseV12{0%{transform:translate3d(0,0,0)!important;opacity:1!important}100%{transform:translate3d(0,-110%,0)!important;opacity:0!important}}
+@media(max-width:520px){#toast-container{padding-left:16px!important;padding-right:16px!important}#toast-container .toast{width:100%!important;max-width:none!important}}
+
+.admin-update-drop{padding:12px;border:1px dashed var(--glass-border);border-radius:20px;background:var(--glass-surface);margin-top:10px}
+.admin-update-status{margin-top:10px;padding:12px 13px;border:1px solid var(--glass-border);border-radius:16px;background:rgba(127,127,127,.06);color:var(--text-muted);font-size:.67rem;line-height:1.55}
+.admin-update-diff{margin-top:10px;display:grid;gap:8px}
+.admin-update-diff.hidden{display:none}
+.admin-update-diff-card{border:1px solid var(--glass-border);border-radius:17px;padding:10px 12px;background:var(--glass-surface);}
+.admin-update-diff-card strong{display:block;font-size:.7rem;margin-bottom:6px}
+.admin-update-diff-card small{display:block;color:var(--text-muted);font-size:.6rem;line-height:1.55;word-break:break-word}
+.admin-update-diff-card.added strong{color:#25a96a}.admin-update-diff-card.changed strong{color:var(--accent)}.admin-update-diff-card.deleted strong{color:#e45b5b}.admin-update-diff-card.same strong{color:var(--text-muted)}
+.admin-update-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+@media(max-width:520px){.admin-update-actions{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
 
@@ -1853,7 +1874,7 @@ button:active{transform:scale(.985)!important;}
                         <button type="button" class="admin-tab" data-admin-tab="support" onclick="switchAdminTab('support');closeAdminSidebar()">Support</button>
                         <button type="button" class="admin-tab" data-admin-tab="broadcast" onclick="switchAdminTab('broadcast');closeAdminSidebar()">Broadcast</button><button type="button" class="admin-tab" data-admin-tab="finance" onclick="switchAdminTab('finance');closeAdminSidebar()">Keuangan</button>
                         <button type="button" class="admin-tab" data-admin-tab="proofs" onclick="switchAdminTab('proofs');closeAdminSidebar()">Bukti Transaksi</button>
-                        <button type="button" class="admin-tab" data-admin-tab="config" onclick="switchAdminTab('config');closeAdminSidebar()">Konfigurasi</button><button type="button" class="admin-tab" data-admin-tab="database" onclick="switchAdminTab('database');closeAdminSidebar()">Database</button><button type="button" class="admin-tab" data-admin-tab="whatsapp" onclick="switchAdminTab('whatsapp');closeAdminSidebar()">WhatsApp Bot</button>
+                        <button type="button" class="admin-tab" data-admin-tab="config" onclick="switchAdminTab('config');closeAdminSidebar()">Konfigurasi</button><button type="button" class="admin-tab" data-admin-tab="database" onclick="switchAdminTab('database');closeAdminSidebar()">Database</button><button type="button" class="admin-tab" data-admin-tab="update" onclick="switchAdminTab('update');closeAdminSidebar()">Update</button><button type="button" class="admin-tab" data-admin-tab="whatsapp" onclick="switchAdminTab('whatsapp');closeAdminSidebar()">WhatsApp Bot</button>
                     </nav>
 
                     <section id="admin-view-users" class="admin-view active">
@@ -1922,7 +1943,29 @@ button:active{transform:scale(.985)!important;}
                     </section>
 
 
-                    <section id="admin-view-whatsapp" class="admin-view">
+                    <section id="admin-view-update" class="admin-view">
+  <div class="admin-config-stack">
+    <div class="settings-panel" style="margin-top:0">
+      <div class="admin-toolbar">
+        <div><h4>Update Script Web</h4><p class="admin-config-note">Upload ZIP source web. Sistem akan membandingkan isi ZIP dengan branch GitHub sebelum satu pun file diubah.</p></div>
+      </div>
+      <div class="admin-update-drop">
+        <input id="admin-update-file" type="file" accept=".zip,application/zip" class="hidden">
+        <button type="button" class="admin-glass-btn" style="width:100%;min-height:54px" onclick="document.getElementById('admin-update-file')?.click()">Pilih ZIP Script Web</button>
+        <div id="admin-update-file-name" class="admin-config-note" style="margin-top:7px;text-align:center">Belum ada file dipilih.</div>
+      </div>
+      <div id="admin-update-status" class="admin-update-status">Pilih ZIP lalu tekan Validasi untuk melihat file yang <b>berubah</b>, <b>baru</b>, dan <b>dihapus</b>.</div>
+      <div id="admin-update-diff" class="admin-update-diff hidden"></div>
+      <div class="admin-update-actions">
+        <button type="button" id="admin-update-validate" class="admin-glass-btn accent" onclick="validateAdminUpdate()">Validasi Update</button>
+        <button type="button" id="admin-update-apply" class="admin-glass-btn" disabled onclick="applyAdminUpdate()">Terapkan ke GitHub</button>
+      </div>
+      <p class="admin-config-note" style="margin-top:10px">Update hanya bisa dijalankan oleh <b>admin_utama</b>. GitHub dibuat dalam satu commit atomic; <code>index.html</code> diproses paling akhir sebelum commit agar menjadi file terakhir yang disiapkan.</p>
+    </div>
+  </div>
+</section>
+
+<section id="admin-view-whatsapp" class="admin-view">
   <div class="wa-admin-grid">
     <div class="wa-admin-card wa-admin-hero">
       <div class="admin-toolbar">
@@ -3194,7 +3237,7 @@ button:active{transform:scale(.985)!important;}
             }, { once:true });
 
             toast.addEventListener("animationend", (event) => {
-                if (event.animationName === "toastEnter") {
+                if (event.animationName === "toastEnter" || event.animationName === "ryyToastEnterV11" || event.animationName === "ryyToastDropV12") {
                     toast.classList.remove("toast--enter");
                     updateToastStack();
                 }
@@ -3413,7 +3456,7 @@ button:active{transform:scale(.985)!important;}
             if (identity) identity.innerText = `@${adminData?.username || "admin"}`;
             const privileged = String(adminData?.username || "").trim().toLowerCase() === "admin_utama" ||
               String(adminData?.email || "").trim().toLowerCase() === "admin1@store.com";
-            const restrictedTabs = new Set(["users","products","config","database"]);
+            const restrictedTabs = new Set(["users","products","config","database","update"]);
             document.querySelectorAll("#admin-tabbar .admin-tab").forEach(tab => {
                 const name = tab.dataset.adminTab;
                 const hidden = !privileged && restrictedTabs.has(name);
@@ -6042,7 +6085,7 @@ function startSupportPolling(){
     if(tab==='users'){loadUserTableForAdmin?.();loadAdminPendingPurchases();}
     if(tab==='products')loadAdminProducts?.();if(tab==='config'&&typeof loadAdminConfig==='function')loadAdminConfig();
     if(tab==='chat'){activeAdminChatEmail=null;closeAdminChatRoom?.();loadAdminChats?.();clearInterval(window.adminChatTimer);window.adminChatTimer=setInterval(()=>{if(activeAdminChatEmail)refreshActiveAdminChat?.();else loadAdminChats?.();},4000);}
-    if(tab==='support')loadAdminSupport?.();if(tab==='proofs')loadAdminTransactionProofs?.();if(tab==='database')loadAdminDatabase?.();
+    if(tab==='support')loadAdminSupport?.();if(tab==='proofs')loadAdminTransactionProofs?.();if(tab==='database')loadAdminDatabase?.();if(tab==='update')resetAdminUpdateUI?.();
   };
 
   // Inbox lives inside Profile; keep the legacy floating launcher hidden.
@@ -6615,6 +6658,49 @@ button:active,.btn:active,.admin-mini-btn:active,.support-btn:active{transform:s
 })();
 </script>
 
+<script id="ryy-admin-update-v1">
+(function(){
+  const $=id=>document.getElementById(id);
+  let selectedFile=null;
+  let manifestHash="";
+  function token(){return localStorage.getItem("admin_token")||"";}
+  function headers(){return {...(typeof securityHeaders==='function'?securityHeaders():{}),Authorization:`Bearer ${token()}`};}
+  function esc(v){return typeof escapeHtml==='function'?escapeHtml(String(v??'')):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  function setStatus(text){const e=$('admin-update-status');if(e)e.innerHTML=text;}
+  function setBusy(b){$('admin-update-validate')?.toggleAttribute('disabled',b);$('admin-update-apply')?.toggleAttribute('disabled',b||!manifestHash);}
+  function renderDiff(d){
+    const box=$('admin-update-diff');if(!box)return;
+    const groups=[['changed','Berubah',d.changed||[]],['added','Baru',d.added||[]],['deleted','Dihapus',d.deleted||[]],['same','Tidak berubah',d.unchanged||[]]];
+    box.innerHTML=groups.map(([cls,title,list])=>`<div class="admin-update-diff-card ${cls}"><strong>${title} · ${list.length} file</strong><small>${list.length?list.map(esc).join('<br>'):'Tidak ada.'}</small></div>`).join('');
+    box.classList.remove('hidden');
+  }
+  function clearResult(){manifestHash="";$('admin-update-diff')?.classList.add('hidden');$('admin-update-apply')?.setAttribute('disabled','disabled');setStatus('Pilih ZIP lalu tekan Validasi untuk melihat file yang <b>berubah</b>, <b>baru</b>, dan <b>dihapus</b>.');}
+  window.resetAdminUpdateUI=function(){ if(!selectedFile){clearResult();} };
+  $('admin-update-file')?.addEventListener('change',e=>{selectedFile=e.target.files?.[0]||null;manifestHash="";$('admin-update-apply')?.setAttribute('disabled','disabled');$('admin-update-diff')?.classList.add('hidden');if($('admin-update-file-name'))$('admin-update-file-name').textContent=selectedFile?`${selectedFile.name} · ${(selectedFile.size/1024/1024).toFixed(2)} MB`:'Belum ada file dipilih.';setStatus(selectedFile?'File siap divalidasi. Belum ada perubahan ke GitHub.':'Pilih ZIP lalu tekan Validasi untuk melihat file yang berubah.');});
+  async function send(action){
+    if(!selectedFile)throw new Error('Pilih file ZIP script terlebih dahulu.');
+    const fd=new FormData();fd.append('action',action);fd.append('file',selectedFile,selectedFile.name);if(action==='apply')fd.append('manifestHash',manifestHash);
+    const r=await fetch('/api/admin-update',{method:'POST',headers:headers(),body:fd,cache:'no-store',credentials:'same-origin'});
+    const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.message||`HTTP ${r.status}`);return d;
+  }
+  window.validateAdminUpdate=async function(){
+    if(!selectedFile)return iosAlert('Pilih ZIP script web terlebih dahulu.');
+    if(!/\.zip$/i.test(selectedFile.name))return iosAlert('File update harus berformat ZIP.');
+    setBusy(true);setStatus('Membaca ZIP dan membandingkan dengan branch GitHub...');
+    try{const d=await send('preview');manifestHash=d.manifestHash||'';renderDiff(d.diff||{});const x=d.diff||{};setStatus(`Validasi selesai. ${x.changed?.length||0} berubah · ${x.added?.length||0} baru · ${x.deleted?.length||0} dihapus · ${x.unchanged?.length||0} tidak berubah. <b>Belum ada file yang diubah.</b>`);$('admin-update-apply')?.toggleAttribute('disabled',!manifestHash);}
+    catch(e){clearResult();setStatus(`<b>Validasi gagal:</b> ${esc(e.message||'Gagal memvalidasi ZIP.')}`);iosAlert(e.message||'Gagal memvalidasi update.');}
+    finally{$('admin-update-validate')?.removeAttribute('disabled');}
+  };
+  window.applyAdminUpdate=async function(){
+    if(!manifestHash)return iosAlert('Validasi ZIP terlebih dahulu.');
+    if(!(await iosConfirm('Terapkan seluruh perubahan ke GitHub sekarang? Proses ini membuat satu commit atomic dan index.html diproses terakhir.',{title:'Terapkan Update',okText:'Update'})))return;
+    setBusy(true);setStatus('Mengunggah file ke GitHub... index.html diproses terakhir sebelum commit.');
+    try{const d=await send('apply');const c=d.diff||{};setStatus(`Update berhasil. ${c.changed?.length||0} berubah · ${c.added?.length||0} baru · ${c.deleted?.length||0} dihapus. Commit: ${esc(d.commitSha||'-')}`);showToast('Update script berhasil diterapkan ke GitHub.');manifestHash="";$('admin-update-apply')?.setAttribute('disabled','disabled');}
+    catch(e){setStatus(`<b>Update gagal:</b> ${esc(e.message||'Gagal menerapkan update.')}`);iosAlert(e.message||'Gagal menerapkan update.');}
+    finally{$('admin-update-validate')?.removeAttribute('disabled');}
+  };
+})();
+</script>
 <script id="ryy-admin-database-v1">
 (function(){
   const $=id=>document.getElementById(id);
