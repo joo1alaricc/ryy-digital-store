@@ -36,6 +36,8 @@ async function dispatch(request, env, targetHandler = legacyHandler) {
     const type = request.headers.get("content-type") || "";
     if (type.includes("application/json")) {
       try { req.body = await request.json(); } catch { req.body = {}; }
+    } else if (type.includes("multipart/form-data")) {
+      try { req.body = await request.formData(); } catch { req.body = new FormData(); }
     } else {
       try { req.body = await request.text(); } catch { req.body = undefined; }
     }
@@ -119,7 +121,7 @@ export default {
           headers: {
             "Access-Control-Allow-Origin": url.origin,
             "Access-Control-Allow-Methods": "GET,HEAD,POST,PUT,PATCH,DELETE,OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization, Accept",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, Accept, X-RYY-Security",
             "Access-Control-Max-Age": "86400"
           }
         });
