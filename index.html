@@ -1667,62 +1667,40 @@ button:active{transform:scale(.985)!important;}
 </style>
 
 <style id="ryy-v17-ios26-chat-fix">
-/* ===== iOS 26 notification banner ===== */
+/* ===== iOS 26 notification stack ===== */
 #toast-container{
   position:fixed!important;
   top:max(10px,env(safe-area-inset-top))!important;
-  left:0!important;right:0!important;
-  width:100%!important;
+  left:0!important;right:0!important;width:100%!important;
   z-index:16000!important;
-  display:flex!important;
-  flex-direction:column!important;
-  align-items:center!important;
-  gap:0!important;
-  padding:0 10px!important;
-  box-sizing:border-box!important;
-  pointer-events:none!important;
-  overflow:visible!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;
+  gap:0!important;padding:0 12px!important;box-sizing:border-box!important;
+  pointer-events:none!important;overflow:visible!important;
 }
 #toast-container .toast{
-  position:relative!important;
-  inset:auto!important;
-  width:min(100%,560px)!important;
-  max-width:560px!important;
-  min-height:72px!important;
-  margin:0!important;
-  padding:10px 12px 10px 10px!important;
-  display:grid!important;
-  grid-template-columns:48px minmax(0,1fr) auto!important;
-  align-items:center!important;
-  gap:11px!important;
-  box-sizing:border-box!important;
-  border-radius:25px!important;
-  border:1px solid rgba(255,255,255,.20)!important;
+  --stack-y:0px;--stack-scale:1;--stack-opacity:1;
+  position:absolute!important;top:0!important;left:50%!important;right:auto!important;
+  width:min(100%,560px)!important;max-width:560px!important;min-height:72px!important;
+  margin:0!important;padding:10px 12px 10px 10px!important;
+  display:grid!important;grid-template-columns:48px minmax(0,1fr) auto!important;
+  align-items:center!important;gap:11px!important;box-sizing:border-box!important;
+  border-radius:25px!important;border:1px solid rgba(255,255,255,.20)!important;
   background:linear-gradient(135deg,rgba(255,255,255,.19),rgba(35,35,42,.78) 48%,rgba(255,255,255,.08))!important;
-  color:var(--text-main)!important;
-  backdrop-filter:blur(34px) saturate(190%)!important;
+  color:var(--text-main)!important;backdrop-filter:blur(34px) saturate(190%)!important;
   -webkit-backdrop-filter:blur(34px) saturate(190%)!important;
   box-shadow:0 18px 55px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.22),inset 0 -1px 0 rgba(0,0,0,.08)!important;
-  transform:translate3d(0,0,0)!important;
-  opacity:1!important;
-  will-change:transform,opacity!important;
-  pointer-events:auto!important;
-  overflow:hidden!important;
+  transform:translate3d(-50%,var(--stack-y),0) scale(var(--stack-scale))!important;
+  opacity:var(--stack-opacity)!important;will-change:transform,opacity!important;
+  pointer-events:auto!important;overflow:hidden!important;
+  transition:none!important;transform-origin:50% 0!important;
 }
-#toast-container .toast::before{
-  content:""!important;position:absolute!important;inset:0!important;pointer-events:none!important;
-  background:linear-gradient(120deg,rgba(255,255,255,.14),transparent 35%,rgba(255,255,255,.025) 75%)!important;
-}
+#toast-container .toast::before{content:""!important;position:absolute!important;inset:0!important;pointer-events:none!important;background:linear-gradient(120deg,rgba(255,255,255,.14),transparent 35%,rgba(255,255,255,.025) 75%)!important}
 #toast-container .toast-icon{width:48px!important;height:48px!important;border-radius:15px!important;z-index:1!important;background:#f7f7f8!important;color:#111!important;box-shadow:0 5px 18px rgba(0,0,0,.18)!important;overflow:hidden!important}
 #toast-container .toast-icon img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}
 #toast-container .toast-copy{min-width:0!important;z-index:1!important}
 #toast-container .toast-header{font-size:.88rem!important;font-weight:700!important;line-height:1.18!important;margin:0 0 3px!important;color:#fff!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
 #toast-container .toast-body{font-size:.74rem!important;line-height:1.34!important;color:rgba(255,255,255,.70)!important;overflow-wrap:anywhere!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important}
 #toast-container .toast-time{font-size:.64rem!important;color:rgba(255,255,255,.58)!important;align-self:start!important;margin-top:4px!important;z-index:1!important;white-space:nowrap!important}
-#toast-container .toast.toast--enter{animation:ryyToastEnterIOS26 .48s cubic-bezier(.22,1,.36,1) both!important}
-#toast-container .toast.toast--leaving{animation:ryyToastExitIOS26 .34s cubic-bezier(.4,0,.2,1) both!important;pointer-events:none!important}
-@keyframes ryyToastEnterIOS26{0%{transform:translate3d(0,-125%,0)!important;opacity:0!important}100%{transform:translate3d(0,0,0)!important;opacity:1!important}}
-@keyframes ryyToastExitIOS26{0%{transform:translate3d(0,0,0)!important;opacity:1!important}100%{transform:translate3d(0,-125%,0)!important;opacity:0!important}}
 body.light-mode #toast-container .toast{background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(242,242,247,.82) 55%,rgba(255,255,255,.72))!important;border-color:rgba(255,255,255,.90)!important;box-shadow:0 18px 55px rgba(0,0,0,.15),inset 0 1px 0 rgba(255,255,255,.95)!important}
 body.light-mode #toast-container .toast-header{color:#111!important}
 body.light-mode #toast-container .toast-body,body.light-mode #toast-container .toast-time{color:rgba(0,0,0,.58)!important}
@@ -3261,43 +3239,103 @@ body.light-mode #toast-container .toast-body,body.light-mode #toast-container .t
             return markdown ? markdown[1] : raw;
         }
 
-        /* iOS 26-style notification presenter: one banner at a time, vertical motion only. */
-        let __toastQueue = [];
-        let __activeToast = null;
-        let __toastTimer = null;
-        let __toastClosing = false;
+        /* iOS 26-style notification stack: cards stay layered instead of being queued one-by-one. */
+        const __toastStack = [];
+        const __TOAST_MAX = 4;
+        const __TOAST_GAP = 13;
+        const __TOAST_SCALE = 0.018;
+        const __TOAST_OPACITY = 0.22;
 
-        function removeToast(toast, immediate=false) {
-            if (!toast) return;
-            if (toast === __activeToast) clearTimeout(__toastTimer);
-            if (immediate) {
-                toast.remove();
-                if (toast === __activeToast) __activeToast = null;
-                __toastClosing = false;
-                return;
-            }
-            if (toast.classList.contains('toast--leaving')) return;
-            toast.classList.remove('toast--enter');
-            toast.classList.add('toast--leaving');
-            __toastClosing = true;
-            setTimeout(() => {
-                toast.remove();
-                if (toast === __activeToast) __activeToast = null;
-                __toastClosing = false;
-                showNextToast();
-            }, 360);
+        function toastTransform(index) {
+            return `translate3d(-50%,${index * __TOAST_GAP}px,0) scale(${Math.max(0.94, 1 - index * __TOAST_SCALE)})`;
         }
 
-        function showNextToast() {
-            if (__activeToast || __toastClosing || !__toastQueue.length) return;
-            const item = __toastQueue.shift();
-            const container = document.getElementById('toast-container');
-            if (!container) return;
+        function animateToast(toast, keyframes, options) {
+            if (!toast || typeof toast.animate !== 'function') return null;
+            try {
+                const animation = toast.animate(keyframes, options);
+                animation.onfinish = () => {
+                    if (toast.isConnected && options?.fill === 'forwards') {
+                        toast.style.transform = keyframes[keyframes.length - 1].transform || '';
+                        if (keyframes[keyframes.length - 1].opacity != null) toast.style.opacity = keyframes[keyframes.length - 1].opacity;
+                    }
+                };
+                return animation;
+            } catch (_) { return null; }
+        }
 
+        function applyToastStack(animate=true) {
+            __toastStack.forEach((toast, index) => {
+                if (!toast?.isConnected) return;
+                const target = toastTransform(index);
+                const targetOpacity = Math.max(__TOAST_OPACITY, 1 - index * 0.24);
+                const targetScale = Math.max(0.94, 1 - index * __TOAST_SCALE);
+                toast.style.zIndex = String(16000 + (__toastStack.length - index));
+                toast.style.setProperty('--stack-y', `${index * __TOAST_GAP}px`);
+                toast.style.setProperty('--stack-scale', targetScale);
+                toast.style.setProperty('--stack-opacity', targetOpacity);
+                if (animate) {
+                    const current = getComputedStyle(toast).transform;
+                    const currentOpacity = getComputedStyle(toast).opacity;
+                    toast.style.transition = 'none';
+                    animateToast(toast, [
+                        { transform: current === 'none' ? target : current, opacity: currentOpacity },
+                        { transform: target, opacity: targetOpacity }
+                    ], { duration: 430, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'forwards' });
+                } else {
+                    toast.style.transform = target;
+                    toast.style.opacity = String(targetOpacity);
+                }
+            });
+        }
+
+        function removeToast(toast, immediate=false) {
+            const index = __toastStack.indexOf(toast);
+            if (index < 0 || !toast) return;
+            clearTimeout(toast.__toastTimer);
+            if (immediate) {
+                __toastStack.splice(index, 1);
+                toast.remove();
+                applyToastStack(false);
+                return;
+            }
+            if (toast.__toastRemoving) return;
+            toast.__toastRemoving = true;
+
+            // Front card exits upward with alpha; background cards slide forward naturally.
+            if (index === 0) {
+                const current = getComputedStyle(toast).transform;
+                animateToast(toast, [
+                    { transform: current, opacity: 1 },
+                    { transform: 'translate3d(-50%,-125%,0) scale(.985)', opacity: 0 }
+                ], { duration: 360, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
+                setTimeout(() => {
+                    const i = __toastStack.indexOf(toast);
+                    if (i >= 0) __toastStack.splice(i, 1);
+                    toast.remove();
+                    applyToastStack(true);
+                }, 365);
+            } else {
+                animateToast(toast, [
+                    { transform: toastTransform(index), opacity: Math.max(__TOAST_OPACITY, 1 - index * .24) },
+                    { transform: `translate3d(-50%,${index * __TOAST_GAP + 4}px,0) scale(.94)`, opacity: 0 }
+                ], { duration: 220, easing: 'ease-in', fill: 'forwards' });
+                setTimeout(() => {
+                    const i = __toastStack.indexOf(toast);
+                    if (i >= 0) __toastStack.splice(i, 1);
+                    toast.remove();
+                    applyToastStack(true);
+                }, 225);
+            }
+        }
+
+        function buildToast(item) {
             const toast = document.createElement('div');
             toast.className = 'toast';
             toast.setAttribute('role','status');
             toast.setAttribute('aria-live','polite');
+            toast.style.transform = 'translate3d(-50%,-125%,0) scale(.985)';
+            toast.style.opacity = '0';
 
             const logoUrl = imageDisplayUrl(getStoreLogoUrl());
             const icon = document.createElement('div');
@@ -3326,27 +3364,51 @@ body.light-mode #toast-container .toast-body,body.light-mode #toast-container .t
             time.className = 'toast-time';
             time.textContent = 'sekarang';
             toast.appendChild(time);
-
-            container.appendChild(toast);
-            __activeToast = toast;
-            __toastClosing = false;
-
-            requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('toast--enter')));
-
-            const duration = Number(item.options.duration) > 0 ? Number(item.options.duration) : 3600;
-            __toastTimer = setTimeout(() => removeToast(toast), duration);
-            toast.addEventListener('click', () => removeToast(toast), { once:true });
-            toast.addEventListener('animationend', (event) => {
-                if (event.animationName === 'ryyToastEnterIOS26') toast.classList.remove('toast--enter');
-            });
+            return toast;
         }
 
         function showToast(message, options = {}) {
             const container = document.getElementById('toast-container');
             if (!container) return;
-            __toastQueue.push({ message:String(message ?? ''), options:{...options} });
-            if (__toastQueue.length > 4) __toastQueue = __toastQueue.slice(-4);
-            showNextToast();
+            const item = { message:String(message ?? ''), options:{...options} };
+            const toast = buildToast(item);
+
+            // Keep the newest banner in front and retain up to four cards behind it.
+            container.appendChild(toast);
+            __toastStack.unshift(toast);
+            while (__toastStack.length > __TOAST_MAX) {
+                const oldest = __toastStack.pop();
+                clearTimeout(oldest.__toastTimer);
+                oldest.remove();
+            }
+
+            // Animate the whole stack: new banner drops in, previous banners move down/back.
+            const previous = __toastStack.slice(1);
+            previous.forEach((card, index) => {
+                const oldIndex = index + 1;
+                const oldTransform = getComputedStyle(card).transform;
+                const oldOpacity = getComputedStyle(card).opacity;
+                const newIndex = oldIndex + 1;
+                const target = toastTransform(newIndex);
+                const targetOpacity = Math.max(__TOAST_OPACITY, 1 - newIndex * .24);
+                card.style.setProperty('--stack-y', `${newIndex * __TOAST_GAP}px`);
+                card.style.setProperty('--stack-scale', Math.max(.94, 1 - newIndex * __TOAST_SCALE));
+                card.style.setProperty('--stack-opacity', targetOpacity);
+                animateToast(card, [
+                    { transform: oldTransform, opacity: oldOpacity },
+                    { transform: target, opacity: targetOpacity }
+                ], { duration: 420, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'forwards' });
+            });
+
+            toast.style.zIndex = String(16000 + __toastStack.length + 5);
+            animateToast(toast, [
+                { transform:'translate3d(-50%,-125%,0) scale(.985)', opacity:0 },
+                { transform:'translate3d(-50%,0,0) scale(1)', opacity:1 }
+            ], { duration: 500, easing:'cubic-bezier(.22,1,.36,1)', fill:'forwards' });
+
+            const duration = Number(item.options.duration) > 0 ? Number(item.options.duration) : 3600;
+            toast.__toastTimer = setTimeout(() => removeToast(toast), duration);
+            toast.addEventListener('click', () => removeToast(toast), { once:false });
         }
 
         // Dual Role Switcher di Halaman Login
