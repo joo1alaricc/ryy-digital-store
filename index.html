@@ -349,6 +349,38 @@
         }
         select option { background: var(--bg-main); color: var(--text-main); }
 
+        /* Flexible text color: force the theme's text/background colors even when
+           the browser injects its own autofill styling (Chrome/Safari autofill
+           otherwise paints a fixed white/blue box with black text, which can make
+           text invisible or unreadable in dark mode). */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            -webkit-text-fill-color: var(--text-main) !important;
+            caret-color: var(--text-main);
+            box-shadow: 0 0 0 1000px var(--card-bg) inset !important;
+            -webkit-box-shadow: 0 0 0 1000px var(--card-bg) inset !important;
+            transition: background-color 9999s ease-in-out 0s, color 9999s ease-in-out 0s;
+        }
+        input::placeholder { color: var(--text-muted); opacity: 1; }
+
+        /* Password / PIN field with a show-hide "eye" toggle. */
+        .password-field-wrap { position: relative; width: 100%; }
+        .password-field-wrap input { padding-right: 42px; margin-bottom: 0; }
+        .password-toggle-btn {
+            position: absolute; top: 50%; right: 4px; transform: translateY(-50%);
+            width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
+            background: transparent; border: none; padding: 0; margin: 0;
+            color: var(--text-muted); cursor: pointer; border-radius: 8px;
+        }
+        .password-toggle-btn:hover { color: var(--text-main); transform: translateY(-50%); box-shadow: none; }
+        .password-toggle-btn:active { transform: translateY(-50%) scale(0.9); box-shadow: none; }
+        .password-toggle-btn svg { width: 18px; height: 18px; display: block; }
+        .password-toggle-btn .eye-off { display: none; }
+        .password-toggle-btn.is-visible .eye { display: none; }
+        .password-toggle-btn.is-visible .eye-off { display: block; }
+
         .btn-accent {
             width: 100%; padding: 11px; background: var(--accent);
             color: #fff; border: none; border-radius: 12px;
@@ -1626,9 +1658,9 @@ button:active{transform:scale(.985)!important;}
 <style id="ryy-v11-final-fixes">
 /* V11: definitive notification + AI platform-style pass + Profile Inbox. */
 #toast-container{left:0!important;right:0!important;width:100%!important;padding-left:16px!important;padding-right:16px!important;display:flex!important;align-items:center!important;flex-direction:column!important;gap:8px!important;}
-#toast-container .toast{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;width:min(100%,560px)!important;max-width:560px!important;margin:0!important;transform:translateY(0)!important;opacity:1!important;}
-#toast-container .toast.toast--enter{animation:ryyToastEnterV11 .42s cubic-bezier(.22,1,.36,1) both!important;}
-#toast-container .toast.toast--leaving{animation:ryyToastExitV11 .28s cubic-bezier(.4,0,.2,1) forwards!important;}
+#toast-container .toast{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;width:min(100%,560px)!important;max-width:560px!important;margin:0!important;transform:translateY(0);opacity:1;}
+#toast-container .toast.toast--enter{animation:ryyToastEnterV11 .42s cubic-bezier(.22,1,.36,1) both;}
+#toast-container .toast.toast--leaving{animation:ryyToastExitV11 .28s cubic-bezier(.4,0,.2,1) forwards;}
 @keyframes ryyToastEnterV11{from{transform:translateY(-20px)!important;opacity:0!important}to{transform:translateY(0)!important;opacity:1!important}}
 @keyframes ryyToastExitV11{from{transform:translateY(0)!important;opacity:1!important}to{transform:translateY(-14px)!important;opacity:0!important}}
 
@@ -1647,9 +1679,9 @@ button:active{transform:scale(.985)!important;}
 <style id="ryy-v12-update-toast-fix">
 /* V12 notification: position is fixed by the container; motion is vertical only. */
 #toast-container{top:max(12px,env(safe-area-inset-top))!important;left:0!important;right:0!important;width:100%!important;padding:0 16px!important;box-sizing:border-box!important;overflow:visible!important;}
-#toast-container .toast{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;width:min(100%,560px)!important;max-width:560px!important;margin:0 auto!important;transform:translate3d(0,0,0)!important;will-change:transform,opacity!important;}
-#toast-container .toast.toast--enter{animation:ryyToastDropV12 .46s cubic-bezier(.22,1,.36,1) both!important;}
-#toast-container .toast.toast--leaving{animation:ryyToastRiseV12 .34s cubic-bezier(.4,0,.2,1) both!important;}
+#toast-container .toast{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;width:min(100%,560px)!important;max-width:560px!important;margin:0 auto!important;transform:translate3d(0,0,0);will-change:transform,opacity;}
+#toast-container .toast.toast--enter{animation:ryyToastDropV12 .46s cubic-bezier(.22,1,.36,1) both;}
+#toast-container .toast.toast--leaving{animation:ryyToastRiseV12 .34s cubic-bezier(.4,0,.2,1) both;}
 @keyframes ryyToastDropV12{0%{transform:translate3d(0,-110%,0)!important;opacity:0!important}100%{transform:translate3d(0,0,0)!important;opacity:1!important}}
 @keyframes ryyToastRiseV12{0%{transform:translate3d(0,0,0)!important;opacity:1!important}100%{transform:translate3d(0,-110%,0)!important;opacity:0!important}}
 @media(max-width:520px){#toast-container{padding-left:16px!important;padding-right:16px!important}#toast-container .toast{width:100%!important;max-width:none!important}}
@@ -1689,8 +1721,8 @@ button:active{transform:scale(.985)!important;}
   color:var(--text-main)!important;backdrop-filter:blur(34px) saturate(190%)!important;
   -webkit-backdrop-filter:blur(34px) saturate(190%)!important;
   box-shadow:0 18px 55px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.22),inset 0 -1px 0 rgba(0,0,0,.08)!important;
-  transform:translate3d(-50%,var(--stack-y),0) scale(var(--stack-scale))!important;
-  opacity:var(--stack-opacity)!important;will-change:transform,opacity!important;
+  transform:translate3d(-50%,var(--stack-y),0) scale(var(--stack-scale));
+  opacity:var(--stack-opacity);will-change:transform,opacity!important;
   pointer-events:auto!important;overflow:hidden!important;
   transition:none!important;transform-origin:50% 0!important;
 }
@@ -1761,6 +1793,54 @@ body.light-mode #toast-container .toast-body,body.light-mode #toast-container .t
 .support-chat .support-chat-message,.ai-chat .ai-message{max-width:82%!important}
 .support-chat .support-chat-time,.ai-chat .ai-message-time{font-variant-numeric:tabular-nums!important}
 </style>
+
+<style id="ryy-v18-ios26-final-polish">
+/* ===== FINAL iOS 26 notification motion fix ===== */
+#toast-container .toast{
+  transform:translate3d(-50%,var(--stack-y,0px),0) scale(var(--stack-scale,1));
+  opacity:var(--stack-opacity,1);
+  animation:none !important;
+}
+#toast-container .toast.toast--enter{animation:ryyToastDropFinal .52s cubic-bezier(.22,1,.36,1) both !important;}
+#toast-container .toast.toast--leaving{animation:ryyToastRiseFinal .38s cubic-bezier(.4,0,.2,1) both !important;}
+@keyframes ryyToastDropFinal{
+  0%{transform:translate3d(-50%,-125%,0) scale(.985);opacity:0}
+  70%{transform:translate3d(-50%,5px,0) scale(1.005);opacity:1}
+  100%{transform:translate3d(-50%,0,0) scale(1);opacity:1}
+}
+@keyframes ryyToastRiseFinal{
+  0%{transform:translate3d(-50%,0,0) scale(1);opacity:1}
+  100%{transform:translate3d(-50%,-125%,0) scale(.985);opacity:0}
+}
+
+/* Category labels: high-contrast in both themes and especially on the active pill. */
+.category-tabs .cat-tab{
+  color:#242428 !important;
+  background:rgba(255,255,255,.74) !important;
+  border-color:rgba(255,255,255,.46) !important;
+  text-shadow:none !important;
+}
+.category-tabs .cat-tab.active,.category-tabs .cat-tab:hover{
+  color:#fff !important;
+  background:var(--accent) !important;
+  border-color:var(--accent) !important;
+  text-shadow:0 1px 2px rgba(0,0,0,.22) !important;
+}
+body:not(.light-mode) .category-tabs .cat-tab{
+  color:#f4f4f7 !important;
+  background:rgba(38,38,44,.78) !important;
+  border-color:rgba(255,255,255,.16) !important;
+}
+body:not(.light-mode) .category-tabs .cat-tab.active,
+body:not(.light-mode) .category-tabs .cat-tab:hover{color:#fff !important;}
+
+/* Minimal modern particle field — subtle, adaptive, and behind all UI. */
+#ryy-particle-canvas{
+  position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;
+  display:block;opacity:.78;
+}
+@media(max-width:700px){#ryy-particle-canvas{opacity:.68}}
+</style>
 </head>
 <body>
 
@@ -1769,6 +1849,7 @@ body.light-mode #toast-container .toast-body,body.light-mode #toast-container .t
         <div class="orb orb-2"></div>
         <div class="orb orb-3"></div>
     </div>
+    <canvas id="ryy-particle-canvas" aria-hidden="true"></canvas>
 
     <div id="toast-container"></div>
     <!-- 1. AUTH SECTION (DUAL USER: USER & ADMIN) -->
@@ -1788,7 +1869,13 @@ body.light-mode #toast-container .toast-body,body.light-mode #toast-container .t
                 <div id="userAuthContainer">
                     <div id="user-login-panel" class="auth-step active">
                         <input type="text" id="user-login-input" data-i18n-placeholder="username_email" placeholder="Username / Email">
-                        <input type="password" id="user-login-password" data-i18n-placeholder="password" placeholder="Password">
+                        <div class="password-field-wrap" style="margin-bottom:12px;">
+                            <input type="password" id="user-login-password" data-i18n-placeholder="password" placeholder="Password">
+                            <button type="button" class="password-toggle-btn" aria-label="Tampilkan password" onclick="togglePasswordVisibility('user-login-password', this)">
+                                <svg class="eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-3.27 2.61A9.16 9.16 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 4.22-5.94M1 1l22 22"/><path d="M14.12 14.12A3 3 0 1 1 9.88 9.88"/></svg>
+                            </button>
+                        </div>
                         <button type="submit" class="btn-accent" data-i18n="login_user_btn">Masuk sebagai User</button>
 
                         <div style="display:flex;align-items:center;gap:10px;margin:10px 0;color:var(--text-muted);font-size:.72rem;">
@@ -1829,9 +1916,21 @@ body.light-mode #toast-container .toast-body,body.light-mode #toast-container .t
 
                 <div id="adminAuthContainer" class="hidden">
                     <input type="text" id="admin-username" data-i18n-placeholder="admin_username" placeholder="Username / Email Admin">
-                    <input type="password" id="admin-password" data-i18n-placeholder="admin_password" placeholder="Password Admin">
+                    <div class="password-field-wrap" style="margin-bottom:12px;">
+                        <input type="password" id="admin-password" data-i18n-placeholder="admin_password" placeholder="Password Admin">
+                        <button type="button" class="password-toggle-btn" aria-label="Tampilkan password" onclick="togglePasswordVisibility('admin-password', this)">
+                            <svg class="eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-3.27 2.61A9.16 9.16 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 4.22-5.94M1 1l22 22"/><path d="M14.12 14.12A3 3 0 1 1 9.88 9.88"/></svg>
+                        </button>
+                    </div>
                     <input type="text" id="admin-token" data-i18n-placeholder="developer_token" placeholder="Token Developer (cth: dev-7762...)">
-                    <input type="password" id="admin-pin" data-i18n-placeholder="admin_pin" placeholder="PIN Admin (4-8 digit)" maxlength="8">
+                    <div class="password-field-wrap" style="margin-bottom:12px;">
+                        <input type="password" id="admin-pin" data-i18n-placeholder="admin_pin" placeholder="PIN Admin (4-8 digit)" maxlength="8">
+                        <button type="button" class="password-toggle-btn" aria-label="Tampilkan PIN" onclick="togglePasswordVisibility('admin-pin', this)">
+                            <svg class="eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8Z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <svg class="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-3.27 2.61A9.16 9.16 0 0 1 12 20c-7 0-11-8-11-8a18.5 18.5 0 0 1 4.22-5.94M1 1l22 22"/><path d="M14.12 14.12A3 3 0 1 1 9.88 9.88"/></svg>
+                        </button>
+                    </div>
                     <button type="submit" class="btn-accent" data-i18n="login_admin_btn">Masuk sebagai Admin</button>
                 </div>
             </form>
@@ -4192,6 +4291,16 @@ body.light-mode #toast-container .toast-body,body.light-mode #toast-container .t
             document.getElementById("old-password").value = "";
             document.getElementById("new-password").value = "";
             showToast("Kata sandi berhasil diubah!");
+        }
+
+        // Show/hide toggle ("eye" icon) for password & PIN fields (user + admin login).
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            const nowVisible = input.type === "password";
+            input.type = nowVisible ? "text" : "password";
+            btn.classList.toggle("is-visible", nowVisible);
+            btn.setAttribute("aria-label", nowVisible ? "Sembunyikan" : "Tampilkan");
         }
 
         // ===== RYY STORE API INTEGRATION =====
@@ -7232,5 +7341,80 @@ button:active, .btn:active, .admin-glass-btn:active, .support-btn:active,
         body.theme-neumorphic .type-option.selected .adaptive-price-value { color:var(--accent)!important;-webkit-text-fill-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);border-color:color-mix(in srgb,var(--accent) 35%,var(--glass-border));text-shadow:none; }
         body.theme-neumorphic .type-option.selected::after { content:"✓"; flex:0 0 auto; width:24px; height:24px; display:grid; place-items:center; border-radius:50%; background:color-mix(in srgb,var(--accent) 18%,var(--glass-surface)); color:var(--accent); font-size:.75rem; font-weight:900; box-shadow:inset 2px 2px 5px rgba(0,0,0,.22),inset -2px -2px 5px rgba(255,255,255,.04); }
 </style>
+
+<script id="ryy-v18-particle-engine">
+(() => {
+  const canvas = document.getElementById('ryy-particle-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d', { alpha: true });
+  if (!ctx) return;
+  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)');
+  const state = { w: 0, h: 0, dpr: 1, points: [], raf: 0, last: 0 };
+  const countFor = () => Math.max(18, Math.min(38, Math.round((innerWidth * innerHeight) / 26000)));
+
+  function theme(){
+    const light = document.body.classList.contains('light-mode');
+    return light
+      ? { dot:'rgba(35,35,45,.23)', line:'rgba(35,35,45,.085)', glow:'rgba(35,35,45,.12)' }
+      : { dot:'rgba(255,255,255,.27)', line:'rgba(255,255,255,.075)', glow:'rgba(255,255,255,.12)' };
+  }
+
+  function resize(){
+    state.dpr = Math.min(devicePixelRatio || 1, 2);
+    state.w = innerWidth; state.h = innerHeight;
+    canvas.width = Math.round(state.w * state.dpr);
+    canvas.height = Math.round(state.h * state.dpr);
+    canvas.style.width = state.w+'px'; canvas.style.height = state.h+'px';
+    ctx.setTransform(state.dpr,0,0,state.dpr,0,0);
+    if (!state.points.length) seed();
+  }
+
+  function seed(){
+    const n = countFor();
+    state.points = Array.from({length:n}, (_,i) => ({
+      x: Math.random()*state.w, y: Math.random()*state.h,
+      vx:(Math.random()-.5)*.10, vy:(Math.random()-.5)*.10,
+      r:Math.random()*1.8+.65, phase:Math.random()*Math.PI*2,
+      drift:Math.random()*.0009+.00035,
+    }));
+  }
+
+  function draw(t){
+    const dt = Math.min(32, t-(state.last||t)); state.last=t;
+    ctx.clearRect(0,0,state.w,state.h);
+    const c=theme();
+    const maxLink=Math.min(150, Math.max(105,state.w*.20));
+    for(const p of state.points){
+      if(!reduceMotion?.matches){
+        p.x += p.vx*dt; p.y += p.vy*dt; p.phase += p.drift*dt;
+        p.x += Math.cos(p.phase)*.035; p.y += Math.sin(p.phase*.8)*.035;
+      }
+      if(p.x<-20)p.x=state.w+20; if(p.x>state.w+20)p.x=-20;
+      if(p.y<-20)p.y=state.h+20; if(p.y>state.h+20)p.y=-20;
+    }
+    for(let i=0;i<state.points.length;i++){
+      const a=state.points[i];
+      for(let j=i+1;j<state.points.length;j++){
+        const b=state.points[j], dx=a.x-b.x, dy=a.y-b.y, d=Math.hypot(dx,dy);
+        if(d<maxLink){
+          const alpha=(1-d/maxLink)*.75;
+          ctx.strokeStyle=c.line.replace(/\.\d+\)/, (parseFloat((alpha*.085).toFixed(3)))+')');
+          ctx.lineWidth=.55; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+        }
+      }
+    }
+    for(const p of state.points){
+      const pulse=1+Math.sin(p.phase)*.16;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r*pulse,0,Math.PI*2);
+      ctx.fillStyle=c.dot; ctx.shadowBlur=8; ctx.shadowColor=c.glow; ctx.fill(); ctx.shadowBlur=0;
+    }
+    state.raf=requestAnimationFrame(draw);
+  }
+
+  addEventListener('resize', resize, {passive:true});
+  resize();
+  state.raf=requestAnimationFrame(draw);
+})();
+</script>
 </body>
 </html>
