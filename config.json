@@ -8,8 +8,8 @@
   "admins": [],
   "webTheme": "liquid-glass",
   "accent": {
-    "name": "Cyan Mint",
-    "hex": "#67e8d0",
-    "glow": "rgba(72,225,207,.22)"
+    "name": "Lavender",
+    "hex": "#b79ced",
+    "glow": "rgba(144,122,214,.28)"
   }
 }
