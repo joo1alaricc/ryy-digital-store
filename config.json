@@ -5,5 +5,11 @@
     "family": "san-francisco",
     "weight": 700
   },
-  "admins": []
+  "admins": [],
+  "webTheme": "liquid-glass",
+  "accent": {
+    "name": "Lavender",
+    "hex": "#b79ced",
+    "glow": "rgba(144,122,214,.28)"
+  }
 }
