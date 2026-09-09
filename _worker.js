@@ -130,7 +130,7 @@ export default {
         });
       }
 
-      const response = await dispatch(request, env);
+      const response = await runWithRequestCache(() => dispatch(request, env));
       const headers = new Headers(response.headers);
       headers.set("Access-Control-Allow-Origin", url.origin);
       headers.set("Access-Control-Allow-Methods", "GET,HEAD,POST,PUT,PATCH,DELETE,OPTIONS");
