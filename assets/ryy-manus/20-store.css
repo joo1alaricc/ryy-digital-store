@@ -1,0 +1,17 @@
+/* RYY STORE Manus-style presentation layer — 20-store.css */
+/* ---------- Main store shell ---------- */
+#app-section{min-height:100vh!important;background:transparent!important}
+.store-header{width:min(var(--ryy-max),calc(100% - 48px))!important;min-height:76px!important;margin:0 auto!important;border-bottom:1px solid var(--ryy-line)!important;background:transparent!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:20px!important;position:sticky!important;top:0!important;z-index:90!important;backdrop-filter:blur(22px)!important;-webkit-backdrop-filter:blur(22px)!important}
+.store-header:before{content:"";position:absolute;inset:0 -100vw;background:rgba(7,16,19,.68);z-index:-1;border-bottom:1px solid rgba(255,255,255,.02)}
+.brand-area h2{font-size:15px!important;letter-spacing:.025em!important;color:#ecf8f7!important}
+.brand-area p{font-size:9px!important;color:#718789!important;margin-top:3px!important;letter-spacing:.08em!important;text-transform:uppercase}
+.header-status-pill{display:inline-flex!important;align-items:center!important;padding:8px 11px!important;border:1px solid rgba(125,224,219,.14)!important;background:rgba(82,193,188,.06)!important;border-radius:999px!important;color:#84d9d4!important;font-size:9px!important;letter-spacing:.08em!important}
+.catalog-search{height:38px!important;border:1px solid var(--ryy-line)!important;border-radius:11px!important;background:rgba(14,29,33,.76)!important;box-shadow:none!important}
+.catalog-search:focus-within{border-color:rgba(135,227,222,.46)!important;box-shadow:0 0 0 3px rgba(135,227,222,.06)!important}
+.catalog-search input{font-size:11px!important;color:#e6f4f2!important}
+.btn-icon-minimal{border:1px solid var(--ryy-line)!important;background:rgba(14,29,33,.72)!important;color:#d6e8e6!important;border-radius:11px!important;transition:.2s ease!important}
+.btn-icon-minimal:hover{border-color:rgba(135,227,222,.45)!important;background:rgba(25,48,52,.82)!important;transform:translateY(-1px)}
+#cart-count{background:#83dfda!important;color:#071013!important;box-shadow:0 0 15px rgba(131,223,218,.25)!important}
+.user-balance-pill{border:1px solid var(--ryy-line)!important;background:rgba(12,27,31,.88)!important;border-radius:14px!important;box-shadow:0 16px 40px rgba(0,0,0,.16)!important}
+.main-container{width:min(var(--ryy-max),calc(100% - 48px))!important;margin:0 auto!important;padding:36px 0 120px!important}
+
