@@ -2,7 +2,6 @@ import legacyHandler from "./lib/_api-router.js";
 import inboxCleanup from "./lib/handler/inbox-cleanup.js";
 import subscriptionReminders from "./lib/handler/subscription-reminders.js";
 import { setRuntimeEnv, hydrateRuntimeEnv } from "./lib/_env.js";
-import { runWithRequestCache } from "./lib/_github.js";
 
 function makeReq(request) {
   const url = new URL(request.url);
@@ -30,7 +29,6 @@ function makeRes() {
 }
 
 async function dispatch(request, env, targetHandler = legacyHandler) {
-  return runWithRequestCache(async () => {
   setRuntimeEnv(env);
   await hydrateRuntimeEnv();
   const req = makeReq(request);
@@ -52,7 +50,6 @@ async function dispatch(request, env, targetHandler = legacyHandler) {
     console.error("RYY STORE request error:", error);
     return Response.json({ success: false, message: "Terjadi kesalahan pada server." }, { status: 500 });
   }
-  });
 }
 
 export default {
