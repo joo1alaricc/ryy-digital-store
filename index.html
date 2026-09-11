@@ -1905,6 +1905,7 @@ body.light-mode{--pro-bg:#f5f6fa;--pro-surface:#fff;--pro-surface-2:#f0f1f6;--pr
 </style>
 <link rel="stylesheet" href="/assets/manus-design/manus-core.css">
 <link rel="stylesheet" href="/assets/manus-design/ryy-manus-adapter.css">
+<link rel="stylesheet" href="/assets/manus-design/manus-exact-v2.css">
 </head>
 <body>
 
@@ -2002,40 +2003,57 @@ body.light-mode{--pro-bg:#f5f6fa;--pro-surface:#fff;--pro-surface-2:#f0f1f6;--pr
     </div>
 
     <!-- 2. LANDING / PORTFOLIO TOKO SECTION -->
-    <div id="landing-section" class="hidden">
-        <div class="landing-wrapper">
-            <div class="landing-nav">
-                <div class="landing-brand" id="landing-store-name">RYYSTORE</div>
-                <div class="landing-nav-links">
-                    <span onclick="enterStoreCatalog()" data-i18n="nav_catalog">Katalog</span>
-                </div>
-            </div>
-
-            <div class="landing-hero">
-                <span class="badge-pill" data-i18n="official_store">Official Store Preview</span>
-                <h1>Hey! , I am <span id="landing-owner-title">Ryy</span></h1>
-                <p id="landing-slogan-text">Memuat slogan...</p>
-                <div class="hero-buttons">
-                    <button onclick="enterStoreCatalog()" class="btn-accent" data-i18n="browse_catalog">Lihat Produk</button>
-                </div>
-            </div>
-
-            <div class="landing-box">
-                <h2 data-i18n="about">About Store</h2>
-                <p id="landing-desc-text">Memuat deskripsi toko...</p>
-                <p><strong data-i18n="owner_label">Owner:</strong> <span id="landing-owner">-</span> &nbsp;|&nbsp; <strong data-i18n="since_label">Beroperasi Sejak:</strong> <span id="landing-since">-</span></p>
-                <p><strong data-i18n="buyers_label">Total Pembeli:</strong> <span id="landing-buyers">-</span></p>
-            </div>
-
-            <div class="best-seller-section">
-                <h3>⭐ <span data-i18n="browse_catalog">Produk Terlaris</span></h3>
-                <div id="best-seller-grid" class="best-seller-grid"></div>
-            </div>
+    <div id="landing-section" class="hidden manus-page">
+        <div class="manus-shell">
+            <div class="manus-ambient manus-ambient-one"></div><div class="manus-ambient manus-ambient-two"></div>
+            <nav class="manus-site-header">
+                <div class="manus-brand"><span class="manus-brand-mark">R</span><strong id="landing-store-name">RYYSTORE</strong></div>
+                <div class="manus-main-nav"><span onclick="enterStoreCatalog()" data-i18n="nav_catalog">Katalog</span></div>
+                <button type="button" class="manus-icon-button" onclick="enterStoreCatalog()" aria-label="Masuk ke katalog">→</button>
+            </nav>
+            <main class="manus-page-width">
+                <section class="manus-hero-section">
+                    <div class="manus-hero-copy">
+                        <div class="manus-eyebrow"><i></i>OFFICIAL DIGITAL STORE</div>
+                        <h1>Hey! I am <em id="landing-owner-title">Ryy</em></h1>
+                        <p id="landing-slogan-text">Memuat slogan...</p>
+                        <div class="manus-hero-actions">
+                            <button onclick="enterStoreCatalog()" class="manus-primary-button" data-i18n="browse_catalog">Lihat Produk <span>→</span></button>
+                            <span class="manus-trust"><b>RYY STORE</b> · Digital Selection</span>
+                        </div>
+                        <div class="manus-hero-points"><span>✓ Harga transparan</span><span>✓ Proses cepat</span><span>✓ Support aktif</span></div>
+                    </div>
+                    <div class="manus-hero-visual">
+                        <div class="manus-orbit orbit-a"></div><div class="manus-orbit orbit-b"></div>
+                        <div class="manus-showcase">
+                            <div class="manus-showcase-glow"></div>
+                            <div class="manus-showcase-badge">✦ OFFICIAL</div>
+                            <div class="manus-showcase-content"><small>RYY / SELECTED</small><strong>Digital<br><span>Made</span> Simple.</strong><p>Produk digital pilihan dengan pengalaman belanja yang cepat dan nyaman.</p><div class="manus-showcase-line"><i></i><small>EST. RYY STORE</small></div></div>
+                        </div>
+                        <div class="manus-floating-chip chip-top"><b>Trusted Store</b><small>Verified selection</small></div>
+                        <div class="manus-floating-chip chip-bottom"><b>Fast Service</b><small>Support ready</small></div>
+                    </div>
+                </section>
+                <section class="manus-benefit-strip">
+                    <div><span class="benefit-icon">✓</span><span><b>Produk Terpilih</b><small>Kurasi untuk kebutuhan digital</small></span></div>
+                    <div><span class="benefit-icon purple">◆</span><span><b>Harga Kompetitif</b><small>Nominal jelas sebelum checkout</small></span></div>
+                    <div><span class="benefit-icon orange">↗</span><span><b>Support Aktif</b><small>Bantuan saat kamu membutuhkannya</small></span></div>
+                </section>
+                <section class="manus-about-card">
+                    <div><span class="manus-section-kicker">ABOUT STORE</span><h2>Simple store.<br><em>Better experience.</em></h2></div>
+                    <div><p id="landing-desc-text">Memuat deskripsi toko...</p><div class="manus-about-meta"><span><small>OWNER</small><b id="landing-owner">-</b></span><span><small>SINCE</small><b id="landing-since">-</b></span><span><small>BUYERS</small><b id="landing-buyers">-</b></span></div></div>
+                </section>
+                <section class="manus-catalog-preview">
+                    <div class="manus-section-heading"><div><span class="manus-section-kicker">EXPLORE</span><h2>Produk Terlaris</h2></div><button onclick="enterStoreCatalog()">Lihat semua →</button></div>
+                    <div id="best-seller-grid" class="best-seller-grid"></div>
+                </section>
+            </main>
         </div>
     </div>
 
     <!-- 3. MAIN APP SECTION (USER / ADMIN DASHBOARD) -->
     <div id="app-section" class="hidden">
+        <div class="manus-ambient manus-ambient-one"></div><div class="manus-ambient manus-ambient-two"></div>
         <header class="store-header">
             <div class="brand-area">
                 <h2 id="store-name-display">RYY STORE</h2>
@@ -2062,40 +2080,38 @@ body.light-mode{--pro-bg:#f5f6fa;--pro-surface:#fff;--pro-surface-2:#f0f1f6;--pr
 
         <main class="main-container">
             <!-- VIEW HOME / BERANDA -->
-            <div id="view-home">
-                <section class="home-portfolio-card">
-                    <div class="home-portfolio-media">
-                        <img id="home-portfolio-image" src="" alt="RYY STORE">
-                        <span class="home-portfolio-badge" data-i18n="official_store">Official Store</span>
-                    </div>
-                    <div class="home-portfolio-body">
-                        <span class="home-eyebrow" data-i18n="welcome_store">Selamat datang di</span>
+            <div id="view-home" class="manus-view-home">
+                <section class="manus-hero-section manus-app-hero">
+                    <div class="manus-hero-copy">
+                        <div class="manus-eyebrow"><i></i>WELCOME TO <span id="home-store-name-inline">RYY STORE</span></div>
                         <h1 id="home-store-name">RYY STORE</h1>
-                        <p id="home-store-slogan">Murah, cepat, dan terpercaya.</p>
-                        <p id="home-store-description" class="home-description">Memuat deskripsi toko...</p>
-                        <div class="home-meta-grid">
-                            <div><span data-i18n="owner">Pemilik</span><strong id="home-owner">-</strong></div>
-                            <div><span data-i18n="operating_since">Beroperasi sejak</span><strong id="home-since">-</strong></div>
-                            <div><span data-i18n="buyers_since">Pembeli sejak</span><strong id="home-buyers">-</strong></div>
+                        <p id="home-store-description">Memuat deskripsi toko...</p>
+                        <div class="manus-hero-actions">
+                            <button class="manus-primary-button" onclick="switchView('catalog')">Browse Products <span>→</span></button>
+                            <span class="manus-trust"><b id="home-store-slogan">Murah, cepat, dan terpercaya.</b></span>
                         </div>
+                        <div class="manus-hero-points"><span>✓ <span id="home-owner">-</span></span><span>✓ <span id="home-since">-</span></span><span>✓ <span id="home-buyers">0</span> buyers</span></div>
+                    </div>
+                    <div class="manus-hero-visual">
+                        <div class="manus-orbit orbit-a"></div><div class="manus-orbit orbit-b"></div>
+                        <div class="manus-showcase manus-photo-showcase"><img id="home-portfolio-image" src="" alt="RYY STORE"><div class="manus-showcase-overlay"></div><div class="manus-showcase-badge" data-i18n="official_store">✦ OFFICIAL</div><div class="manus-showcase-content"><small>RYY / STORE</small><strong>Digital<br><span>Selection.</span></strong><p>Produk digital pilihan dalam satu tempat.</p></div></div>
                     </div>
                 </section>
-                <section class="home-section">
-                    <div class="section-heading">
-                        <div>
-                            <span class="home-eyebrow" data-i18n="browse_categories">Jelajahi toko</span>
-                            <h2 data-i18n="product_categories">Kategori Produk</h2>
-                        </div>
-                        <span id="home-total-products" class="section-count">0</span>
-                    </div>
+                <section class="manus-benefit-strip">
+                    <div><span class="benefit-icon">✓</span><span><b>Fast Delivery</b><small>Proses pesanan lebih ringkas</small></span></div>
+                    <div><span class="benefit-icon purple">◆</span><span><b>Secure Checkout</b><small>Alur pembayaran terstruktur</small></span></div>
+                    <div><span class="benefit-icon orange">↗</span><span><b>Active Support</b><small>Bantuan saat diperlukan</small></span></div>
+                </section>
+                <section class="manus-catalog-section manus-home-categories">
+                    <div class="manus-section-heading"><div><span class="manus-section-kicker">EXPLORE STORE</span><h2>Kategori Produk</h2></div><p><span id="home-total-products">0</span><br>available items</p></div>
                     <div id="home-category-grid" class="home-category-grid"></div>
                 </section>
-                <section class="home-section">
-                    <div class="section-heading"><div><span class="home-eyebrow">Komunitas</span><h2>Channel WhatsApp</h2></div></div>
-                    <a id="home-whatsapp-link" class="support-btn" href="https://whatsapp.com/channel/0029Vb76SfPDzgTBlh5Tn70I" target="_blank" rel="noopener" style="text-decoration:none;display:flex;justify-content:space-between;align-items:center;"><span><strong>Channel WhatsApp</strong><small>Ikuti informasi terbaru RYY STORE.</small></span><span>→</span></a>
+                <section class="manus-service-banner">
+                    <div><span class="manus-section-kicker">COMMUNITY</span><h2>Need help?<br><em>We're here.</em></h2><p>Ikuti channel resmi RYY STORE untuk informasi terbaru dan bantuan.</p><a id="home-whatsapp-link" href="https://whatsapp.com/channel/0029Vb76SfPDzgTBlh5Tn70I" target="_blank" rel="noopener" class="manus-primary-button">Open Channel →</a></div>
+                    <div class="manus-service-art"><div class="service-orb"></div><div class="service-card card-back">✓ Verified Store</div><div class="service-card card-front"><b>RYY</b><span>Support Online</span></div></div>
                 </section>
-                <section class="home-section" id="home-testimonials-section">
-                    <div class="section-heading"><div><span class="home-eyebrow">Pengalaman pembeli</span><h2>Testimoni</h2></div></div>
+                <section class="manus-order-section" id="home-testimonials-section">
+                    <div class="manus-section-heading"><div><span class="manus-section-kicker">EXPERIENCE</span><h2>Buyer feedback</h2></div></div>
                     <div id="home-testimonials" class="home-category-grid"></div>
                 </section>
             </div>
