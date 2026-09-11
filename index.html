@@ -2049,6 +2049,22 @@ button:active,.btn-accent:active,.add-button:active{transform:scale(.97)!importa
 @media(max-width:560px){.product-grid{grid-template-columns:1fr!important}.product-art{height:190px!important}.product-card-body{padding:16px!important}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.product-card,.product-art img,button{transition-duration:.001ms!important}.product-card:hover,.product-card:hover .product-art img{transform:none!important}}
 </style>
+
+<style id="ryy-manus-nav-and-mobile-revamp">
+/* Manus-style navigation shell: minimal chrome, clear active state, reversible taps. */
+.store-header{position:sticky!important;top:12px!important;z-index:1100!important;width:min(1120px,calc(100% - 28px))!important;margin:12px auto 0!important;min-height:68px!important;padding:10px 12px 10px 18px!important;border:1px solid rgba(174,235,230,.15)!important;border-radius:24px!important;background:rgba(7,21,24,.78)!important;box-shadow:0 18px 46px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.08)!important;backdrop-filter:blur(24px) saturate(135%)!important;-webkit-backdrop-filter:blur(24px) saturate(135%)!important}
+.manus-v9-brand{transition:transform .22s cubic-bezier(.23,1,.32,1),opacity .22s ease!important}.manus-v9-brand:hover{transform:translateX(3px)!important}.manus-v9-brand:active{transform:scale(.97)!important}
+.manus-v9-brand-mark{background:linear-gradient(135deg,#9cebe6,#b995e9)!important;color:#092023!important;box-shadow:0 8px 22px rgba(139,226,220,.2)!important}
+.manus-v9-circle{width:42px!important;height:42px!important;border-radius:14px!important;border:1px solid rgba(174,235,230,.16)!important;background:rgba(255,255,255,.055)!important;transition:transform .2s cubic-bezier(.23,1,.32,1),background-color .2s ease,border-color .2s ease!important}
+.manus-v9-circle:hover{transform:translateY(-2px)!important;background:rgba(139,226,220,.14)!important;border-color:rgba(139,226,220,.4)!important}.manus-v9-circle:active{transform:scale(.94)!important}
+.manus-v9-menu{position:relative!important}.manus-v9-menu::after{content:'MENU';position:absolute;right:0;top:48px;opacity:0;pointer-events:none;font-size:8px;letter-spacing:.16em;color:#8be2dc;transition:opacity .18s ease}.manus-v9-menu:hover::after{opacity:1}
+.floating-user-nav{position:fixed!important;left:50%!important;bottom:max(18px,calc(env(safe-area-inset-bottom) + 12px))!important;transform:translateX(-50%)!important;z-index:11500!important;display:flex!important;gap:5px!important;padding:7px!important;width:min(430px,calc(100% - 28px))!important;border:1px solid rgba(174,235,230,.16)!important;border-radius:22px!important;background:rgba(8,22,26,.84)!important;box-shadow:0 20px 55px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.08)!important;backdrop-filter:blur(24px) saturate(140%)!important;-webkit-backdrop-filter:blur(24px) saturate(140%)!important}
+.floating-nav-item{min-height:48px!important;border-radius:17px!important;color:#83a0a3!important;transition:transform .2s cubic-bezier(.23,1,.32,1),color .2s ease,background-color .2s ease!important}.floating-nav-item:hover{color:#dffaf7!important;background:rgba(139,226,220,.08)!important;transform:translateY(-2px)!important}.floating-nav-item.active{color:#061719!important;background:#8be2dc!important;box-shadow:0 7px 20px rgba(139,226,220,.18)!important}
+/* The reference's support section: airy typography, soft cyan-to-indigo panel, calm geometry. */
+.support-panel,.support-hero,.support-card{border:1px solid rgba(160,234,229,.25)!important;border-radius:34px!important;background:radial-gradient(circle at 10% 0%,rgba(93,208,194,.35),transparent 42%),linear-gradient(145deg,rgba(20,82,83,.92),rgba(29,31,77,.92))!important;box-shadow:0 28px 80px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.15)!important}
+@media(max-width:600px){.store-header{top:8px!important;width:calc(100% - 20px)!important;margin-top:8px!important;min-height:62px!important;padding:8px 9px 8px 13px!important;border-radius:21px!important}.manus-v9-circle{width:38px!important;height:38px!important;border-radius:12px!important}.manus-v9-brand-mark{width:32px!important;height:32px!important}.manus-v9-brand small{display:none!important}.floating-user-nav{bottom:max(10px,calc(env(safe-area-inset-bottom) + 7px))!important;width:calc(100% - 20px)!important;border-radius:20px!important}.floating-nav-item{min-height:45px!important;font-size:10px!important}.floating-nav-item svg{width:19px!important;height:19px!important}.support-panel,.support-hero,.support-card{border-radius:30px!important}}
+@media(prefers-reduced-motion:reduce){.store-header,.manus-v9-circle,.floating-nav-item,.manus-v9-brand{transition-duration:.001ms!important}}
+</style>
 </head>
 <body>
 
@@ -6555,7 +6571,11 @@ function startSupportPolling(){
   window.switchView = function(viewName,category=null,fromHistory=false){
     const views={home:'view-home',catalog:'view-catalog',profile:'view-profile',finance:'view-finance',settings:'view-settings'};
     const previous=window.__ryyStoreView || 'home';
-
+    // Navigation buttons are toggles: tapping the active destination returns home.
+    // This only changes presentation state; product, account, checkout and API logic remain untouched.
+    const toggleable = viewName==='catalog'||viewName==='profile'||viewName==='finance'||viewName==='settings';
+    if(!fromHistory && toggleable && window.__ryyActiveNav===viewName){ viewName='home'; category=null; }
+    window.__ryyActiveNav = viewName==='home' ? null : viewName;
     if(!fromHistory && viewName!=='home' && viewName!=='catalog' && previous!==viewName){
       try { history.pushState({...history.state, ryyStoreView:viewName}, '', location.href); } catch (_) {}
     }
