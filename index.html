@@ -1984,6 +1984,40 @@ html,body{width:100%!important;min-width:0!important;overflow-x:hidden!important
 /* Product detail must always be reachable from the storefront cards. */
 #product-detail-modal{z-index:26000!important}
 </style>
+
+<style id="ryy-v12-storefront-fix">
+/* v12: restore a normal, touch-scrollable document and remove legacy layout conflicts. */
+html, body { width:100% !important; min-width:0 !important; overflow-x:hidden !important; overflow-y:auto !important; }
+body.page-no-scroll { overflow-y:auto !important; }
+#app-section { width:100% !important; max-width:none !important; min-width:0 !important; min-height:100vh !important; display:flex !important; flex-direction:column !important; align-items:stretch !important; overflow:visible !important; }
+#app-section .store-header.manus-v9-header { flex:0 0 auto !important; width:min(1180px,calc(100% - 32px)) !important; }
+#app-section .main-container { flex:0 0 auto !important; display:block !important; width:min(1120px,calc(100% - 32px)) !important; max-width:none !important; margin:0 auto !important; min-height:0 !important; height:auto !important; overflow:visible !important; padding-bottom:80px !important; }
+#app-section .manus-v9-home, #app-section #view-home { width:100% !important; max-width:none !important; min-height:0 !important; height:auto !important; overflow:visible !important; }
+#app-section .manus-v10-product-grid { width:100% !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; align-items:start !important; }
+#app-section .manus-v10-product-card { width:100% !important; min-width:0 !important; height:auto !important; align-self:start !important; }
+#app-section .manus-v10-product-card .product-art { width:100% !important; height:190px !important; }
+#app-section .manus-v10-product-card .product-card-body { min-width:0 !important; }
+#app-section .manus-v10-product-card .home-card-price,
+#app-section .manus-v10-product-card .home-card-price * { color:#e5f7f5 !important; -webkit-text-fill-color:#e5f7f5 !important; background:transparent !important; border:0 !important; box-shadow:none !important; padding:0 !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; white-space:nowrap !important; }
+#app-section .manus-v10-product-card .manus-v10-product-bottom { align-items:center !important; }
+#app-section .manus-v10-product-card .manus-v10-product-bottom button { appearance:none !important; -webkit-appearance:none !important; border:1px solid rgba(139,226,220,.32) !important; background:#8be2dc !important; color:#071014 !important; -webkit-text-fill-color:#071014 !important; box-shadow:none !important; opacity:1 !important; }
+#app-section .manus-v10-product-card .product-image-button { pointer-events:auto !important; touch-action:manipulation !important; }
+#app-section .manus-v9-brand { cursor:pointer !important; user-select:none !important; -webkit-user-select:none !important; }
+#app-section .manus-v9-brand:focus-visible { outline:2px solid #8be2dc !important; outline-offset:5px !important; border-radius:10px !important; }
+#app-section #view-catalog { display:none !important; }
+#floating-user-nav { display:none !important; }
+@media (max-width:700px) {
+  #app-section .store-header.manus-v9-header { width:calc(100% - 24px) !important; }
+  #app-section .main-container { width:calc(100% - 24px) !important; }
+  #app-section .manus-v10-product-grid { grid-template-columns:1fr !important; gap:16px !important; }
+  #app-section .manus-v10-product-card .product-art { height:auto !important; aspect-ratio:1.45/1 !important; min-height:0 !important; }
+  #app-section .manus-v10-product-card .product-card-body { padding:16px !important; }
+  #app-section .manus-v10-product-card h3 { font-size:18px !important; }
+  #app-section .manus-v10-product-card .product-desc { font-size:11px !important; line-height:1.55 !important; min-height:0 !important; }
+  #app-section .manus-v10-product-bottom strong { font-size:15px !important; }
+  #app-section .manus-v10-product-bottom button { font-size:11px !important; padding:9px 13px !important; }
+}
+</style>
 </head>
 <body>
 
@@ -2133,7 +2167,7 @@ html,body{width:100%!important;min-width:0!important;overflow-x:hidden!important
     <div id="app-section" class="hidden">
         <div class="manus-ambient manus-ambient-one"></div><div class="manus-ambient manus-ambient-two"></div>
         <header class="store-header manus-v9-header">
-            <div class="manus-v9-brand">
+            <div class="manus-v9-brand" role="button" tabindex="0" onclick="switchView('home')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchView('home')}" aria-label="Kembali ke beranda">
                 <span class="manus-v9-brand-mark" aria-hidden="true">✦</span>
                 <div><strong><span>RYY</span> STORE</strong><small id="store-slogan-display">Digital goods, made simple.</small><span id="store-name-display" class="hidden">RYY STORE</span></div>
             </div>
@@ -3935,14 +3969,15 @@ html,body{width:100%!important;min-width:0!important;overflow-x:hidden!important
         }
 
         function updatePageScrollMode() {
-            const main=document.querySelector(".main-container");
-            if(!main || document.getElementById("app-section")?.classList.contains("hidden")) return;
-            main.classList.add("compact-scroll");
-            requestAnimationFrame(() => {
-                const needsScroll=document.documentElement.scrollHeight > window.innerHeight + 2;
-                main.classList.toggle("compact-scroll", !needsScroll);
-                document.body.classList.toggle("page-no-scroll", !needsScroll);
-            });
+            // The storefront is a normal document flow. Never lock the page
+            // scroll just because the current frame happens to be shorter than
+            // the viewport; Safari/Chrome can otherwise get stuck after a
+            // dynamic product render. Modal sheets have their own scroll lock.
+            const app=document.getElementById("app-section");
+            if(!app || app.classList.contains("hidden")) return;
+            document.body.classList.remove("page-no-scroll");
+            document.documentElement.style.overflowY = "auto";
+            document.body.style.overflowY = "auto";
         }
 
         window.addEventListener("resize", updatePageScrollMode, {passive:true});
@@ -3963,13 +3998,17 @@ html,body{width:100%!important;min-width:0!important;overflow-x:hidden!important
             let list=products.filter(p=>category==="Semua" || p.category===category || (category==="Best Seller"&&p.bestSeller===true));
             if(query) list=list.filter(p=>`${p.name||""} ${p.category||""} ${p.description||""}`.toLowerCase().includes(query));
             grid.innerHTML=list.map(p=>{
-                const price=Number(p.price||p.basePrice||0);
                 const image=imageDisplayUrl(p.image||p.imageUrl||p.photo||"");
-                return `<article class="product-card manus-v10-product-card">
+                const variants=(Array.isArray(p.types)?p.types:[]).filter(Boolean).slice().sort((a,b)=>Number(resellerPrice(a.price)||0)-Number(resellerPrice(b.price)||0));
+                const firstVariant=variants.find(v=>typeStock(v)>0)||variants[0]||null;
+                const price=firstVariant ? Number(resellerPrice(firstVariant.price)||0) : Number(resellerPrice(p.price||p.basePrice||0)||0);
+                const stock=firstVariant ? typeStock(firstVariant) : productStock(p);
+                const priceText=price>0 ? priceMarkup(price) : escapeHtml(t("price_unavailable"));
+                return `<article class="product-card manus-v10-product-card" data-product-id="${escapeHtml(String(p.id??""))}">
                     <button type="button" class="product-image-button" onclick="openProductDetail('${escapeHtml(String(p.id??""))}')">
                         <div class="product-art"><img src="${escapeHtml(image)}" loading="lazy" alt="${escapeHtml(p.name||"Produk")}"><div class="product-art-shade"></div><span class="product-art-category">${escapeHtml(categoryLabel(p.category||"Digital"))}</span>${p.bestSeller?'<span class="best-seller">Best Seller</span>':''}</div>
                     </button>
-                    <div class="product-card-body"><div class="product-meta"><span>${escapeHtml(categoryLabel(p.category||"Digital"))}</span><span class="stock-dot"><i></i>Tersedia</span></div><h3>${escapeHtml(p.name||"Produk digital")}</h3><p class="product-desc">${escapeHtml(String(p.description||"").slice(0,140))}</p><div class="manus-v10-product-bottom"><strong>${rupiah(price)}</strong><button type="button" onclick="openProductDetail('${escapeHtml(String(p.id??""))}')">Lihat <span>→</span></button></div></div>
+                    <div class="product-card-body"><div class="product-meta"><span>${escapeHtml(categoryLabel(p.category||"Digital"))}</span><span class="stock-dot"><i></i>${stock>0?"Tersedia":"Habis"}</span></div><h3>${escapeHtml(p.name||"Produk digital")}</h3><p class="product-desc">${escapeHtml(String(p.description||"").slice(0,140))}</p><div class="manus-v10-product-bottom"><strong class="home-card-price">${priceText}</strong><button type="button" onclick="openProductDetail('${escapeHtml(String(p.id??""))}')">Lihat <span>→</span></button></div></div>
                 </article>`;
             }).join("") || `<div class="empty-state" style="grid-column:1/-1;text-align:center;padding:35px;color:var(--text-muted)">${escapeHtml(t("product_unavailable"))}</div>`;
         }
@@ -6478,15 +6517,22 @@ function startSupportPolling(){
   window.updateDeviceBattery=updateDeviceBattery; window.updateJakartaClock=updateJakartaClock;
   if(!clockTimer) clockTimer=setInterval(updateJakartaClock,1000);
 
-  window.switchView = function(viewName,category=null){
+  window.switchView = function(viewName,category=null,fromHistory=false){
     const views={home:'view-home',catalog:'view-catalog',profile:'view-profile',finance:'view-finance',settings:'view-settings'};
-    // Home and catalog are one continuous Manus-style page. Never hide Home just to browse products.
+    const previous=window.__ryyStoreView || 'home';
+
+    if(!fromHistory && viewName!=='home' && viewName!=='catalog' && previous!==viewName){
+      try { history.pushState({...history.state, ryyStoreView:viewName}, '', location.href); } catch (_) {}
+    }
+    if(!history.state || history.state.ryyStoreView===undefined){
+      try { history.replaceState({...history.state, ryyStoreView:previous}, '', location.href); } catch (_) {}
+    }
+    window.__ryyStoreView = viewName==='catalog' ? 'home' : viewName;
+
+    // Home and catalog are one continuous page.
     if(viewName==='catalog'){
-      Object.entries(views).forEach(([name,id])=>{
-        if(name!=='home') $(id)?.classList.add('hidden');
-      });
+      Object.entries(views).forEach(([name,id])=>{ if(name!=='home') $(id)?.classList.add('hidden'); });
       $('view-home')?.classList.remove('hidden');
-      document.querySelectorAll('.floating-nav-item').forEach((el,i)=>el.classList.toggle('active',i===0));
       if(typeof updateCatalogHeaderControls==='function') updateCatalogHeaderControls('home');
       renderHomeView?.();
       requestAnimationFrame(()=>{
@@ -6498,18 +6544,36 @@ function startSupportPolling(){
       updateInboxBadge?.();
       return;
     }
+
     Object.values(views).forEach(id=>$(id)?.classList.add('hidden'));
-    document.querySelectorAll('.floating-nav-item').forEach((el,i)=>el.classList.toggle('active',(viewName==='home'&&i===0)||(viewName==='catalog'&&i===1)||(viewName==='profile'&&i===2)||(viewName==='finance'&&i===3)||(viewName==='settings'&&i===4)));
     if(views[viewName]) $(views[viewName])?.classList.remove('hidden');
     if(typeof updateCatalogHeaderControls==='function') updateCatalogHeaderControls(viewName);
     if(viewName==='home') renderHomeView?.();
     if(viewName==='finance') updateProfileDashboard?.();
     if(viewName==='profile'||viewName==='finance'||viewName==='settings') updateProfileDashboard?.();
     if(viewName==='profile') refreshCurrentUserSession().then(updateProfileDashboard).catch(()=>{});
-    window.scrollTo({top:0,behavior:'smooth'});
+    if(viewName==='home') window.scrollTo({top:0,behavior:'smooth'});
     updatePageScrollMode?.();
     updateInboxBadge?.();
   };
+
+  window.addEventListener('popstate', function(){
+    try {
+      const modal=document.getElementById('product-detail-modal');
+      if(modal && !modal.classList.contains('hidden')) {
+        modal.classList.add('hidden');
+        document.body.classList.remove('modal-open');
+        return;
+      }
+      const current=window.__ryyStoreView || 'home';
+      if(document.body.dataset.screen==='app' && current!=='home') {
+        window.switchView('home', null, true);
+      }
+    } catch(e) { console.warn('Store back navigation:',e); }
+  }, {passive:true});
+
+  window.__ryyStoreView = window.__ryyStoreView || 'home';
+  try { history.replaceState({...history.state, ryyStoreView:window.__ryyStoreView}, '', location.href); } catch (_) {}
 
   window.openProductDetail = function(productId){
     const product=(storeData.products||[]).find(p=>String(p.id)===String(productId)||String(p.id).replace(/^0+(?=\d)/,"")===String(productId).replace(/^0+(?=\d)/,""));
