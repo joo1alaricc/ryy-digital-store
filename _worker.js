@@ -3,6 +3,23 @@ import inboxCleanup from "./lib/handler/inbox-cleanup.js";
 import subscriptionReminders from "./lib/handler/subscription-reminders.js";
 import { setRuntimeEnv, hydrateRuntimeEnv } from "./lib/_env.js";
 
+// CORS for the Cloudflare backend used by the Manus frontend.
+// Configure MANUS_FRONTEND_ORIGINS as a comma-separated list in Cloudflare Variables.
+function getCorsOrigin(request, env) {
+  const requestOrigin = request.headers.get("Origin") || "";
+  const configuredOrigins = String(env.MANUS_FRONTEND_ORIGINS || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+  const allowedOrigins = new Set([
+    "https://ryy-store.pages.dev",
+    ...configuredOrigins
+  ]);
+  return allowedOrigins.has(requestOrigin)
+    ? requestOrigin
+    : "https://ryy-store.pages.dev";
+}
+
 function makeReq(request) {
   const url = new URL(request.url);
   const headers = {};
@@ -106,7 +123,8 @@ export default {
         const headers = new Headers(upstream.headers);
         headers.set("Cache-Control", "public, max-age=86400, s-maxage=604800, stale-while-revalidate=86400");
         headers.set("X-Content-Type-Options", "nosniff");
-        headers.set("Access-Control-Allow-Origin", url.origin);
+        headers.set("Access-Control-Allow-Origin", getCorsOrigin(request, env));
+        headers.set("Vary", "Origin");
         return new Response(upstream.body, { status: upstream.status, headers });
       } catch (error) {
         console.error("Image proxy error:", error);
@@ -119,19 +137,21 @@ export default {
         return new Response(null, {
           status: 204,
           headers: {
-            "Access-Control-Allow-Origin": url.origin,
+            "Access-Control-Allow-Origin": getCorsOrigin(request, env),
             "Access-Control-Allow-Methods": "GET,HEAD,POST,PUT,PATCH,DELETE,OPTIONS",
             "Access-Control-Allow-Headers": "Content-Type, Authorization, Accept, X-RYY-Security",
-            "Access-Control-Max-Age": "86400"
+            "Access-Control-Max-Age": "86400",
+            "Vary": "Origin"
           }
         });
       }
 
       const response = await dispatch(request, env);
       const headers = new Headers(response.headers);
-      headers.set("Access-Control-Allow-Origin", url.origin);
+      headers.set("Access-Control-Allow-Origin", getCorsOrigin(request, env));
       headers.set("Access-Control-Allow-Methods", "GET,HEAD,POST,PUT,PATCH,DELETE,OPTIONS");
-      headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization, Accept");
+      headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization, Accept, X-RYY-Security");
+      headers.set("Vary", "Origin");
       headers.set("Cache-Control", "no-store");
       headers.set("X-RYY-API", "cloudflare-pages-worker");
       return new Response(response.body, { status: response.status, headers });
