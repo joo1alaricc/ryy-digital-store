@@ -7,14 +7,17 @@ import { setRuntimeEnv, hydrateRuntimeEnv } from "./lib/_env.js";
 // Configure MANUS_FRONTEND_ORIGINS as a comma-separated list in Cloudflare Variables.
 function getCorsOrigin(request, env) {
   const requestOrigin = request.headers.get("Origin") || "";
-  const configuredOrigins = String(env.MANUS_FRONTEND_ORIGINS || "")
-    .split(",")
-    .map((origin) => origin.trim())
-    .filter(Boolean);
+
   const allowedOrigins = new Set([
     "https://ryy-store.pages.dev",
-    ...configuredOrigins
+    "https://ryystore-r92tpdwv.manus.space",
+    "https://3000-inx4cq9wcqlz2n4mujest-1db72e2d.sg2.manus.computer",
+    ...String(env.MANUS_FRONTEND_ORIGINS || "")
+      .split(",")
+      .map((origin) => origin.trim())
+      .filter(Boolean),
   ]);
+
   return allowedOrigins.has(requestOrigin)
     ? requestOrigin
     : "https://ryy-store.pages.dev";
